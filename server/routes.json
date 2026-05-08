@@ -1,0 +1,8 @@
+{
+  "/api/v1/identity-access": "/identityAccess",
+  "/api/v1/medical-simulations": "/medicalSimulations",
+  "/api/v1/gamification": "/gamification",
+  "/api/v1/ecommerce": "/ecommerce",
+  "/api/v1/statistics": "/statistics",
+  "/api/v1/*": "/$1"
+}

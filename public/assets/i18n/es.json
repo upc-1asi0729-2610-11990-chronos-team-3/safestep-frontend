@@ -1,0 +1,128 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "simulations": "Simulaciones",
+    "learning": "Aprendizaje",
+    "progress": "Progreso",
+    "gamification": "Gamificacion",
+    "store": "Tienda"
+  },
+  "shell": {
+    "appTagline": "App de entrenamiento",
+    "title": "Centro de entrenamiento SafeStep",
+    "subtitle": "Aprende primeros auxilios, gana XP y prepara tu kit",
+    "level": "Nivel",
+    "safeCoinsAvailable": "SafeCoins disponibles"
+  },
+  "shared": {
+    "medicalSimulation": "Simulacion medica",
+    "viewAll": "Ver todas",
+    "open": "Abrir",
+    "review": "Revisar",
+    "train": "Entrenar",
+    "days": "dias"
+  },
+  "dashboard": {
+    "eyebrow": "Dashboard personal",
+    "welcome": "Bienvenido de vuelta, {{ name }}",
+    "description": "Continua donde lo dejaste, conserva tu racha diaria y prepara tu kit con recomendaciones basadas en tus simulaciones.",
+    "continueSimulation": "Continuar simulacion",
+    "viewRecommendations": "Ver recomendaciones",
+    "consecutiveDays": "dias consecutivos",
+    "completedSimulations": "simulaciones completadas",
+    "nextTraining": "Siguiente entrenamiento",
+    "practiceNow": "Practicar ahora",
+    "activeMissions": "Misiones activas",
+    "suggestedProducts": "Productos sugeridos para tu preparacion",
+    "goToStore": "Ir a tienda"
+  },
+  "simulations": {
+    "title": "Practica escenarios de emergencia como una ruta de aprendizaje.",
+    "description": "Cada simulacion funciona por modulos: escenario, decision, feedback, resultados finales y productos sugeridos segun errores."
+  },
+  "simulationDetail": {
+    "back": "Volver a simulaciones",
+    "estimatedMinutes": "minutos estimados",
+    "module": "Modulo",
+    "finish": "Finalizar simulacion",
+    "finalScreen": "Pantalla final",
+    "result": "Resultado de la simulacion",
+    "correctAnswers": "Respuestas correctas",
+    "xpEarned": "XP ganada",
+    "errorsMade": "Errores cometidos",
+    "productSuggestions": "Sugerencias de productos segun desempeno",
+    "notFound": "Simulacion no encontrada",
+    "availableSimulations": "Ver simulaciones disponibles"
+  },
+  "stats": {
+    "eyebrow": "Progreso",
+    "title": "Analitica personal de aprendizaje y desempeno",
+    "description": "Revisa tu avance semanal, precision por tipo de emergencia, XP obtenido y errores frecuentes para decidir que simulacion practicar despues.",
+    "accuracy": "precision",
+    "measuredDays": "dias medidos esta semana",
+    "weeklyActivity": "Actividad semanal",
+    "xpPerDay": "XP obtenido por dia",
+    "simulationTypes": "Tipos de simulaciones",
+    "completedAndAccuracy": "Completadas y precision",
+    "completed": "completado",
+    "frequentMistakes": "Errores frecuentes y acciones recomendadas",
+    "trainingPriorities": "Prioridades para tu siguiente entrenamiento",
+    "errors": "errores",
+    "loading": "Cargando progreso...",
+    "loadError": "No se pudieron cargar las estadisticas. Ejecuta npm run server y revisa server/db.json."
+  },
+  "gamification": {
+    "title": "Sube de nivel mientras entrenas para emergencias reales",
+    "description": "Completa misiones, conserva tu racha diaria, desbloquea insignias y usa SafeCoins para obtener cupones en la tienda.",
+    "weeklyRank": "ranking semanal",
+    "streakDays": "dias de racha",
+    "currentStreak": "Racha actual",
+    "dailyBonus": "Bonus activo por practica diaria",
+    "availableCoins": "Monedas disponibles",
+    "redeemableCoupons": "Canjeables por cupones",
+    "badges": "Insignias",
+    "trainingAchievements": "Logros del entrenamiento",
+    "missionsSubtitle": "Completa objetivos diarios y semanales",
+    "weeklyRanking": "Ranking semanal",
+    "healthyCompetition": "Competencia saludable",
+    "badgesAndAchievements": "Insignias y logros",
+    "unlockedAndPending": "Desbloqueadas y pendientes",
+    "loading": "Cargando gamificacion...",
+    "loadError": "No se pudo cargar gamificacion. Ejecuta npm run server y revisa server/db.json."
+  },
+  "store": {
+    "eyebrow": "Tienda SafeStep",
+    "title": "Productos farmaceuticos y kits para emergencias.",
+    "description": "Catalogo inspirado en el prototipo: categorias, cupones con SafeCoins y productos recomendados por tu entrenamiento.",
+    "cart": "Carrito",
+    "items": "items",
+    "inStock": "en stock",
+    "addToCart": "Agregar al carrito"
+  },
+  "auth": {
+    "eyebrow": "Identidad y acceso",
+    "title": "Entra a tu entrenamiento de primeros auxilios.",
+    "description": "Accede a simulaciones medicas, misiones, estadisticas personales y recomendaciones de productos segun tu desempeno.",
+    "completedSimulations": "simulaciones completadas",
+    "activeStreakDays": "dias de racha activa",
+    "cardTitle": "Continua aprendiendo",
+    "login": "Inicio de sesion",
+    "email": "Correo electronico",
+    "password": "Contrasena",
+    "rememberMe": "Recordarme",
+    "recoverAccess": "Recuperar acceso",
+    "enter": "Ingresar",
+    "alsoWith": "Tambien puedes acceder con",
+    "securityRules": "Reglas de seguridad"
+  },
+  "profile": {
+    "learningPreferences": "Preferencias de aprendizaje",
+    "dailyReminders": "Recibir recordatorios diarios",
+    "productRecommendations": "Mostrar recomendaciones de productos",
+    "shareAchievements": "Compartir logros en ranking",
+    "security": "Seguridad",
+    "persistentSession": "Sesion persistente",
+    "emailVerification": "Verificacion por correo",
+    "suspiciousActivityAlerts": "Alertas por actividad sospechosa"
+  }
+}

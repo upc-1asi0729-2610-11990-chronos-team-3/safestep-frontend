@@ -1,13 +1,28 @@
-# SafestepFrontend
+# SafeStep Frontend V2
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.8.
+Frontend Angular de SafeStep adaptado sobre la estructura usada en clase.
+
+La aplicacion esta organizada por bounded contexts:
+
+- `identity-access`
+- `medical-simulation`
+- `gamification`
+- `ecommerce`
+- `statistics`
+- `shared`
 
 ## Development server
 
-To start a local development server, run:
+To start the mock API backed by `server/db.json`, run:
 
 ```bash
-ng serve
+npm run server
+```
+
+Then start the Angular development server:
+
+```bash
+npm run start
 ```
 
 Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.

@@ -1,0 +1,237 @@
+.app-frame {
+  min-height: 100vh;
+  background: #f9fafb;
+}
+
+.sidebar {
+  width: 288px;
+  padding: 0;
+  background: #ffffff;
+  color: #111827;
+  border-right: 1px solid #e5e7eb;
+}
+
+.brand {
+  height: 92px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 24px;
+  color: #111827;
+  text-decoration: none;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.brand-mark {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, #0ea5e9, #22c55e);
+  color: #ffffff;
+  font-weight: 900;
+  box-shadow: 0 12px 24px rgba(14, 165, 233, 0.28);
+}
+
+.brand strong {
+  display: block;
+  font-size: 1.45rem;
+  font-weight: 900;
+  letter-spacing: 0;
+}
+
+.brand strong::after {
+  content: "Step";
+  color: #22c55e;
+}
+
+.brand strong {
+  font-size: 0;
+}
+
+.brand strong::before {
+  content: "Safe";
+  color: #111827;
+  font-size: 1.45rem;
+}
+
+.brand strong::after {
+  font-size: 1.45rem;
+}
+
+.brand small {
+  display: block;
+  margin-top: 2px;
+  color: #6b7280;
+  font-size: 0.78rem;
+}
+
+mat-nav-list {
+  padding: 16px;
+}
+
+mat-nav-list a {
+  --mdc-list-list-item-label-text-color: #4b5563;
+  --mdc-list-list-item-leading-icon-color: #6b7280;
+  --mdc-list-list-item-hover-label-text-color: #0284c7;
+  --mdc-list-list-item-hover-leading-icon-color: #0284c7;
+  border-radius: 12px;
+  margin-bottom: 8px;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+mat-nav-list a:hover {
+  background: #f9fafb;
+  transform: translateX(2px);
+}
+
+mat-nav-list a.active {
+  background: #f0f9ff;
+  --mdc-list-list-item-label-text-color: #0284c7;
+  --mdc-list-list-item-leading-icon-color: #0284c7;
+  font-weight: 800;
+}
+
+.nav-badge {
+  min-width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: #f97316;
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 900;
+}
+
+.sidebar-card {
+  margin: 16px;
+  background: #ffffff;
+  border-color: #f3f4f6;
+  box-shadow: none;
+}
+
+.profile-mini {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.profile-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, #38bdf8, #0284c7);
+  color: #ffffff;
+  font-weight: 900;
+}
+
+.sidebar-card p,
+.sidebar-card strong,
+.sidebar-card small {
+  display: block;
+  margin: 0;
+}
+
+.sidebar-card p {
+  color: #111827;
+  font-weight: 800;
+}
+
+.sidebar-card strong {
+  margin: 4px 0 12px;
+  color: #111827;
+  font-size: 1.35rem;
+}
+
+.sidebar-card small {
+  color: #6b7280;
+  margin-top: 12px;
+}
+
+.content-area {
+  min-width: 0;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  min-height: 82px;
+  padding: 16px 32px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid #e5e7eb;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.03);
+}
+
+.topbar h1,
+.topbar p {
+  margin: 0;
+}
+
+.topbar h1 {
+  color: #111827;
+  font-size: clamp(1.25rem, 2vw, 1.8rem);
+  font-weight: 900;
+}
+
+.eyebrow {
+  color: #6b7280;
+  font-size: 0.86rem;
+  font-weight: 500;
+}
+
+.toolbar-spacer {
+  flex: 1 1 auto;
+}
+
+.user-chip,
+.coin-chip {
+  margin-left: 12px;
+  text-decoration: none;
+}
+
+.user-chip mat-icon,
+.coin-chip mat-icon {
+  margin-right: 6px;
+}
+
+.coin-chip {
+  border-color: #facc15;
+  color: #92400e;
+  background: #fffbeb;
+  font-weight: 900;
+}
+
+main {
+  padding: 28px 32px 44px;
+}
+
+@media (max-width: 920px) {
+  .sidebar {
+    width: 248px;
+  }
+
+  .topbar {
+    min-height: 116px;
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 18px;
+  }
+
+  .toolbar-spacer {
+    display: none;
+  }
+
+  main {
+    padding: 18px;
+  }
+}

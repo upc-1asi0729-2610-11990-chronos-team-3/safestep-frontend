@@ -1,0 +1,151 @@
+@if (data(); as stats) {
+  <section class="stats-hero">
+    <div class="hero-copy">
+      <mat-chip>{{ 'stats.eyebrow' | translate }}</mat-chip>
+      <h2>{{ 'stats.title' | translate }}</h2>
+      <p>
+        {{ 'stats.description' | translate }}
+      </p>
+    </div>
+
+    <aside class="score-card">
+      <span class="score-ring">
+        <strong>{{ stats.simulationTypes[0].accuracy }}%</strong>
+        <small>{{ 'stats.accuracy' | translate }}</small>
+      </span>
+      <div>
+        <strong>{{ stats.weeklyActivity.length }}</strong>
+        <span>{{ 'stats.measuredDays' | translate }}</span>
+      </div>
+    </aside>
+  </section>
+
+  <section class="summary-grid">
+    @for (item of stats.summary; track item.label; let i = $index) {
+      <mat-card class="summary-card card-hover">
+        <mat-card-content>
+          <mat-icon>{{ summaryIcons[i] || 'analytics' }}</mat-icon>
+          <span class="label">{{ item.label }}</span>
+          <strong>{{ item.value }}</strong>
+          <small>{{ item.trend }}</small>
+        </mat-card-content>
+      </mat-card>
+    }
+  </section>
+
+  <section class="analytics-grid">
+    <mat-card class="panel">
+      <mat-card-header>
+        <mat-card-title>{{ 'stats.weeklyActivity' | translate }}</mat-card-title>
+        <mat-card-subtitle>{{ 'stats.xpPerDay' | translate }}</mat-card-subtitle>
+      </mat-card-header>
+      <div class="bar-chart">
+        @for (day of stats.weeklyActivity; track day.day) {
+          <div class="bar-item">
+            <span class="bar-fill" [style.height.%]="(day.xp / maxWeeklyXp()) * 100"></span>
+            <strong>{{ day.day }}</strong>
+            <small>{{ day.xp }} XP</small>
+          </div>
+        }
+      </div>
+    </mat-card>
+
+    <mat-card class="panel">
+      <mat-card-header>
+        <mat-card-title>{{ 'stats.simulationTypes' | translate }}</mat-card-title>
+        <mat-card-subtitle>{{ 'stats.completedAndAccuracy' | translate }}</mat-card-subtitle>
+      </mat-card-header>
+      <div class="type-list">
+        @for (item of stats.simulationTypes; track item.type) {
+          <article class="type-card">
+            <div>
+              <strong>{{ item.type }}</strong>
+              <span>{{ item.completed }} {{ 'stats.completed' | translate }} - {{ item.accuracy }}% {{ 'stats.accuracy' | translate }}</span>
+            </div>
+            <div class="progress-track">
+              <i [style.width.%]="item.accuracy"></i>
+            </div>
+          </article>
+        }
+      </div>
+    </mat-card>
+  </section>
+
+  <mat-card class="panel">
+    <mat-card-header>
+      <mat-card-title>{{ 'stats.frequentMistakes' | translate }}</mat-card-title>
+      <mat-card-subtitle>{{ 'stats.trainingPriorities' | translate }}</mat-card-subtitle>
+    </mat-card-header>
+    <div class="mistake-grid">
+      @for (mistake of stats.commonMistakes; track mistake.topic) {
+        <article class="mistake-card">
+          <mat-icon>report_problem</mat-icon>
+          <strong>{{ mistake.topic }}</strong>
+          <span>{{ mistake.mistakes }} {{ 'stats.errors' | translate }}</span>
+          <p>{{ mistake.recommendation }}</p>
+        </article>
+      }
+    </div>
+  </mat-card>
+
+  <section class="analytics-grid extra-analytics">
+    <mat-card class="panel">
+      <mat-card-header>
+        <mat-card-title>Progreso por escenario</mat-card-title>
+        <mat-card-subtitle>Intentos, puntaje y errores comunes</mat-card-subtitle>
+      </mat-card-header>
+      <div class="type-list">
+        @for (visual of stats.progressVisuals ?? []; track visual.id) {
+          <article class="type-card">
+            <div>
+              <strong>{{ visual.scenarioName }}</strong>
+              <span>{{ visual.totalAttempts }} intentos - mejor {{ visual.bestScore }}% - promedio {{ visual.averageScore }}%</span>
+            </div>
+            <div class="progress-track">
+              <i [style.width.%]="visual.completionPercentage"></i>
+            </div>
+            <small>{{ visual.commonErrors.join(' - ') }}</small>
+          </article>
+        }
+      </div>
+    </mat-card>
+
+    <mat-card class="panel">
+      <mat-card-header>
+        <mat-card-title>Certificados y recomendaciones</mat-card-title>
+        <mat-card-subtitle>Resultados listos para accionar</mat-card-subtitle>
+      </mat-card-header>
+      <div class="type-list">
+        @for (certificate of stats.certificates ?? []; track certificate.id) {
+          <article class="type-card certificate-card">
+            <strong>{{ certificate.moduleName }}</strong>
+            <span>{{ certificate.achievementLevel }} - {{ certificate.score }}%</span>
+            <small>{{ certificate.verificationCode }}</small>
+          </article>
+        }
+        @for (recommendation of stats.recommendations ?? []; track recommendation.id) {
+          <article class="type-card">
+            <strong>{{ recommendation.title }}</strong>
+            <span>{{ recommendation.priority }}</span>
+            <small>{{ recommendation.action }}</small>
+          </article>
+        }
+      </div>
+    </mat-card>
+  </section>
+} @else if (error(); as message) {
+  <mat-card class="loading-state error-state">
+    <mat-card-content>
+      <mat-icon>error</mat-icon>
+      <strong>{{ message | translate }}</strong>
+    </mat-card-content>
+  </mat-card>
+} @else {
+  <mat-card class="loading-state">
+    <mat-card-content>
+      <mat-icon>analytics</mat-icon>
+      <strong>{{ 'stats.loading' | translate }}</strong>
+      <mat-progress-bar mode="indeterminate" />
+    </mat-card-content>
+  </mat-card>
+}

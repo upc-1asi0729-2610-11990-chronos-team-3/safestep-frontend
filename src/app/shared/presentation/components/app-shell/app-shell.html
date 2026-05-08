@@ -1,0 +1,83 @@
+<mat-sidenav-container class="app-frame">
+  <mat-sidenav class="sidebar" mode="side" opened>
+    <a class="brand" routerLink="/app/dashboard" aria-label="Ir al dashboard">
+      <span class="brand-mark">S</span>
+      <span>
+        <strong>SafeStep</strong>
+        <small>{{ 'shell.appTagline' | translate }}</small>
+      </span>
+    </a>
+
+    <mat-nav-list aria-label="Navegacion principal">
+      @for (item of navItems; track item.path) {
+        <a
+          mat-list-item
+          [routerLink]="item.path"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: item.path.endsWith('dashboard') }"
+        >
+          <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+          <span matListItemTitle>{{ item.label | translate }}</span>
+          @if (item.label === 'nav.store') {
+            <span matListItemMeta class="nav-badge">3</span>
+          }
+        </a>
+      }
+    </mat-nav-list>
+
+    @if (user(); as currentUser) {
+    <mat-card class="sidebar-card" appearance="outlined">
+      <mat-card-content>
+          <div class="profile-mini">
+            <div class="profile-avatar">{{ currentUser.fullName.slice(0, 1) }}</div>
+            <div>
+              <p>{{ currentUser.fullName }}</p>
+              <small>{{ 'shell.level' | translate }} {{ currentUser.level }}</small>
+            </div>
+          </div>
+          <strong>{{ currentUser.xp }} XP</strong>
+          <mat-progress-bar
+            mode="determinate"
+            [value]="(currentUser.xp / currentUser.nextLevelXp) * 100"
+          />
+          <small>{{ wallet.balance() }} {{ 'shell.safeCoinsAvailable' | translate }}</small>
+        </mat-card-content>
+      </mat-card>
+    }
+  </mat-sidenav>
+
+  <mat-sidenav-content class="content-area">
+    <mat-toolbar class="topbar">
+      <div>
+        <h1>{{ 'shell.title' | translate }}</h1>
+        <p class="eyebrow">{{ 'shell.subtitle' | translate }}</p>
+      </div>
+      <span class="toolbar-spacer"></span>
+      <button mat-icon-button aria-label="Notificaciones">
+        <mat-icon [matBadge]="unreadNotifications()" matBadgeColor="warn">notifications</mat-icon>
+      </button>
+      <a mat-stroked-button class="coin-chip" routerLink="/app/tienda">
+        <mat-icon>paid</mat-icon>
+        {{ wallet.balance() }} SafeCoins
+      </a>
+      <app-language-switcher />
+      @if (user(); as currentUser) {
+        <a
+          mat-stroked-button
+          class="user-chip"
+          routerLink="/app/perfil"
+          [matBadge]="currentUser.streakDays"
+          matBadgeColor="accent"
+          matBadgeOverlap="false"
+        >
+          <mat-icon>account_circle</mat-icon>
+          {{ currentUser.fullName }}
+        </a>
+      }
+    </mat-toolbar>
+
+    <main>
+      <router-outlet />
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>

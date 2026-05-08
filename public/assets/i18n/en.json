@@ -1,0 +1,128 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "simulations": "Simulations",
+    "learning": "Learning",
+    "progress": "Progress",
+    "gamification": "Gamification",
+    "store": "Store"
+  },
+  "shell": {
+    "appTagline": "Training app",
+    "title": "SafeStep Training Center",
+    "subtitle": "Learn first aid, earn XP, and prepare your kit",
+    "level": "Level",
+    "safeCoinsAvailable": "SafeCoins available"
+  },
+  "shared": {
+    "medicalSimulation": "Medical simulation",
+    "viewAll": "View all",
+    "open": "Open",
+    "review": "Review",
+    "train": "Train",
+    "days": "days"
+  },
+  "dashboard": {
+    "eyebrow": "Personal dashboard",
+    "welcome": "Welcome back, {{ name }}",
+    "description": "Continue where you left off, keep your daily streak, and prepare your kit with recommendations based on your simulations.",
+    "continueSimulation": "Continue simulation",
+    "viewRecommendations": "View recommendations",
+    "consecutiveDays": "consecutive days",
+    "completedSimulations": "completed simulations",
+    "nextTraining": "Next training",
+    "practiceNow": "Practice now",
+    "activeMissions": "Active missions",
+    "suggestedProducts": "Suggested products for your preparation",
+    "goToStore": "Go to store"
+  },
+  "simulations": {
+    "title": "Practice emergency scenarios as a learning path.",
+    "description": "Each simulation works through modules: scenario, decision, feedback, final results, and product suggestions based on mistakes."
+  },
+  "simulationDetail": {
+    "back": "Back to simulations",
+    "estimatedMinutes": "estimated minutes",
+    "module": "Module",
+    "finish": "Finish simulation",
+    "finalScreen": "Final screen",
+    "result": "Simulation result",
+    "correctAnswers": "Correct answers",
+    "xpEarned": "XP earned",
+    "errorsMade": "Errors made",
+    "productSuggestions": "Product suggestions based on performance",
+    "notFound": "Simulation not found",
+    "availableSimulations": "View available simulations"
+  },
+  "stats": {
+    "eyebrow": "Progress",
+    "title": "Personal learning and performance analytics",
+    "description": "Review your weekly progress, accuracy by emergency type, XP earned, and frequent mistakes to decide what to practice next.",
+    "accuracy": "accuracy",
+    "measuredDays": "measured days this week",
+    "weeklyActivity": "Weekly activity",
+    "xpPerDay": "XP earned per day",
+    "simulationTypes": "Simulation types",
+    "completedAndAccuracy": "Completed and accuracy",
+    "completed": "completed",
+    "frequentMistakes": "Frequent mistakes and recommended actions",
+    "trainingPriorities": "Priorities for your next training",
+    "errors": "errors",
+    "loading": "Loading progress...",
+    "loadError": "Could not load statistics. Run npm run server and check server/db.json."
+  },
+  "gamification": {
+    "title": "Level up while training for real emergencies",
+    "description": "Complete missions, keep your daily streak, unlock badges, and use SafeCoins to get coupons in the store.",
+    "weeklyRank": "weekly rank",
+    "streakDays": "streak days",
+    "currentStreak": "Current streak",
+    "dailyBonus": "Daily practice bonus active",
+    "availableCoins": "Available coins",
+    "redeemableCoupons": "Redeemable for coupons",
+    "badges": "Badges",
+    "trainingAchievements": "Training achievements",
+    "missionsSubtitle": "Complete daily and weekly goals",
+    "weeklyRanking": "Weekly ranking",
+    "healthyCompetition": "Healthy competition",
+    "badgesAndAchievements": "Badges and achievements",
+    "unlockedAndPending": "Unlocked and pending",
+    "loading": "Loading gamification...",
+    "loadError": "Could not load gamification. Run npm run server and check server/db.json."
+  },
+  "store": {
+    "eyebrow": "SafeStep Store",
+    "title": "Pharmaceutical products and emergency kits.",
+    "description": "Catalog inspired by the prototype: categories, SafeCoins coupons, and products recommended by your training.",
+    "cart": "Cart",
+    "items": "items",
+    "inStock": "in stock",
+    "addToCart": "Add to cart"
+  },
+  "auth": {
+    "eyebrow": "Identity and access",
+    "title": "Enter your first aid training.",
+    "description": "Access medical simulations, missions, personal statistics, and product recommendations based on your performance.",
+    "completedSimulations": "completed simulations",
+    "activeStreakDays": "active streak days",
+    "cardTitle": "Continue learning",
+    "login": "Sign in",
+    "email": "Email",
+    "password": "Password",
+    "rememberMe": "Remember me",
+    "recoverAccess": "Recover access",
+    "enter": "Enter",
+    "alsoWith": "You can also access with",
+    "securityRules": "Security rules"
+  },
+  "profile": {
+    "learningPreferences": "Learning preferences",
+    "dailyReminders": "Receive daily reminders",
+    "productRecommendations": "Show product recommendations",
+    "shareAchievements": "Share achievements in ranking",
+    "security": "Security",
+    "persistentSession": "Persistent session",
+    "emailVerification": "Email verification",
+    "suspiciousActivityAlerts": "Suspicious activity alerts"
+  }
+}
