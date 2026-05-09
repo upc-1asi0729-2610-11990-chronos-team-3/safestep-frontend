@@ -1,0 +1,311 @@
+.brand-lockup,
+.search-box,
+.store-topbar,
+.category-rail,
+.section-head,
+.price-row {
+  display: flex;
+  align-items: center;
+}
+
+.store-topbar {
+  display: grid;
+  grid-template-columns: 230px minmax(280px, 1fr) auto auto auto;
+  gap: 14px;
+  margin-bottom: 12px;
+  padding: 14px 18px;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  background: #ffffff;
+}
+
+.brand-lockup {
+  gap: 10px;
+  color: #15803d;
+  font-size: 1.25rem;
+  font-weight: 900;
+}
+
+.search-box {
+  min-height: 50px;
+  gap: 10px;
+  padding: 0 14px;
+  border-radius: 12px;
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+}
+
+.store-mark {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #16a34a;
+  color: #ffffff;
+}
+
+.search-box input {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #111827;
+  font: inherit;
+}
+
+.points-button {
+  border-color: #facc15;
+  background: #fffbeb;
+  color: #92400e;
+  font-weight: 900;
+}
+
+.cart-button {
+  min-width: 72px;
+}
+
+.category-rail {
+  gap: 10px;
+  margin-bottom: 20px;
+  padding: 10px 0 2px;
+  overflow-x: auto;
+}
+
+.category-rail button {
+  min-height: 42px;
+  flex: 0 0 auto;
+  border: 0;
+  border-radius: 12px;
+  padding: 0 16px;
+  background: #ffffff;
+  color: #0f172a;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.category-rail button.active {
+  background: #16a34a;
+  color: #ffffff;
+}
+
+.store-hero,
+.coupon-panel {
+  margin-bottom: 22px;
+  padding: 28px;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #ffffff, #ecfdf5);
+}
+
+.store-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 230px;
+  gap: 20px;
+}
+
+.store-hero aside {
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  background: #ffffff;
+  color: #166534;
+}
+
+.store-hero aside mat-icon {
+  width: 54px;
+  height: 54px;
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  background: #dcfce7;
+  color: #15803d;
+  font-size: 34px;
+  line-height: 54px;
+}
+
+.store-hero aside strong {
+  color: #111827;
+  font-size: 2rem;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  color: #0284c7;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
+h2 {
+  max-width: 780px;
+  color: #111827;
+  font-size: clamp(1.8rem, 4vw, 2.9rem);
+  line-height: 1;
+  font-weight: 900;
+}
+
+p {
+  color: #4b5563;
+  line-height: 1.65;
+}
+
+.section-head {
+  justify-content: space-between;
+  gap: 14px;
+  margin: 20px 0 12px;
+}
+
+.coupon-grid,
+.kit-strip,
+.review-strip,
+.product-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.coupon-card,
+.kit-card,
+.product-card,
+.review-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  background: #ffffff;
+}
+
+.coupon-card mat-card-content {
+  display: grid;
+  gap: 8px;
+}
+
+.coupon-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.coupon-card mat-icon {
+  color: #f97316;
+}
+
+.redeemable {
+  width: fit-content;
+  background: #dcfce7;
+  color: #166534;
+}
+
+.locked-coupon {
+  width: fit-content;
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.kit-strip {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 18px;
+}
+
+.kit-card {
+  background: linear-gradient(180deg, #ffffff, #f0fdf4);
+}
+
+.product-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.product-card {
+  overflow: hidden;
+}
+
+.media {
+  min-height: 150px;
+  display: flex;
+  align-items: flex-start;
+  padding: 12px;
+  background-size: cover;
+  background-position: center;
+  background-color: #e0f2fe;
+}
+
+.body {
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+}
+
+.body h3 {
+  min-height: 48px;
+  margin: 0;
+  color: #111827;
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+.body p {
+  min-height: 72px;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.rating,
+.commerce-summary span,
+.review-card span,
+.review-card p {
+  color: #6b7280;
+}
+
+.price-row {
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.price-row strong {
+  color: #dc2626;
+  font-size: 1.35rem;
+}
+
+.price-row del,
+.price-row span {
+  color: #6b7280;
+}
+
+button[mat-flat-button] {
+  min-height: 42px;
+  font-weight: 900;
+}
+
+.reviews-section {
+  margin-top: 26px;
+}
+
+.review-strip {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.review-card p {
+  margin-bottom: 0;
+}
+
+@media (max-width: 1180px) {
+  .store-topbar,
+  .product-grid,
+  .kit-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .store-topbar,
+  .store-hero,
+  .coupon-grid,
+  .kit-strip,
+  .product-grid,
+  .relevant-grid,
+  .review-strip {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,238 @@
+<section class="store-topbar">
+  <div class="brand-lockup">
+    <span class="store-mark">S</span>
+    <strong>SafeStep Farma</strong>
+  </div>
+
+  <label class="search-box">
+    <mat-icon>search</mat-icon>
+    <input type="search" placeholder="Busca un producto o kit" (input)="setSearchQuery($event)" />
+  </label>
+
+  <button mat-button type="button" class="delivery-button">
+    <mat-icon>location_on</mat-icon>
+    {{ addresses()[0]?.district || 'Ingresa tu direccion' }}
+  </button>
+
+  <button mat-stroked-button type="button" class="points-button" (click)="openCoupons()">
+    <mat-icon>confirmation_number</mat-icon>
+    Canjear puntos
+  </button>
+
+  <button mat-flat-button color="primary" type="button" class="cart-button" [matBadge]="cartCount()" matBadgeColor="warn">
+    <mat-icon>shopping_cart</mat-icon>
+    {{ cartCount() }}
+  </button>
+</section>
+
+<nav class="category-rail" aria-label="Categorias de tienda">
+  <button type="button" [class.active]="selectedCategory() === 'Todos'" (click)="setCategory('Todos')">
+    Todos los productos
+  </button>
+  @for (category of categories(); track category.id) {
+    <button type="button" [class.active]="selectedCategory() === category.name" (click)="setCategory(category.name)">
+      {{ category.name }}
+    </button>
+  }
+</nav>
+
+@if (couponsOpen()) {
+  <section class="coupon-panel">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">SafeCoins</p>
+        <h2>Canjea puntos por cupones</h2>
+        <span>{{ wallet.balance() }} SafeCoins disponibles</span>
+      </div>
+      <button mat-button type="button" (click)="closeCoupons()">Volver a productos</button>
+    </div>
+
+    <div class="coupon-grid">
+      @for (coupon of coupons(); track coupon.id) {
+        <mat-card appearance="outlined" class="coupon-card card-hover">
+          <mat-card-content>
+            <mat-icon>confirmation_number</mat-icon>
+            <strong>{{ coupon.title }}</strong>
+            <span>{{ coupon.costCoins }} SafeCoins · {{ coupon.discount }}</span>
+            @if (canRedeem(coupon)) {
+              <mat-chip class="redeemable">Canjeable ahora</mat-chip>
+            } @else {
+              <mat-chip class="locked-coupon">Faltan {{ missingCoins(coupon) }} SafeCoins</mat-chip>
+            }
+          </mat-card-content>
+        </mat-card>
+      }
+    </div>
+  </section>
+} @else if (isMainStoreView()) {
+  <section class="store-hero">
+    <div>
+      <p class="eyebrow">{{ 'store.eyebrow' | translate }}</p>
+      <h2>Productos relevantes para tu entrenamiento</h2>
+      <p>
+        Kits, insumos y dispositivos priorizados segun tus simulaciones, tu historial de errores y la preparacion para emergencias.
+      </p>
+      <button mat-flat-button color="primary" type="button" (click)="openCoupons()">
+        <mat-icon>paid</mat-icon>
+        Canjear puntos
+      </button>
+    </div>
+    <aside>
+      <mat-icon>health_and_safety</mat-icon>
+      <span>Saldo SafeCoins</span>
+      <strong>{{ wallet.balance() }}</strong>
+    </aside>
+  </section>
+
+  <section class="section-head">
+    <div>
+      <p class="eyebrow">Primera vista</p>
+      <h2>Mas relevantes</h2>
+    </div>
+  </section>
+
+  <section class="product-grid relevant-grid">
+    @for (product of relevantProducts(); track product.id) {
+      <mat-card class="product-card card-hover">
+        <div class="media" [style.background-image]="'linear-gradient(135deg, rgba(15,23,42,.14), rgba(14,165,233,.10)), url(' + product.imageUrl + ')'">
+          <mat-chip>{{ product.category }}</mat-chip>
+        </div>
+        <mat-card-content class="body">
+          <span class="rating">★ {{ product.rating }} · {{ product.stock }} disponibles</span>
+          <h3>{{ product.name }}</h3>
+          <p>{{ product.description }}</p>
+          <div class="price-row">
+            <strong>S/ {{ product.price }}</strong>
+            @if (product.oldPrice) {
+              <del>S/ {{ product.oldPrice }}</del>
+            }
+          </div>
+          <button mat-flat-button color="primary" type="button" (click)="addToCart()">
+            <mat-icon>add_shopping_cart</mat-icon>
+            Agregar
+          </button>
+        </mat-card-content>
+      </mat-card>
+    }
+  </section>
+
+  <section class="kit-strip">
+    @for (kit of emergencyKits().slice(0, 4); track kit.id) {
+      <mat-card class="kit-card card-hover">
+        <mat-card-content>
+          <mat-chip>{{ kit.level }}</mat-chip>
+          <h3>{{ kit.name }}</h3>
+          <p>{{ kit.description }}</p>
+          <div class="price-row">
+            <strong>S/ {{ kit.kitPrice }}</strong>
+            <del>S/ {{ kit.individualPrice }}</del>
+            <span>{{ kit.savingsPercentage }}% ahorro</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    }
+  </section>
+
+  <section class="section-head">
+    <div>
+      <p class="eyebrow">Catalogo</p>
+      <h2>{{ selectedCategory() === 'Todos' ? 'Todos los productos' : selectedCategory() }}</h2>
+    </div>
+  </section>
+
+  <section class="product-grid">
+    @for (product of filteredProducts(); track product.id) {
+      <mat-card class="product-card card-hover">
+        <div class="media" [style.background-image]="'linear-gradient(135deg, rgba(15,23,42,.14), rgba(14,165,233,.10)), url(' + product.imageUrl + ')'">
+          <mat-chip>{{ product.type }}</mat-chip>
+        </div>
+        <mat-card-content class="body">
+          <span class="rating">★ {{ product.rating }} · {{ product.stock }} {{ 'store.inStock' | translate }}</span>
+          <h3>{{ product.name }}</h3>
+          <p>{{ product.description }}</p>
+          <mat-chip-set>
+            @for (tag of product.tags.slice(0, 2); track tag) {
+              <mat-chip>{{ tag }}</mat-chip>
+            }
+          </mat-chip-set>
+          <div class="price-row">
+            <strong>S/ {{ product.price }}</strong>
+            @if (product.oldPrice) {
+              <del>S/ {{ product.oldPrice }}</del>
+            }
+          </div>
+          <button mat-flat-button color="primary" type="button" (click)="addToCart()">
+            <mat-icon>add_shopping_cart</mat-icon>
+            {{ 'store.addToCart' | translate }}
+          </button>
+        </mat-card-content>
+      </mat-card>
+    }
+  </section>
+
+  <section class="reviews-section">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Resenas</p>
+        <h2>Opiniones de usuarios</h2>
+      </div>
+    </div>
+    <div class="review-strip">
+      @for (review of reviews().slice(0, 6); track review.id) {
+        <mat-card appearance="outlined" class="review-card">
+          <mat-card-content>
+            <strong>{{ review.userName }}</strong>
+            <span>{{ review.rating }} / 5</span>
+            <p>{{ review.comment }}</p>
+          </mat-card-content>
+        </mat-card>
+      }
+    </div>
+  </section>
+} @else {
+  <section class="category-products-view">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Categoria</p>
+        <h2>{{ selectedCategory() }}</h2>
+      </div>
+    </div>
+
+    <section class="product-grid">
+      @for (product of filteredProducts(); track product.id) {
+        <mat-card class="product-card card-hover">
+          <div class="media" [style.background-image]="'linear-gradient(135deg, rgba(15,23,42,.14), rgba(14,165,233,.10)), url(' + product.imageUrl + ')'">
+            <mat-chip>{{ product.type }}</mat-chip>
+          </div>
+          <mat-card-content class="body">
+            <span class="rating">★ {{ product.rating }} · {{ product.stock }} {{ 'store.inStock' | translate }}</span>
+            <h3>{{ product.name }}</h3>
+            <p>{{ product.description }}</p>
+            <mat-chip-set>
+              @for (tag of product.tags.slice(0, 2); track tag) {
+                <mat-chip>{{ tag }}</mat-chip>
+              }
+            </mat-chip-set>
+            <div class="price-row">
+              <strong>S/ {{ product.price }}</strong>
+              @if (product.oldPrice) {
+                <del>S/ {{ product.oldPrice }}</del>
+              }
+            </div>
+            <button mat-flat-button color="primary" type="button" (click)="addToCart()">
+              <mat-icon>add_shopping_cart</mat-icon>
+              {{ 'store.addToCart' | translate }}
+            </button>
+          </mat-card-content>
+        </mat-card>
+      } @empty {
+        <mat-card class="empty-category" appearance="outlined">
+          <mat-card-content>
+            <mat-icon>search_off</mat-icon>
+            <strong>No hay productos en esta categoria.</strong>
+          </mat-card-content>
+        </mat-card>
+      }
+    </section>
+  </section>
+}
