@@ -1,0 +1,26 @@
+@if (user(); as currentUser) {
+  <section class="profile-card">
+    <div class="avatar">{{ currentUser.fullName.slice(0, 1) }}</div>
+    <div>
+      <p class="eyebrow">{{ 'auth.eyebrow' | translate }}</p>
+      <h2>{{ currentUser.fullName }}</h2>
+      <p>{{ currentUser.role }} - {{ currentUser.city }}</p>
+      <span>{{ currentUser.email }}</span>
+    </div>
+  </section>
+
+  <section class="settings-grid">
+    <article>
+      <h3>{{ 'profile.learningPreferences' | translate }}</h3>
+      <label>{{ 'profile.dailyReminders' | translate }} <input type="checkbox" checked /></label>
+      <label>{{ 'profile.productRecommendations' | translate }} <input type="checkbox" checked /></label>
+      <label>{{ 'profile.shareAchievements' | translate }} <input type="checkbox" checked /></label>
+    </article>
+    <article>
+      <h3>{{ 'profile.security' | translate }}</h3>
+      <label>{{ 'profile.persistentSession' | translate }} <input type="checkbox" checked /></label>
+      <label>{{ 'profile.emailVerification' | translate }} <input type="checkbox" checked /></label>
+      <label>{{ 'profile.suspiciousActivityAlerts' | translate }} <input type="checkbox" /></label>
+    </article>
+  </section>
+}

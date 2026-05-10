@@ -19,7 +19,15 @@ import { StatsData } from '../../../../statistics/domain/model/statistics.entity
 
 @Component({
   selector: 'app-dashboard-page',
-  imports: [RouterLink, MatButtonModule, MatCardModule, MatChipsModule, MatIconModule, MatProgressBarModule, TranslatePipe],
+  imports: [
+    RouterLink,
+    MatButtonModule,
+    MatCardModule,
+    MatChipsModule,
+    MatIconModule,
+    MatProgressBarModule,
+    TranslatePipe,
+  ],
   templateUrl: './dashboard-page.html',
   styleUrl: './dashboard-page.css',
 })
@@ -29,8 +37,10 @@ export class DashboardPage {
   protected readonly gamification = signal<GamificationData | null>(null);
   protected readonly stats = signal<StatsData | null>(null);
   protected readonly products = signal<StoreProduct[]>([]);
-  protected readonly nextSimulation = computed(() =>
-    this.simulations()?.simulations.find((simulation) => simulation.status !== 'Completado') ?? null,
+  protected readonly nextSimulation = computed(
+    () =>
+      this.simulations()?.simulations.find((simulation) => simulation.status !== 'Completado') ??
+      null,
   );
 
   constructor(

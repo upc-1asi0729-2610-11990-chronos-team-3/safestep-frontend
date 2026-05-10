@@ -1,0 +1,147 @@
+.auth-layout {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(360px, 520px);
+  gap: 48px;
+  align-items: center;
+  padding: clamp(24px, 5vw, 72px);
+  background:
+    linear-gradient(130deg, rgba(14, 165, 233, 0.92), rgba(15, 23, 42, 0.96)),
+    #0f172a;
+}
+
+.auth-copy {
+  color: #ffffff;
+  max-width: 720px;
+}
+
+.brand {
+  display: inline-flex;
+  color: #ffffff;
+  font-weight: 900;
+  font-size: 1.3rem;
+  text-decoration: none;
+  margin-bottom: 64px;
+}
+
+.eyebrow {
+  margin: 0 0 10px;
+  color: #bbf7d0;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.78rem;
+}
+
+h1,
+h2,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  max-width: 720px;
+  font-size: clamp(2.7rem, 7vw, 5.6rem);
+  line-height: 0.95;
+  margin-bottom: 24px;
+}
+
+.auth-copy > p:not(.eyebrow) {
+  max-width: 620px;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 1.1rem;
+  line-height: 1.7;
+}
+
+.proof-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 42px;
+}
+
+.proof-grid mat-card {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+}
+
+.proof-grid strong,
+.proof-grid span {
+  display: block;
+}
+
+.proof-grid strong {
+  font-size: 1.7rem;
+}
+
+.proof-grid span {
+  color: rgba(255, 255, 255, 0.78);
+  margin-top: 4px;
+}
+
+.auth-card {
+  padding: 32px;
+  box-shadow: 0 24px 70px rgba(15, 23, 42, 0.25);
+}
+
+.auth-card mat-card-title {
+  color: #111827;
+  font-size: 2rem;
+  font-weight: 900;
+}
+
+form {
+  display: grid;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.form-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+a {
+  color: #0284c7;
+  font-weight: 800;
+}
+
+a[mat-flat-button] {
+  min-height: 50px;
+}
+
+.providers,
+.rules {
+  display: grid;
+  gap: 10px;
+  margin-top: 24px;
+  padding-top: 22px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.providers span,
+.rules strong {
+  color: #6b7280;
+  font-weight: 800;
+}
+
+@media (max-width: 900px) {
+  .auth-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .brand {
+    margin-bottom: 34px;
+  }
+
+  .proof-grid {
+    grid-template-columns: 1fr;
+  }
+}
