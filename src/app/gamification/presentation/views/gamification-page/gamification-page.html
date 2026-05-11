@@ -1,0 +1,208 @@
+@if (data(); as game) {
+  <section class="game-hero">
+    <div class="hero-copy">
+      <mat-chip>{{ 'nav.gamification' | translate }}</mat-chip>
+      <h2>{{ 'gamification.title' | translate }}</h2>
+      <p>
+        {{ 'gamification.description' | translate }}
+      </p>
+      <div class="hero-stats">
+        <span>
+          <strong>#{{ game.levelSummary.weeklyRank }}</strong>
+          {{ 'gamification.weeklyRank' | translate }}
+        </span>
+        <span>
+          <strong>{{ game.levelSummary.safeCoins }}</strong>
+          SafeCoins
+        </span>
+        <span>
+          <strong>{{ game.levelSummary.streakDays }}</strong>
+          {{ 'gamification.streakDays' | translate }}
+        </span>
+      </div>
+    </div>
+
+    <aside class="level-card">
+      <span class="level-orb">
+        <strong>{{ game.levelSummary.level }}</strong>
+        <small>{{ 'shell.level' | translate }}</small>
+      </span>
+      <mat-progress-bar
+        mode="determinate"
+        [value]="(game.levelSummary.xp / game.levelSummary.nextLevelXp) * 100"
+      />
+      <p>{{ game.levelSummary.xp }} / {{ game.levelSummary.nextLevelXp }} XP</p>
+    </aside>
+  </section>
+
+  <section class="reward-grid">
+    <mat-card class="reward-card card-hover">
+      <mat-card-content>
+        <mat-icon>local_fire_department</mat-icon>
+        <span>{{ 'gamification.currentStreak' | translate }}</span>
+        <strong>{{ game.levelSummary.streakDays }} {{ 'shared.days' | translate }}</strong>
+        <small>{{ 'gamification.dailyBonus' | translate }}</small>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="reward-card card-hover">
+      <mat-card-content>
+        <mat-icon>paid</mat-icon>
+        <span>{{ 'gamification.availableCoins' | translate }}</span>
+        <strong>{{ game.levelSummary.safeCoins }}</strong>
+        <small>{{ 'gamification.redeemableCoupons' | translate }}</small>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="reward-card card-hover">
+      <mat-card-content>
+        <mat-icon>workspace_premium</mat-icon>
+        <span>{{ 'gamification.badges' | translate }}</span>
+        <strong>{{ game.badges.length }}</strong>
+        <small>{{ 'gamification.trainingAchievements' | translate }}</small>
+      </mat-card-content>
+    </mat-card>
+  </section>
+
+  <section class="content-grid">
+    <mat-card class="panel">
+      <mat-card-header>
+        <mat-card-title>{{ 'dashboard.activeMissions' | translate }}</mat-card-title>
+        <mat-card-subtitle>{{ 'gamification.missionsSubtitle' | translate }}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content class="mission-list">
+        @for (mission of game.missions; track mission.id) {
+          <article class="mission-card">
+            <div class="mission-head">
+              <span>
+                <strong>{{ mission.title }}</strong>
+                <small>{{ mission.rewardXp }} XP - {{ mission.rewardCoins }} SafeCoins</small>
+              </span>
+              <mat-chip>{{ mission.cadence }}</mat-chip>
+            </div>
+            <mat-progress-bar
+              mode="determinate"
+              [value]="mission.progress >= mission.goal ? 100 : (mission.progress / mission.goal) * 100"
+            />
+            <small>{{ mission.progress }} / {{ mission.goal }} {{ 'stats.completed' | translate }}</small>
+          </article>
+        }
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="panel ranking-panel">
+      <mat-card-header>
+        <mat-card-title>{{ 'gamification.weeklyRanking' | translate }}</mat-card-title>
+        <mat-card-subtitle>{{ 'gamification.healthyCompetition' | translate }}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-list>
+        @for (entry of game.leaderboard; track entry.rank) {
+          <mat-list-item [class.current]="entry.name === 'Ana Torres'">
+            <span class="rank-badge" matListItemIcon>{{ entry.rank }}</span>
+            <span matListItemTitle>{{ entry.name }}</span>
+            <span matListItemLine>{{ entry.xp }} XP - {{ entry.streak }} {{ 'gamification.streakDays' | translate }}</span>
+          </mat-list-item>
+        }
+      </mat-list>
+    </mat-card>
+  </section>
+
+  <mat-card class="panel">
+    <mat-card-header>
+      <mat-card-title>{{ 'gamification.badgesAndAchievements' | translate }}</mat-card-title>
+      <mat-card-subtitle>{{ 'gamification.unlockedAndPending' | translate }}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content class="badge-grid">
+      @for (badge of game.badges; track badge.id) {
+        <article class="badge-card" [class.locked]="!badge.unlocked">
+          <mat-icon>{{ badge.unlocked ? 'workspace_premium' : 'lock' }}</mat-icon>
+          <mat-chip>{{ badge.rarity }}</mat-chip>
+          <h4>{{ badge.name }}</h4>
+          <p>{{ badge.description }}</p>
+        </article>
+      }
+    </mat-card-content>
+  </mat-card>
+
+  <section class="content-grid extra-grid">
+    <mat-card class="panel">
+      <mat-card-header>
+        <mat-card-title>Eventos y torneos</mat-card-title>
+        <mat-card-subtitle>Retos temporales con recompensas especiales</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content class="mission-list">
+        @for (event of game.events ?? []; track event.id) {
+          <article class="mission-card">
+            <div class="mission-head">
+              <span>
+                <strong>{{ event.name }}</strong>
+                <small>{{ event.description }}</small>
+              </span>
+              <mat-chip>{{ event.isActive ? 'Activo' : 'Proximo' }}</mat-chip>
+            </div>
+            <small>{{ event.xpReward }} XP - {{ event.coinsReward }} SafeCoins - {{ event.participantCount }} participantes</small>
+          </article>
+        }
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="panel coin-history-panel">
+      <mat-card-header>
+        <mat-card-title>Historial de SafeCoins</mat-card-title>
+        <mat-card-subtitle>Recompensas ganadas al completar simulaciones</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content class="coin-history">
+        @for (transaction of recentCoinTransactions(); track transaction.id) {
+          <article class="coin-transaction">
+            <span>
+              <strong>{{ transaction.simulationTitle }}</strong>
+              <small>
+                Precision {{ transaction.accuracy * 100 }}% -
+                multiplicador x{{ transaction.multiplier }}
+              </small>
+            </span>
+            <strong [class.empty-reward]="transaction.earnedCoins === 0">
+              +{{ transaction.earnedCoins }}
+            </strong>
+          </article>
+        } @empty {
+          <p>Aun no hay recompensas por simulaciones.</p>
+        }
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="panel">
+      <mat-card-header>
+        <mat-card-title>Prestigio</mat-card-title>
+        <mat-card-subtitle>Progreso despues de los niveles estandar</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content class="mission-list">
+        @for (prestige of game.prestigeLevels ?? []; track prestige.id) {
+          <article class="mission-card">
+            <div class="mission-head">
+              <span>
+                <strong>{{ prestige.title }}</strong>
+                <small>{{ prestige.requiredXP }} XP requeridos</small>
+              </span>
+              <mat-chip>{{ prestige.isUnlocked ? 'Desbloqueado' : 'Bloqueado' }}</mat-chip>
+            </div>
+            <small>{{ prestige.benefits.join(' - ') }}</small>
+          </article>
+        }
+      </mat-card-content>
+    </mat-card>
+  </section>
+} @else if (error(); as message) {
+  <mat-card class="loading-state error-state">
+    <mat-card-content>
+      <mat-icon>error</mat-icon>
+      <strong>{{ message | translate }}</strong>
+    </mat-card-content>
+  </mat-card>
+} @else {
+  <mat-card class="loading-state">
+    <mat-card-content>
+      <mat-icon>emoji_events</mat-icon>
+      <strong>{{ 'gamification.loading' | translate }}</strong>
+      <mat-progress-bar mode="indeterminate" />
+    </mat-card-content>
+  </mat-card>
+}
