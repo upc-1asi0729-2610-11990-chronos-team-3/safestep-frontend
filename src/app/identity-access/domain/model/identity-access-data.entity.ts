@@ -3,6 +3,7 @@ import { UserProfile } from './user-profile.entity';
 
 export interface IdentityAccessData {
   sampleUser: UserProfile;
+  demoUsers?: UserProfile[];
   authProviders: AuthProvider[];
   passwordRules: string[];
   securityEvents?: Array<{

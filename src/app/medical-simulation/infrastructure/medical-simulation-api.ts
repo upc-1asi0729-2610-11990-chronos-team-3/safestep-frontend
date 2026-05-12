@@ -4,6 +4,8 @@ import { firstValueFrom } from 'rxjs';
 import { BaseApi } from '../../shared/infrastructure/base-api';
 import { environment } from '../../../environments/environment';
 import { MedicalSimulationData } from '../domain/model/medical-simulation.entity';
+import { MedicalSimulationAssembler } from './assemblers/medical-simulation.assembler';
+import { MedicalSimulationResource } from './resources/medical-simulation.resource';
 
 @Injectable({ providedIn: 'root' })
 export class MedicalSimulationApi extends BaseApi {
@@ -13,11 +15,14 @@ export class MedicalSimulationApi extends BaseApi {
     super();
   }
 
-  getMedicalSimulations(): Promise<MedicalSimulationData> {
-    return firstValueFrom(this.http.get<MedicalSimulationData>(this.endpointUrl));
+  async getMedicalSimulations(): Promise<MedicalSimulationData> {
+    const resource = await firstValueFrom(this.http.get<MedicalSimulationResource>(this.endpointUrl));
+    return MedicalSimulationAssembler.toEntity(resource);
   }
 
-  updateMedicalSimulations(data: MedicalSimulationData): Promise<MedicalSimulationData> {
-    return firstValueFrom(this.http.patch<MedicalSimulationData>(this.endpointUrl, data));
+  async updateMedicalSimulations(data: MedicalSimulationData): Promise<MedicalSimulationData> {
+    const resource = MedicalSimulationAssembler.toResource(data);
+    const saved = await firstValueFrom(this.http.patch<MedicalSimulationResource>(this.endpointUrl, resource));
+    return MedicalSimulationAssembler.toEntity(saved);
   }
 }

@@ -4,6 +4,8 @@ import { firstValueFrom } from 'rxjs';
 import { BaseApi } from '../../shared/infrastructure/base-api';
 import { environment } from '../../../environments/environment';
 import { StatsData } from '../domain/model/statistics.entity';
+import { StatisticsAssembler } from './assemblers/statistics.assembler';
+import { StatisticsResource } from './resources/statistics.resource';
 
 @Injectable({ providedIn: 'root' })
 export class StatisticsApi extends BaseApi {
@@ -13,7 +15,8 @@ export class StatisticsApi extends BaseApi {
     super();
   }
 
-  getStats(): Promise<StatsData> {
-    return firstValueFrom(this.http.get<StatsData>(this.endpointUrl));
+  async getStats(): Promise<StatsData> {
+    const resource = await firstValueFrom(this.http.get<StatisticsResource>(this.endpointUrl));
+    return StatisticsAssembler.toEntity(resource);
   }
 }

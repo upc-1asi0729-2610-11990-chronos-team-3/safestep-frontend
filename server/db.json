@@ -3051,7 +3051,9 @@
           "RCP",
           "Quemaduras",
           "Atragantamiento"
-        ]
+        ],
+        "images": [],
+        "specifications": {}
       },
       {
         "id": "mochila-emergencia",
@@ -3069,7 +3071,9 @@
         "description": "Mochila equipada con insumos basicos para evacuacion, iluminacion, hidratacion y primeros auxilios.",
         "recommendedFor": [
           "Sismos"
-        ]
+        ],
+        "images": [],
+        "specifications": {}
       },
       {
         "id": "mascarilla-rcp",
@@ -3087,7 +3091,9 @@
         "description": "Barrera de proteccion para ventilaciones de rescate con estuche portatil.",
         "recommendedFor": [
           "RCP"
-        ]
+        ],
+        "images": [],
+        "specifications": {}
       },
       {
         "id": "apposito-quemaduras",
@@ -3105,7 +3111,9 @@
         "description": "Aposito esteril no adherente para cubrir quemaduras menores hasta recibir atencion.",
         "recommendedFor": [
           "Quemaduras"
-        ]
+        ],
+        "images": [],
+        "specifications": {}
       },
       {
         "id": "vendas-elasticas",
@@ -3124,7 +3132,9 @@
         "recommendedFor": [
           "Fracturas",
           "Esguinces"
-        ]
+        ],
+        "images": [],
+        "specifications": {}
       },
       {
         "id": "guantes-nitrilo",
@@ -3144,7 +3154,9 @@
         "recommendedFor": [
           "Hemorragias",
           "Heridas"
-        ]
+        ],
+        "images": [],
+        "specifications": {}
       },
       {
         "id": "antiseptico-spray",
@@ -3162,7 +3174,9 @@
         "description": "Solucion antiseptica para limpieza inicial de lesiones superficiales.",
         "recommendedFor": [
           "Heridas"
-        ]
+        ],
+        "images": [],
+        "specifications": {}
       },
       {
         "id": "gasas-esteriles",
@@ -3181,7 +3195,9 @@
         "recommendedFor": [
           "Heridas",
           "Hemorragias"
-        ]
+        ],
+        "images": [],
+        "specifications": {}
       },
       {
         "id": "termometro-digital",
@@ -3199,7 +3215,9 @@
         "description": "Termometro de lectura rapida para vigilancia de temperatura corporal.",
         "recommendedFor": [
           "Fiebre"
-        ]
+        ],
+        "images": [],
+        "specifications": {}
       },
       {
         "id": "manta-termica",
@@ -3218,7 +3236,9 @@
         "recommendedFor": [
           "Shock",
           "Sismos"
-        ]
+        ],
+        "images": [],
+        "specifications": {}
       },
       {
         "id": "linterna-emergencia",
@@ -3236,7 +3256,9 @@
         "description": "Linterna de alta autonomia para cortes de energia y evacuaciones nocturnas.",
         "recommendedFor": [
           "Sismos"
-        ]
+        ],
+        "images": [],
+        "specifications": {}
       },
       {
         "id": "radio-manivela",
@@ -3255,7 +3277,9 @@
         "description": "Radio portatil con carga manual para alertas y comunicacion durante desastres.",
         "recommendedFor": [
           "Sismos"
-        ]
+        ],
+        "images": [],
+        "specifications": {}
       },
       {
         "id": "torniquete-tactico",
@@ -3273,7 +3297,9 @@
         "description": "Torniquete para control de hemorragias severas en extremidades.",
         "recommendedFor": [
           "Hemorragias"
-        ]
+        ],
+        "images": [],
+        "specifications": {}
       },
       {
         "id": "vendaje-compresivo",
@@ -3291,7 +3317,9 @@
         "description": "Vendaje de presion para control inicial de sangrados importantes.",
         "recommendedFor": [
           "Hemorragias"
-        ]
+        ],
+        "images": [],
+        "specifications": {}
       },
       {
         "id": "suero-fisiologico",
@@ -3310,7 +3338,9 @@
         "recommendedFor": [
           "Heridas",
           "Intoxicacion"
-        ]
+        ],
+        "images": [],
+        "specifications": {}
       },
       {
         "id": "gel-quemaduras",
@@ -3329,7 +3359,9 @@
         "description": "Gel para enfriar y proteger quemaduras leves durante la atencion inicial.",
         "recommendedFor": [
           "Quemaduras"
-        ]
+        ],
+        "images": [],
+        "specifications": {}
       },
       {
         "id": "collarin-cervical",
@@ -3348,7 +3380,9 @@
         "recommendedFor": [
           "Fracturas",
           "Accidentes"
-        ]
+        ],
+        "images": [],
+        "specifications": {}
       },
       {
         "id": "ferula-moldeable",
@@ -3366,7 +3400,9 @@
         "description": "Ferula compacta moldeable para inmovilizar extremidades lesionadas.",
         "recommendedFor": [
           "Fracturas"
-        ]
+        ],
+        "images": [],
+        "specifications": {}
       },
       {
         "id": "botiquin-auto",
@@ -3386,7 +3422,9 @@
         "recommendedFor": [
           "Accidentes",
           "Heridas"
-        ]
+        ],
+        "images": [],
+        "specifications": {}
       },
       {
         "id": "kit-hemorragias",
@@ -3405,7 +3443,9 @@
         "description": "Kit especializado con insumos para control de sangrado severo.",
         "recommendedFor": [
           "Hemorragias"
-        ]
+        ],
+        "images": [],
+        "specifications": {}
       },
       {
         "id": "kit-rcp-entrenamiento",
@@ -3423,7 +3463,9 @@
         "description": "Set de materiales para practicar secuencia de RCP y ventilaciones seguras.",
         "recommendedFor": [
           "RCP"
-        ]
+        ],
+        "images": [],
+        "specifications": {}
       },
       {
         "id": "protector-facial",
@@ -3441,7 +3483,9 @@
         "description": "Protector facial para reducir exposicion durante atencion cercana.",
         "recommendedFor": [
           "Bioseguridad"
-        ]
+        ],
+        "images": [],
+        "specifications": {}
       },
       {
         "id": "mascarillas-kn95",
@@ -3459,7 +3503,9 @@
         "description": "Mascarillas para proteccion respiratoria en atencion y evacuaciones.",
         "recommendedFor": [
           "Bioseguridad"
-        ]
+        ],
+        "images": [],
+        "specifications": {}
       },
       {
         "id": "alcohol-gel",
@@ -3477,7 +3523,9 @@
         "description": "Alcohol gel para higiene de manos antes y despues de brindar ayuda.",
         "recommendedFor": [
           "Bioseguridad"
-        ]
+        ],
+        "images": [],
+        "specifications": {}
       },
       {
         "id": "sales-rehidratacion",
@@ -3496,7 +3544,9 @@
         "recommendedFor": [
           "Golpe de calor",
           "Intoxicacion"
-        ]
+        ],
+        "images": [],
+        "specifications": {}
       },
       {
         "id": "pastillero-semanal",
@@ -3514,7 +3564,9 @@
         "description": "Organizador para medicacion semanal y seguimiento de tratamientos.",
         "recommendedFor": [
           "Cuidado familiar"
-        ]
+        ],
+        "images": [],
+        "specifications": {}
       },
       {
         "id": "senal-evacuacion",
@@ -3532,7 +3584,9 @@
         "description": "Senal para rutas de evacuacion en hogares, aulas u oficinas.",
         "recommendedFor": [
           "Sismos"
-        ]
+        ],
+        "images": [],
+        "specifications": {}
       },
       {
         "id": "silbato-emergencia",
@@ -3551,7 +3605,9 @@
         "recommendedFor": [
           "Sismos",
           "Accidentes"
-        ]
+        ],
+        "images": [],
+        "specifications": {}
       },
       {
         "id": "bolsa-frio-instantaneo",
@@ -3570,7 +3626,9 @@
         "recommendedFor": [
           "Fracturas",
           "Esguinces"
-        ]
+        ],
+        "images": [],
+        "specifications": {}
       },
       {
         "id": "tijera-trauma",
@@ -3589,7 +3647,9 @@
         "recommendedFor": [
           "Trauma",
           "Hemorragias"
-        ]
+        ],
+        "images": [],
+        "specifications": {}
       },
       {
         "id": "pinza-esteril",
@@ -3607,7 +3667,9 @@
         "description": "Pinza para manipular gasas y material esteril sin contaminacion.",
         "recommendedFor": [
           "Heridas"
-        ]
+        ],
+        "images": [],
+        "specifications": {}
       },
       {
         "id": "manual-primeros-auxilios",
@@ -3627,7 +3689,9 @@
           "RCP",
           "Quemaduras",
           "Sismos"
-        ]
+        ],
+        "images": [],
+        "specifications": {}
       }
     ],
     "coupons": [
@@ -3705,6 +3769,17 @@
       }
     ],
     "orders": [
+      {
+        "id": "ord-1778607619201",
+        "userId": "usr-001",
+        "total": 49.8,
+        "status": "Comprado",
+        "items": [
+          "mascarilla-rcp",
+          "mascarilla-rcp"
+        ],
+        "createdAt": "2026-05-12"
+      },
       {
         "id": "ord-1778565282091",
         "userId": "usr-001",

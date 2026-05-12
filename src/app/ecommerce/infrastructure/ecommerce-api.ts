@@ -4,6 +4,8 @@ import { firstValueFrom } from 'rxjs';
 import { BaseApi } from '../../shared/infrastructure/base-api';
 import { environment } from '../../../environments/environment';
 import { EcommerceData } from '../domain/model/ecommerce.entity';
+import { EcommerceAssembler } from './assemblers/ecommerce.assembler';
+import { EcommerceResource } from './resources/ecommerce.resource';
 
 @Injectable({ providedIn: 'root' })
 export class EcommerceApi extends BaseApi {
@@ -13,11 +15,14 @@ export class EcommerceApi extends BaseApi {
     super();
   }
 
-  getEcommerce(): Promise<EcommerceData> {
-    return firstValueFrom(this.http.get<EcommerceData>(this.endpointUrl));
+  async getEcommerce(): Promise<EcommerceData> {
+    const resource = await firstValueFrom(this.http.get<EcommerceResource>(this.endpointUrl));
+    return EcommerceAssembler.toEntity(resource);
   }
 
-  updateEcommerce(data: EcommerceData): Promise<EcommerceData> {
-    return firstValueFrom(this.http.patch<EcommerceData>(this.endpointUrl, data));
+  async updateEcommerce(data: EcommerceData): Promise<EcommerceData> {
+    const resource = EcommerceAssembler.toResource(data);
+    const saved = await firstValueFrom(this.http.patch<EcommerceResource>(this.endpointUrl, resource));
+    return EcommerceAssembler.toEntity(saved);
   }
 }
