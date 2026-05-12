@@ -1,0 +1,36 @@
+<section class="page-head">
+  <div>
+    <p class="eyebrow">{{ 'shared.medicalSimulation' | translate }}</p>
+    <h2>{{ 'simulations.title' | translate }}</h2>
+    <p>
+      {{ 'simulations.description' | translate }}
+    </p>
+  </div>
+</section>
+
+<section class="simulation-grid">
+  @for (simulation of simulations(); track simulation.id) {
+    <mat-card class="simulation-card card-hover">
+      <div class="media" [style.background-image]="'linear-gradient(135deg, rgba(15,23,42,.28), rgba(14,165,233,.12)), url(' + simulation.imageUrl + ')'">
+        <mat-chip>{{ simulation.emergencyType }}</mat-chip>
+      </div>
+      <mat-card-content class="body">
+        <mat-chip-set>
+          <mat-chip>{{ simulation.difficulty }}</mat-chip>
+          <mat-chip>{{ simulation.durationMinutes }} min</mat-chip>
+          <mat-chip>{{ simulation.xpReward }} XP</mat-chip>
+          <mat-chip>{{ simulation.coinReward }} SafeCoins</mat-chip>
+        </mat-chip-set>
+        <h3>{{ simulation.title }}</h3>
+        <p>{{ simulation.description }}</p>
+        <mat-progress-bar mode="determinate" [value]="simulation.completion" />
+        <div class="footer-row">
+          <strong>{{ simulation.status }}</strong>
+          <a mat-flat-button color="primary" [routerLink]="['/app/simulaciones', simulation.id]">
+            {{ (simulation.status === 'Completado' ? 'shared.review' : 'shared.train') | translate }}
+          </a>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  }
+</section>

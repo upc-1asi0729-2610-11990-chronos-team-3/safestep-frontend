@@ -1,0 +1,126 @@
+@if (simulation(); as current) {
+  <a class="back-link" routerLink="/app/simulaciones">{{ 'simulationDetail.back' | translate }}</a>
+
+  <section class="detail-head">
+    <div>
+      <p class="eyebrow">{{ current.emergencyType }} - {{ current.difficulty }}</p>
+      <h2>{{ current.title }}</h2>
+      <p>{{ current.description }}</p>
+    </div>
+    <aside>
+      <div>
+        <strong>{{ current.xpReward }} XP</strong>
+        <span>{{ current.coinReward }} SafeCoins</span>
+      </div>
+      <small>{{ current.durationMinutes }} {{ 'simulationDetail.estimatedMinutes' | translate }}</small>
+    </aside>
+  </section>
+
+  <section class="learning-goals">
+    @for (goal of current.learningGoals; track goal) {
+      <article>{{ goal }}</article>
+    }
+  </section>
+
+  @if (!completed()) {
+    <section class="step-list">
+      @for (step of current.steps; track step.id; let index = $index) {
+        <article class="step-card">
+          <span class="step-number">{{ 'simulationDetail.module' | translate }} {{ index + 1 }}</span>
+          <h3>{{ step.prompt }}</h3>
+          <div class="options">
+            @for (option of step.options; track option.id) {
+              <button
+                type="button"
+                [class]="optionClass(step.id, option.id, step.correctOptionId)"
+                (click)="selectOption(step.id, option.id)"
+              >
+                <strong>{{ option.label }}</strong>
+                @if (selectedOptions()[step.id] === option.id) {
+                  <span>{{ option.feedback }}</span>
+                }
+              </button>
+            }
+          </div>
+        </article>
+      }
+    </section>
+
+    @if (rewardError(); as message) {
+      <p class="reward-error">{{ message }}</p>
+    }
+
+    <button class="finish-button" type="button" [disabled]="!allAnswered() || savingReward()" (click)="finish()">
+      @if (savingReward()) {
+        Guardando recompensa...
+      } @else {
+        {{ 'simulationDetail.finish' | translate }}
+      }
+    </button>
+  } @else {
+    <section class="result-panel">
+      <p class="eyebrow">{{ 'simulationDetail.finalScreen' | translate }}</p>
+      <h3>{{ 'simulationDetail.result' | translate }}</h3>
+      <div class="result-grid">
+        <article>
+          <span>{{ 'simulationDetail.correctAnswers' | translate }}</span>
+          <strong>{{ score() }} / {{ current.steps.length }}</strong>
+        </article>
+        <article>
+          <span>{{ 'simulationDetail.xpEarned' | translate }}</span>
+          <strong>{{ earnedXp() }}</strong>
+        </article>
+        <article>
+          <span>{{ 'simulationDetail.errorsMade' | translate }}</span>
+          <strong>{{ current.steps.length - score() }}</strong>
+        </article>
+        <article>
+          <span>Precision</span>
+          <strong>{{ accuracyPercent() }}%</strong>
+        </article>
+      </div>
+
+      <div class="coin-result">
+        <div>
+          <p class="eyebrow">SafeCoins</p>
+          <h4>Recompensa de monedas aplicada</h4>
+          <p>
+            Pago base de {{ current.coinReward }} SafeCoins con multiplicador
+            x{{ appliedMultiplier() }} por intento exitoso #{{ successfulAttemptNumber() }}.
+          </p>
+        </div>
+        <div class="coin-grid">
+          <article>
+            <span>Saldo anterior</span>
+            <strong>{{ previousBalance() }}</strong>
+          </article>
+          <article class="earned">
+            <span>Monedas ganadas</span>
+            <strong>+{{ earnedCoins() }}</strong>
+          </article>
+          <article>
+            <span>Nuevo saldo</span>
+            <strong>{{ newBalance() }}</strong>
+          </article>
+        </div>
+      </div>
+
+      <h4>{{ 'simulationDetail.productSuggestions' | translate }}</h4>
+      <div class="product-grid">
+        @for (product of products(); track product.id) {
+          <article>
+            <div class="image-placeholder"></div>
+            <span>{{ product.category }}</span>
+            <h5>{{ product.name }}</h5>
+            <p>S/ {{ product.price }}</p>
+          </article>
+        }
+      </div>
+    </section>
+  }
+} @else {
+  <section class="empty-state">
+    <h2>{{ 'simulationDetail.notFound' | translate }}</h2>
+    <a routerLink="/app/simulaciones">{{ 'simulationDetail.availableSimulations' | translate }}</a>
+  </section>
+}

@@ -1,0 +1,84 @@
+<section class="learning-hero">
+  <div>
+    <mat-chip>{{ 'nav.learning' | translate }}</mat-chip>
+    <h2>Microlecciones, evaluaciones y certificados</h2>
+    <p>
+      Refuerza los errores detectados en simulaciones con contenidos cortos,
+      valida tu dominio con evaluaciones finales y consulta certificados emitidos.
+    </p>
+    <div class="hero-actions">
+      <a mat-flat-button color="primary" routerLink="/app/simulaciones">
+        <mat-icon>play_circle</mat-icon>
+        Practicar simulaciones
+      </a>
+    </div>
+  </div>
+  <aside>
+    <strong>{{ completedLessons() }} / {{ microLessons().length }}</strong>
+    <span>microlecciones completadas</span>
+    <mat-progress-bar mode="determinate" [value]="microLessons().length ? (completedLessons() / microLessons().length) * 100 : 0" />
+  </aside>
+</section>
+
+<section class="lesson-grid">
+  @for (lesson of microLessons(); track lesson.id) {
+    <mat-card class="lesson-card card-hover">
+      <mat-card-content>
+        <div class="icon-box"><mat-icon>school</mat-icon></div>
+        <mat-chip>{{ lesson.topic }}</mat-chip>
+        <h3>{{ lesson.title }}</h3>
+        <p>{{ lesson.description }}</p>
+        <div class="lesson-meta">
+          <span>{{ lesson.estimatedTime }} min</span>
+          <strong>{{ lesson.xpReward }} XP</strong>
+        </div>
+        @if (lesson.hasVerificationQuestion && lesson.verificationQuestion) {
+          <article class="question-box">
+            <strong>{{ lesson.verificationQuestion.question }}</strong>
+            <span>{{ lesson.verificationQuestion.options[lesson.verificationQuestion.correctAnswerIndex] }}</span>
+          </article>
+        }
+      </mat-card-content>
+    </mat-card>
+  }
+</section>
+
+<section class="learning-grid">
+  <mat-card class="panel">
+    <mat-card-header>
+      <mat-card-title>Evaluaciones de modulo</mat-card-title>
+      <mat-card-subtitle>Desbloqueo por simulaciones completadas</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content class="evaluation-list">
+      @for (evaluation of evaluations(); track evaluation.id) {
+        <article>
+          <div>
+            <strong>{{ evaluation.moduleName }}</strong>
+            <span>{{ evaluation.description }}</span>
+          </div>
+          <mat-chip>{{ evaluation.minimumPassingScore }}% minimo</mat-chip>
+          <small>{{ evaluation.totalQuestions }} preguntas - {{ evaluation.estimatedTime }} min - {{ evaluation.maxAttempts }} intentos</small>
+        </article>
+      }
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="panel">
+    <mat-card-header>
+      <mat-card-title>Certificados</mat-card-title>
+      <mat-card-subtitle>Constancias generadas por evaluaciones</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content class="certificate-list">
+      @for (certificate of certificates(); track certificate.id) {
+        <article>
+          <mat-icon>verified</mat-icon>
+          <div>
+            <strong>{{ certificate.moduleName }}</strong>
+            <span>{{ certificate.achievementLevel }} - {{ certificate.score }}%</span>
+            <small>{{ certificate.verificationCode }}</small>
+          </div>
+        </article>
+      }
+    </mat-card-content>
+  </mat-card>
+</section>
