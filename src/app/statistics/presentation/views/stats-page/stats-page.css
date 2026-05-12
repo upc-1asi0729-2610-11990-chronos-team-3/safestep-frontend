@@ -86,7 +86,9 @@ p {
 
 .summary-grid,
 .analytics-grid,
-.mistake-grid {
+.mistake-grid,
+.simulation-performance-grid,
+.recommendation-grid {
   display: grid;
   gap: 16px;
 }
@@ -158,39 +160,12 @@ p {
 
 .panel > .bar-chart,
 .panel > .type-list,
-.panel > .mistake-grid {
+.panel > .mistake-grid,
+.panel > .simulation-performance-grid,
+.panel > .recommendation-grid {
   padding: 22px;
 }
 
-.bar-chart {
-  height: 300px;
-  display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 14px;
-  align-items: end;
-}
-
-.bar-item {
-  height: 100%;
-  display: grid;
-  grid-template-rows: 1fr auto auto;
-  gap: 8px;
-  text-align: center;
-}
-
-.bar-fill {
-  align-self: end;
-  min-height: 12px;
-  border-radius: 10px 10px 4px 4px;
-  background: linear-gradient(180deg, #38bdf8, #0ea5e9 46%, #22c55e);
-  box-shadow: 0 10px 20px rgba(14, 165, 233, 0.22);
-}
-
-.bar-item strong {
-  color: #111827;
-}
-
-.bar-item small,
 .type-list span,
 .mistake-grid span {
   color: #6b7280;
@@ -206,6 +181,43 @@ p {
   border: 1px solid #e5e7eb;
   border-radius: 14px;
   background: #f8fafc;
+}
+
+.simulation-performance-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.simulation-performance-card,
+.recommendation-card {
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  background: #f8fafc;
+}
+
+.simulation-performance-card.pending {
+  opacity: 0.72;
+}
+
+.simulation-performance-card strong,
+.simulation-performance-card span,
+.simulation-performance-card small,
+.recommendation-card strong {
+  display: block;
+}
+
+.mini-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.mini-metrics small {
+  margin: 0;
+  padding: 7px 9px;
+  border-radius: 10px;
+  background: #ffffff;
 }
 
 .type-card strong,
@@ -242,6 +254,10 @@ p {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+.gamification-list {
+  padding: 22px;
+}
+
 .mistake-card {
   padding: 18px;
   border: 1px solid #fee2e2;
@@ -252,6 +268,22 @@ p {
 .mistake-card mat-icon {
   color: #f97316;
   margin-bottom: 10px;
+}
+
+.recommendation-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.recommendation-card mat-icon {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 12px;
+  border-radius: 14px;
+  background: #e0f2fe;
+  color: #0284c7;
+  font-size: 28px;
 }
 
 .mistake-grid strong,
@@ -288,7 +320,9 @@ p {
   .stats-hero,
   .summary-grid,
   .analytics-grid,
-  .mistake-grid {
+  .mistake-grid,
+  .simulation-performance-grid,
+  .recommendation-grid {
     grid-template-columns: 1fr;
   }
 }

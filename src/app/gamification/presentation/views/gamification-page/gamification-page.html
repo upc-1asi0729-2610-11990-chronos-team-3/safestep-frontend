@@ -69,8 +69,8 @@
         <mat-card-subtitle>{{ 'gamification.missionsSubtitle' | translate }}</mat-card-subtitle>
       </mat-card-header>
       <mat-card-content class="mission-list">
-        @for (mission of game.missions; track mission.id) {
-          <article class="mission-card">
+        @for (mission of missionPreview(); track mission.id) {
+          <article class="mission-card mission-active">
             <div class="mission-head">
               <span>
                 <strong>{{ mission.title }}</strong>
@@ -80,21 +80,25 @@
             </div>
             <mat-progress-bar
               mode="determinate"
-              [value]="mission.progress >= mission.goal ? 100 : (mission.progress / mission.goal) * 100"
+              [value]="missionProgress(mission)"
             />
             <small>{{ mission.progress }} / {{ mission.goal }} {{ 'stats.completed' | translate }}</small>
           </article>
         }
+        <button mat-stroked-button type="button" class="panel-action" (click)="openMissionInventory()">
+          <mat-icon>fact_check</mat-icon>
+          Ver todas las misiones
+        </button>
       </mat-card-content>
     </mat-card>
 
     <mat-card class="panel ranking-panel">
       <mat-card-header>
         <mat-card-title>{{ 'gamification.weeklyRanking' | translate }}</mat-card-title>
-        <mat-card-subtitle>{{ 'gamification.healthyCompetition' | translate }}</mat-card-subtitle>
+      <mat-card-subtitle>{{ 'gamification.healthyCompetition' | translate }}</mat-card-subtitle>
       </mat-card-header>
       <mat-list>
-        @for (entry of game.leaderboard; track entry.rank) {
+        @for (entry of topRanking(); track entry.rank) {
           <mat-list-item [class.current]="entry.name === 'Ana Torres'">
             <span class="rank-badge" matListItemIcon>{{ entry.rank }}</span>
             <span matListItemTitle>{{ entry.name }}</span>
@@ -102,8 +106,86 @@
           </mat-list-item>
         }
       </mat-list>
+      @if (currentUserRanking(); as userRank) {
+        <div class="user-rank-card">
+          <span class="rank-badge">{{ userRank.rank }}</span>
+          <span>
+            <strong>Tu posicion: {{ userRank.name }}</strong>
+            <small>{{ userRank.xp }} XP - {{ userRank.streak }} dias de racha</small>
+          </span>
+        </div>
+      }
     </mat-card>
   </section>
+
+  @if (missionInventoryOpen()) {
+    <mat-card class="panel inventory-panel">
+      <mat-card-header>
+        <mat-card-title>Inventario de misiones</mat-card-title>
+        <mat-card-subtitle>Activas, disponibles y bloqueadas por requisitos</mat-card-subtitle>
+        <button mat-button type="button" (click)="closeMissionInventory()">Cerrar</button>
+      </mat-card-header>
+      <mat-card-content class="mission-sections">
+        <section>
+          <h3>Misiones activas</h3>
+          <div class="mission-card-grid">
+            @for (mission of activeMissions(); track mission.id) {
+              <article class="mission-card mission-active">
+                <div class="mission-head">
+                  <span>
+                    <strong>{{ mission.title }}</strong>
+                    <small>{{ mission.instructions }}</small>
+                  </span>
+                  <mat-chip>{{ mission.cadence }}</mat-chip>
+                </div>
+                <mat-progress-bar mode="determinate" [value]="missionProgress(mission)" />
+                <small>Recompensa: {{ mission.rewardXp }} XP - {{ mission.rewardCoins }} SafeCoins</small>
+                <small>Requisito: {{ mission.unlockRequirement }}</small>
+              </article>
+            }
+          </div>
+        </section>
+
+        <section>
+          <h3>Misiones que puedes aceptar</h3>
+          <div class="mission-card-grid">
+            @for (mission of availableMissions(); track mission.id) {
+              <article class="mission-card mission-available">
+                <div class="mission-head">
+                  <span>
+                    <strong>{{ mission.title }}</strong>
+                    <small>{{ mission.instructions }}</small>
+                  </span>
+                  <mat-chip>{{ mission.cadence }}</mat-chip>
+                </div>
+                <small>Recompensa: {{ mission.rewardXp }} XP - {{ mission.rewardCoins }} SafeCoins</small>
+                <small>Requisito: {{ mission.unlockRequirement }}</small>
+              </article>
+            }
+          </div>
+        </section>
+
+        <section>
+          <h3>Misiones bloqueadas</h3>
+          <div class="mission-card-grid">
+            @for (mission of lockedMissions(); track mission.id) {
+              <article class="mission-card mission-locked">
+                <div class="mission-head">
+                  <span>
+                    <strong>{{ mission.title }}</strong>
+                    <small>{{ mission.instructions }}</small>
+                  </span>
+                  <mat-chip>Bloqueada</mat-chip>
+                </div>
+                <small>Recompensa: {{ mission.rewardXp }} XP - {{ mission.rewardCoins }} SafeCoins</small>
+                <small>Requisito: {{ mission.unlockRequirement }}</small>
+              </article>
+            }
+          </div>
+        </section>
+      </mat-card-content>
+    </mat-card>
+  }
 
   <mat-card class="panel">
     <mat-card-header>
@@ -111,16 +193,60 @@
       <mat-card-subtitle>{{ 'gamification.unlockedAndPending' | translate }}</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content class="badge-grid">
-      @for (badge of game.badges; track badge.id) {
-        <article class="badge-card" [class.locked]="!badge.unlocked">
-          <mat-icon>{{ badge.unlocked ? 'workspace_premium' : 'lock' }}</mat-icon>
+      @for (badge of badgePreview(); track badge.id) {
+        <article class="badge-card" [class]="rarityClass(badge)">
+          <mat-icon>workspace_premium</mat-icon>
           <mat-chip>{{ badge.rarity }}</mat-chip>
           <h4>{{ badge.name }}</h4>
           <p>{{ badge.description }}</p>
         </article>
       }
+      <button mat-stroked-button type="button" class="panel-action badge-action" (click)="openBadgeInventory()">
+        <mat-icon>inventory_2</mat-icon>
+        Ver todas las insignias
+      </button>
     </mat-card-content>
   </mat-card>
+
+  @if (badgeInventoryOpen()) {
+    <mat-card class="panel inventory-panel">
+      <mat-card-header>
+        <mat-card-title>Inventario de insignias</mat-card-title>
+        <mat-card-subtitle>Insignias obtenidas y requisitos pendientes</mat-card-subtitle>
+        <button mat-button type="button" (click)="closeBadgeInventory()">Cerrar</button>
+      </mat-card-header>
+      <mat-card-content class="badge-inventory">
+        <section>
+          <h3>Insignias del usuario</h3>
+          <div class="badge-grid inventory-badge-grid">
+            @for (badge of unlockedBadges(); track badge.id) {
+              <article class="badge-card" [class]="rarityClass(badge)">
+                <mat-icon>workspace_premium</mat-icon>
+                <mat-chip>{{ badge.rarity }}</mat-chip>
+                <h4>{{ badge.name }}</h4>
+                <p>{{ badge.description }}</p>
+              </article>
+            }
+          </div>
+        </section>
+
+        <section>
+          <h3>Insignias bloqueadas</h3>
+          <div class="badge-grid inventory-badge-grid">
+            @for (badge of lockedBadges(); track badge.id) {
+              <article class="badge-card locked" [class]="rarityClass(badge)">
+                <mat-icon>lock</mat-icon>
+                <mat-chip>{{ badge.rarity }}</mat-chip>
+                <h4>{{ badge.name }}</h4>
+                <p>{{ badge.description }}</p>
+                <small>Requisito: {{ badge.unlockRequirement }}</small>
+              </article>
+            }
+          </div>
+        </section>
+      </mat-card-content>
+    </mat-card>
+  }
 
   <section class="content-grid extra-grid">
     <mat-card class="panel">

@@ -10,7 +10,7 @@
       "level": 12,
       "xp": 6840,
       "nextLevelXp": 8000,
-      "safeCoins": 1410,
+      "safeCoins": 1315,
       "streakDays": 18,
       "completedSimulations": 24
     },
@@ -416,8 +416,8 @@
         "durationMinutes": 14,
         "xpReward": 360,
         "imageUrl": "/assets/prototype/cursos/portada/c2-atragantamiento-portada.png",
-        "status": "Disponible",
-        "completion": 0,
+        "status": "Completado",
+        "completion": 100,
         "description": "Simulacion guiada para practicar decisiones clave ante atragantamiento con feedback inmediato y recomendaciones finales.",
         "learningGoals": [
           "Distinguir obstruccion parcial y total",
@@ -534,8 +534,8 @@
         "durationMinutes": 12,
         "xpReward": 300,
         "imageUrl": "/assets/prototype/cursos/portada/c3-quemaduras-portada.png",
-        "status": "Completado",
-        "completion": 100,
+        "status": "Disponible",
+        "completion": 0,
         "description": "Simulacion guiada para practicar decisiones clave ante quemaduras con feedback inmediato y recomendaciones finales.",
         "learningGoals": [
           "Enfriar correctamente la zona",
@@ -1262,8 +1262,8 @@
         "durationMinutes": 11,
         "xpReward": 280,
         "imageUrl": "/assets/prototype/cursos/portada/c9-desmayo-sincope-portada.png",
-        "status": "Completado",
-        "completion": 100,
+        "status": "Disponible",
+        "completion": 0,
         "description": "Simulacion guiada para practicar decisiones clave ante desmayo con feedback inmediato y recomendaciones finales.",
         "learningGoals": [
           "Evaluar respuesta y respiracion",
@@ -1986,8 +1986,8 @@
         "durationMinutes": 10,
         "xpReward": 250,
         "imageUrl": "/assets/prototype/cursos/portada/c15-bioseguridad-portada.png",
-        "status": "Completado",
-        "completion": 100,
+        "status": "Disponible",
+        "completion": 0,
         "description": "Simulacion guiada para practicar decisiones clave ante bioseguridad con feedback inmediato y recomendaciones finales.",
         "learningGoals": [
           "Usar proteccion personal",
@@ -2489,40 +2489,6 @@
         "scenarioSlug": "rcp-basico"
       },
       {
-        "id": 2,
-        "userId": 1,
-        "scenarioId": 7,
-        "mode": "evaluation",
-        "startedAt": "2025-05-02T14:00:00Z",
-        "completedAt": "2025-05-02T14:10:00Z",
-        "score": 75,
-        "totalSteps": 4,
-        "correctSteps": 3,
-        "timeElapsed": 600,
-        "errors": [
-          {
-            "stepNumber": 3,
-            "error": "Retiró la gasa para verificar",
-            "severity": "critical"
-          }
-        ],
-        "scenarioSlug": "intoxicacion-hogar"
-      },
-      {
-        "id": 3,
-        "userId": 2,
-        "scenarioId": 2,
-        "mode": "practice",
-        "startedAt": "2025-05-03T09:15:00Z",
-        "completedAt": "2025-05-03T09:25:00Z",
-        "score": 88,
-        "totalSteps": 4,
-        "correctSteps": 4,
-        "timeElapsed": 600,
-        "errors": [],
-        "scenarioSlug": "atragantamiento"
-      },
-      {
         "id": 4,
         "userId": 1,
         "scenarioId": 1,
@@ -2541,6 +2507,20 @@
           }
         ],
         "scenarioSlug": "rcp-basico"
+      },
+      {
+        "id": 5,
+        "userId": 1,
+        "scenarioId": 2,
+        "scenarioSlug": "atragantamiento",
+        "mode": "practice",
+        "startedAt": "2026-05-12T05:44:00.155Z",
+        "completedAt": "2026-05-12T05:58:00.155Z",
+        "score": 100,
+        "totalSteps": 4,
+        "correctSteps": 4,
+        "timeElapsed": 840,
+        "errors": []
       }
     ],
     "microLessons": [
@@ -2976,7 +2956,7 @@
       "level": 12,
       "xp": 6840,
       "nextLevelXp": 8000,
-      "safeCoins": 1410,
+      "safeCoins": 1315,
       "streakDays": 18,
       "weeklyRank": 4
     },
@@ -2988,7 +2968,10 @@
         "progress": 1,
         "goal": 1,
         "rewardXp": 120,
-        "rewardCoins": 40
+        "rewardCoins": 40,
+        "status": "Activa",
+        "instructions": "Inicia y finaliza cualquier simulacion disponible durante el dia.",
+        "unlockRequirement": "Nivel 1 y cuenta activa"
       },
       {
         "id": "daily-2",
@@ -2997,7 +2980,10 @@
         "progress": 0,
         "goal": 1,
         "rewardXp": 60,
-        "rewardCoins": 25
+        "rewardCoins": 25,
+        "status": "Disponible",
+        "instructions": "Abre la tienda y revisa una recomendacion personalizada de producto.",
+        "unlockRequirement": "Completar al menos una simulacion"
       },
       {
         "id": "daily-3",
@@ -3006,7 +2992,10 @@
         "progress": 2,
         "goal": 3,
         "rewardXp": 90,
-        "rewardCoins": 30
+        "rewardCoins": 30,
+        "status": "Activa",
+        "instructions": "Responde correctamente tres decisiones dentro de una o varias simulaciones.",
+        "unlockRequirement": "Nivel 2"
       },
       {
         "id": "daily-4",
@@ -3015,7 +3004,10 @@
         "progress": 1,
         "goal": 1,
         "rewardXp": 100,
-        "rewardCoins": 35
+        "rewardCoins": 35,
+        "status": "Activa",
+        "instructions": "Completa un modulo relacionado con RCP basico o intermedio.",
+        "unlockRequirement": "Tener desbloqueada la ruta RCP"
       },
       {
         "id": "daily-5",
@@ -3024,7 +3016,10 @@
         "progress": 1,
         "goal": 1,
         "rewardXp": 40,
-        "rewardCoins": 15
+        "rewardCoins": 15,
+        "status": "Disponible",
+        "instructions": "Lee los objetivos de aprendizaje antes de iniciar una simulacion.",
+        "unlockRequirement": "Cuenta activa"
       },
       {
         "id": "daily-6",
@@ -3033,7 +3028,10 @@
         "progress": 1,
         "goal": 1,
         "rewardXp": 80,
-        "rewardCoins": 30
+        "rewardCoins": 30,
+        "status": "Activa",
+        "instructions": "Realiza una accion de entrenamiento para mantener tu racha diaria.",
+        "unlockRequirement": "Racha activa de al menos 1 dia"
       },
       {
         "id": "daily-7",
@@ -3042,7 +3040,10 @@
         "progress": 0,
         "goal": 1,
         "rewardXp": 140,
-        "rewardCoins": 50
+        "rewardCoins": 50,
+        "status": "Disponible",
+        "instructions": "Consulta tus estadisticas y elige una prioridad de entrenamiento.",
+        "unlockRequirement": "Completar 3 simulaciones"
       },
       {
         "id": "weekly-1",
@@ -3051,7 +3052,10 @@
         "progress": 3,
         "goal": 5,
         "rewardXp": 500,
-        "rewardCoins": 180
+        "rewardCoins": 180,
+        "status": "Activa",
+        "instructions": "Completa cinco simulaciones durante la semana con cualquier puntaje.",
+        "unlockRequirement": "Nivel 5"
       },
       {
         "id": "weekly-2",
@@ -3060,7 +3064,10 @@
         "progress": 2,
         "goal": 3,
         "rewardXp": 420,
-        "rewardCoins": 150
+        "rewardCoins": 150,
+        "status": "Disponible",
+        "instructions": "Obt?n 80% o mas de precision en tres simulaciones distintas.",
+        "unlockRequirement": "Nivel 6"
       },
       {
         "id": "weekly-3",
@@ -3069,7 +3076,10 @@
         "progress": 720,
         "goal": 1000,
         "rewardXp": 600,
-        "rewardCoins": 220
+        "rewardCoins": 220,
+        "status": "Bloqueada",
+        "instructions": "Completa dos simulaciones avanzadas sin bajar de 70% de precision.",
+        "unlockRequirement": "Nivel 10 y 10 simulaciones completadas"
       },
       {
         "id": "weekly-4",
@@ -3078,7 +3088,10 @@
         "progress": 0,
         "goal": 1,
         "rewardXp": 450,
-        "rewardCoins": 160
+        "rewardCoins": 160,
+        "status": "Bloqueada",
+        "instructions": "Mant?n una racha semanal completa y reclama el bono final.",
+        "unlockRequirement": "Racha de 7 dias consecutivos"
       },
       {
         "id": "weekly-5",
@@ -3087,7 +3100,10 @@
         "progress": 84,
         "goal": 85,
         "rewardXp": 520,
-        "rewardCoins": 190
+        "rewardCoins": 190,
+        "status": "Disponible",
+        "instructions": "Revisa tres productos sugeridos por tus errores recientes.",
+        "unlockRequirement": "Tener errores registrados en estadisticas"
       },
       {
         "id": "weekly-6",
@@ -3096,7 +3112,10 @@
         "progress": 0,
         "goal": 1,
         "rewardXp": 560,
-        "rewardCoins": 200
+        "rewardCoins": 200,
+        "status": "Bloqueada",
+        "instructions": "Canjea un cupon con SafeCoins acumuladas por entrenamiento.",
+        "unlockRequirement": "Tener 500 SafeCoins disponibles"
       },
       {
         "id": "weekly-7",
@@ -3105,7 +3124,10 @@
         "progress": 320,
         "goal": 500,
         "rewardXp": 360,
-        "rewardCoins": 140
+        "rewardCoins": 140,
+        "status": "Bloqueada",
+        "instructions": "Alcanza el top 3 del ranking semanal de entrenamiento.",
+        "unlockRequirement": "Nivel 12 y mas de 10500 XP semanal"
       }
     ],
     "badges": [
@@ -3114,126 +3136,144 @@
         "name": "RCP inicial",
         "rarity": "Comun",
         "unlocked": true,
-        "description": "Completaste tu primera simulacion de RCP."
+        "description": "Completaste tu primera simulacion de RCP.",
+        "unlockRequirement": "Completar una simulacion de RCP."
       },
       {
         "id": "bdg-streak-7",
         "name": "Racha de 7 dias",
         "rarity": "Rara",
         "unlocked": true,
-        "description": "Practicaste durante una semana seguida."
+        "description": "Practicaste durante una semana seguida.",
+        "unlockRequirement": "Mantener una racha de 7 dias."
       },
       {
         "id": "bdg-streak-30",
         "name": "Racha de 30 dias",
         "rarity": "Epica",
         "unlocked": false,
-        "description": "Mantente activo durante 30 dias."
+        "description": "Mantente activo durante 30 dias.",
+        "unlockRequirement": "Mantener una racha de 30 dias."
       },
       {
         "id": "bdg-hemorragias",
         "name": "Control de sangrado",
         "rarity": "Rara",
         "unlocked": true,
-        "description": "Dominaste conceptos de hemorragias."
+        "description": "Dominaste conceptos de hemorragias.",
+        "unlockRequirement": "Completar la ruta de control de hemorragias."
       },
       {
         "id": "bdg-sismos",
         "name": "Brigadista sismico",
         "rarity": "Rara",
         "unlocked": true,
-        "description": "Completaste escenarios de sismo."
+        "description": "Completaste escenarios de sismo.",
+        "unlockRequirement": "Completar escenarios de preparacion ante sismos."
       },
       {
         "id": "bdg-perfect",
         "name": "Sin errores",
         "rarity": "Epica",
         "unlocked": false,
-        "description": "Completa una simulacion sin fallos."
+        "description": "Completa una simulacion sin fallos.",
+        "unlockRequirement": "Completar una simulacion sin errores."
       },
       {
         "id": "bdg-shop",
         "name": "Preparador de kit",
         "rarity": "Comun",
         "unlocked": true,
-        "description": "Revisaste productos recomendados."
+        "description": "Revisaste productos recomendados.",
+        "unlockRequirement": "Revisar productos recomendados en la tienda."
       },
       {
         "id": "bdg-bio",
         "name": "Bioseguridad",
         "rarity": "Comun",
         "unlocked": true,
-        "description": "Aplicaste proteccion personal correctamente."
+        "description": "Aplicaste proteccion personal correctamente.",
+        "unlockRequirement": "Aplicar correctamente medidas de bioseguridad."
       },
       {
         "id": "bdg-advanced",
         "name": "Modo avanzado",
         "rarity": "Epica",
         "unlocked": false,
-        "description": "Completa tres simulaciones avanzadas."
+        "description": "Completa tres simulaciones avanzadas.",
+        "unlockRequirement": "Cumplir el reto asociado a esta insignia."
       },
       {
         "id": "bdg-pediatric",
         "name": "Cuidado pediatrico",
         "rarity": "Rara",
         "unlocked": false,
-        "description": "Completa primeros auxilios en ninos."
+        "description": "Completa primeros auxilios en ninos.",
+        "unlockRequirement": "Cumplir el reto asociado a esta insignia."
       },
       {
         "id": "bdg-fire",
         "name": "Respuesta a quemaduras",
         "rarity": "Comun",
         "unlocked": true,
-        "description": "Completaste atencion inicial de quemaduras."
+        "description": "Completaste atencion inicial de quemaduras.",
+        "unlockRequirement": "Cumplir el reto asociado a esta insignia."
       },
       {
         "id": "bdg-trauma",
         "name": "Trauma esencial",
         "rarity": "Rara",
         "unlocked": false,
-        "description": "Practica fracturas y accidentes."
+        "description": "Practica fracturas y accidentes.",
+        "unlockRequirement": "Cumplir el reto asociado a esta insignia."
       },
       {
         "id": "bdg-leader",
         "name": "Top 10 semanal",
         "rarity": "Epica",
         "unlocked": true,
-        "description": "Entraste al top 10 del ranking."
+        "description": "Entraste al top 10 del ranking.",
+        "unlockRequirement": "Cumplir el reto asociado a esta insignia."
       },
       {
         "id": "bdg-mentor",
         "name": "Mentor comunitario",
         "rarity": "Legendaria",
         "unlocked": false,
-        "description": "Comparte logros y ayuda a otros."
+        "description": "Comparte logros y ayuda a otros.",
+        "unlockRequirement": "Cumplir el reto asociado a esta insignia."
       },
       {
         "id": "bdg-fast",
         "name": "Respuesta rapida",
         "rarity": "Rara",
         "unlocked": true,
-        "description": "Tomaste decisiones correctas rapidamente."
+        "description": "Tomaste decisiones correctas rapidamente.",
+        "unlockRequirement": "Cumplir el reto asociado a esta insignia."
       },
       {
         "id": "bdg-toxic",
         "name": "Alerta toxica",
         "rarity": "Comun",
         "unlocked": false,
-        "description": "Completa intoxicaciones en el hogar."
+        "description": "Completa intoxicaciones en el hogar.",
+        "unlockRequirement": "Cumplir el reto asociado a esta insignia."
       },
       {
         "id": "bdg-heat",
         "name": "Control de calor",
         "rarity": "Comun",
         "unlocked": false,
-        "description": "Completa golpe de calor."
+        "description": "Completa golpe de calor.",
+        "unlockRequirement": "Cumplir el reto asociado a esta insignia."
       },
       {
         "id": "bdg-master",
         "name": "Maestria SafeStep",
         "rarity": "Legendaria",
         "unlocked": false,
-        "description": "Completa todos los tipos de emergencia."
+        "description": "Completa todos los tipos de emergencia.",
+        "unlockRequirement": "Cumplir el reto asociado a esta insignia."
       }
     ],
     "leaderboard": [
@@ -4471,32 +4511,18 @@
     ],
     "coinTransactions": [
       {
-        "id": "coin-tx-1778558456043",
+        "id": "coin-tx-1778565480155",
         "userId": "usr-001",
-        "simulationId": "quemaduras",
-        "simulationTitle": "Atencion inicial de quemaduras",
+        "simulationId": "atragantamiento",
+        "simulationTitle": "Atragantamiento y maniobra de Heimlich",
         "attemptNumber": 1,
         "successfulAttemptNumber": 1,
-        "baseCoins": 72,
+        "baseCoins": 106,
         "multiplier": 1,
         "accuracy": 1,
-        "earnedCoins": 72,
+        "earnedCoins": 106,
         "successful": true,
-        "createdAt": "2026-05-12T04:00:56.043Z"
-      },
-      {
-        "id": "coin-tx-1778221857771",
-        "userId": "usr-001",
-        "simulationId": "bioseguridad",
-        "simulationTitle": "Bioseguridad antes de atender",
-        "attemptNumber": 1,
-        "successfulAttemptNumber": 1,
-        "baseCoins": 60,
-        "multiplier": 1,
-        "accuracy": 1,
-        "earnedCoins": 60,
-        "successful": true,
-        "createdAt": "2026-05-08T06:30:57.771Z"
+        "createdAt": "2026-05-12T05:58:00.155Z"
       },
       {
         "id": "coin-tx-1778221783021",
@@ -4527,20 +4553,6 @@
         "createdAt": "2026-04-22T09:30:00.000Z"
       },
       {
-        "id": "coin-tx-2",
-        "userId": "usr-001",
-        "simulationId": "hemorragia-control",
-        "simulationTitle": "Control de hemorragias externas",
-        "attemptNumber": 1,
-        "successfulAttemptNumber": 1,
-        "baseCoins": 92,
-        "multiplier": 1,
-        "accuracy": 0.75,
-        "earnedCoins": 69,
-        "successful": true,
-        "createdAt": "2026-04-23T14:12:00.000Z"
-      },
-      {
         "id": "coin-tx-3",
         "userId": "usr-001",
         "simulationId": "rcp-basico",
@@ -4567,7 +4579,7 @@
         "oldPrice": 109.9,
         "rating": 4.8,
         "stock": 34,
-        "imageUrl": "/assets/images/products/kit-hogar.png",
+        "imageUrl": "/assets/images/productosTienda/kit-emergencia-familiar.png",
         "tags": [
           "Bestseller",
           "Hogar"
@@ -4587,7 +4599,7 @@
         "price": 159.9,
         "rating": 4.9,
         "stock": 18,
-        "imageUrl": "/assets/images/products/mochila-emergencia.png",
+        "imageUrl": "/assets/images/productosTienda/mochila-sismos.jpg",
         "tags": [
           "Sismos",
           "72 horas"
@@ -4605,7 +4617,7 @@
         "price": 24.9,
         "rating": 4.7,
         "stock": 72,
-        "imageUrl": "/assets/images/products/mascarilla-rcp.png",
+        "imageUrl": "/assets/images/productosTienda/mascarilla-rcp.jpg",
         "tags": [
           "RCP",
           "Portatil"
@@ -4623,7 +4635,7 @@
         "price": 19.9,
         "rating": 4.5,
         "stock": 50,
-        "imageUrl": "/assets/images/products/apposito-quemaduras.png",
+        "imageUrl": "/assets/images/productosTienda/aposito-quemaduras.jpg",
         "tags": [
           "Esteril",
           "Quemaduras"
@@ -4641,7 +4653,7 @@
         "price": 14.9,
         "rating": 4.4,
         "stock": 88,
-        "imageUrl": "/assets/images/products/vendas-elasticas.png",
+        "imageUrl": "/assets/images/productosTienda/venda-elasticaa-10cm.jpg",
         "tags": [
           "Vendaje",
           "Deporte"
@@ -4661,7 +4673,7 @@
         "oldPrice": 49.9,
         "rating": 4.6,
         "stock": 64,
-        "imageUrl": "/assets/images/products/guantes-nitrilo.png",
+        "imageUrl": "/assets/images/productosTienda/guantes-nitrilo.jpg",
         "tags": [
           "Bioseguridad",
           "Sin latex"
@@ -4680,7 +4692,7 @@
         "price": 18.5,
         "rating": 4.3,
         "stock": 76,
-        "imageUrl": "/assets/images/products/antiseptico-spray.png",
+        "imageUrl": "/assets/images/productosTienda/spray-antiseptico.png",
         "tags": [
           "Limpieza",
           "Heridas"
@@ -4698,7 +4710,7 @@
         "price": 12.9,
         "rating": 4.5,
         "stock": 120,
-        "imageUrl": "/assets/images/products/gasas-esteriles.png",
+        "imageUrl": "/assets/images/productosTienda/gasa-esteriles.jpg",
         "tags": [
           "Esteril",
           "Curacion"
@@ -4717,7 +4729,7 @@
         "price": 29.9,
         "rating": 4.6,
         "stock": 44,
-        "imageUrl": "/assets/images/products/termometro-digital.png",
+        "imageUrl": "/assets/images/productosTienda/termometro-digital-flexible.jpg",
         "tags": [
           "Fiebre",
           "Hogar"
@@ -4735,7 +4747,7 @@
         "price": 16.9,
         "rating": 4.7,
         "stock": 90,
-        "imageUrl": "/assets/images/products/manta-termica.png",
+        "imageUrl": "/assets/images/productosTienda/manta-termica.jpg",
         "tags": [
           "Hipotermia",
           "Compacta"
@@ -4754,7 +4766,7 @@
         "price": 42.9,
         "rating": 4.4,
         "stock": 35,
-        "imageUrl": "/assets/images/products/linterna-emergencia.png",
+        "imageUrl": "/assets/images/productosTienda/linterna-led-recargable.png",
         "tags": [
           "LED",
           "Recargable"
@@ -4773,7 +4785,7 @@
         "oldPrice": 95.9,
         "rating": 4.8,
         "stock": 21,
-        "imageUrl": "/assets/images/products/radio-manivela.png",
+        "imageUrl": "/assets/images/productosTienda/radio-emergencia-manivela.jpg",
         "tags": [
           "Radio",
           "Solar"
@@ -4791,7 +4803,7 @@
         "price": 54.9,
         "rating": 4.7,
         "stock": 28,
-        "imageUrl": "/assets/images/products/torniquete-tactico.png",
+        "imageUrl": "/assets/images/productosTienda/torniquete-emergencia.jpg",
         "tags": [
           "Hemorragia",
           "Control"
@@ -4809,7 +4821,7 @@
         "price": 44.9,
         "rating": 4.6,
         "stock": 32,
-        "imageUrl": "/assets/images/products/vendaje-compresivo.png",
+        "imageUrl": "/assets/images/productosTienda/vendaje-compresivo-israeli.jpg",
         "tags": [
           "Presion",
           "Trauma"
@@ -4827,7 +4839,7 @@
         "price": 9.9,
         "rating": 4.4,
         "stock": 110,
-        "imageUrl": "/assets/images/products/suero-fisiologico.png",
+        "imageUrl": "/assets/images/productosTienda/suero-fisiologico.jpg",
         "tags": [
           "Limpieza",
           "Irrigacion"
@@ -4847,7 +4859,7 @@
         "oldPrice": 34.9,
         "rating": 4.5,
         "stock": 46,
-        "imageUrl": "/assets/images/products/gel-quemaduras.png",
+        "imageUrl": "/assets/images/productosTienda/hidrogel-quemaduras.jpeg",
         "tags": [
           "Hidrogel",
           "Alivio"
@@ -4865,7 +4877,7 @@
         "price": 69.9,
         "rating": 4.3,
         "stock": 16,
-        "imageUrl": "/assets/images/products/collarin-cervical.png",
+        "imageUrl": "/assets/images/productosTienda/collarin-cervical.jpg",
         "tags": [
           "Trauma",
           "Inmovilizacion"
@@ -4884,7 +4896,7 @@
         "price": 49.9,
         "rating": 4.6,
         "stock": 23,
-        "imageUrl": "/assets/images/products/ferula-moldeable.png",
+        "imageUrl": "/assets/images/productosTienda/ferula-moldeable.jpg",
         "tags": [
           "Inmovilizacion",
           "Ligera"
@@ -4903,7 +4915,7 @@
         "oldPrice": 89.9,
         "rating": 4.5,
         "stock": 27,
-        "imageUrl": "/assets/images/products/botiquin-auto.png",
+        "imageUrl": "/assets/images/productosTienda/botiquin-auto.jpg",
         "tags": [
           "Auto",
           "Viaje"
@@ -4923,7 +4935,7 @@
         "oldPrice": 149.9,
         "rating": 4.9,
         "stock": 15,
-        "imageUrl": "/assets/images/products/kit-hemorragias.png",
+        "imageUrl": "/assets/images/productosTienda/kit-control-hemorragia.jpg",
         "tags": [
           "Trauma",
           "Hemorragia"
@@ -4941,7 +4953,7 @@
         "price": 119.9,
         "rating": 4.8,
         "stock": 20,
-        "imageUrl": "/assets/images/products/kit-rcp-entrenamiento.png",
+        "imageUrl": "/assets/images/productosTienda/kit-rcp-entrenamiento.jpeg",
         "tags": [
           "Practica",
           "RCP"
@@ -4959,7 +4971,7 @@
         "price": 22.9,
         "rating": 4.2,
         "stock": 60,
-        "imageUrl": "/assets/images/products/protector-facial.png",
+        "imageUrl": "/assets/images/productosTienda/protector-facial-transparente.jpg",
         "tags": [
           "Bioseguridad",
           "Reusable"
@@ -4977,7 +4989,7 @@
         "price": 28.9,
         "rating": 4.4,
         "stock": 95,
-        "imageUrl": "/assets/images/products/mascarillas-kn95.png",
+        "imageUrl": "/assets/images/productosTienda/pack-mascarillas-kn95-10.jpg",
         "tags": [
           "KN95",
           "Respiratorio"
@@ -4995,7 +5007,7 @@
         "price": 17.9,
         "rating": 4.5,
         "stock": 130,
-        "imageUrl": "/assets/images/products/alcohol-gel.png",
+        "imageUrl": "/assets/images/productosTienda/alcohol-gel.png",
         "tags": [
           "Desinfeccion",
           "Higiene"
@@ -5013,7 +5025,7 @@
         "price": 11.9,
         "rating": 4.3,
         "stock": 58,
-        "imageUrl": "/assets/images/products/sales-rehidratacion.png",
+        "imageUrl": "/assets/images/productosTienda/sales-rehidratacion-oral.jpg",
         "tags": [
           "Hidratacion",
           "Calor"
@@ -5032,7 +5044,7 @@
         "price": 13.9,
         "rating": 4.2,
         "stock": 47,
-        "imageUrl": "/assets/images/products/pastillero-semanal.png",
+        "imageUrl": "/assets/images/productosTienda/pastillero-semanal.jpg",
         "tags": [
           "Organizacion",
           "Hogar"
@@ -5050,7 +5062,7 @@
         "price": 31.9,
         "rating": 4.4,
         "stock": 36,
-        "imageUrl": "/assets/images/products/senal-evacuacion.png",
+        "imageUrl": "/assets/images/productosTienda/senal-evacuacion.jpg",
         "tags": [
           "Evacuacion",
           "Visible"
@@ -5068,7 +5080,7 @@
         "price": 8.9,
         "rating": 4.1,
         "stock": 140,
-        "imageUrl": "/assets/images/products/silbato-emergencia.png",
+        "imageUrl": "/assets/images/productosTienda/silbato-emergencia.jpg",
         "tags": [
           "Rescate",
           "Compacto"
@@ -5087,7 +5099,7 @@
         "price": 10.9,
         "rating": 4.3,
         "stock": 83,
-        "imageUrl": "/assets/images/products/bolsa-frio-instantaneo.png",
+        "imageUrl": "/assets/images/productosTienda/bolso-frio-instantaneo.jpg",
         "tags": [
           "Golpes",
           "Deporte"
@@ -5106,7 +5118,7 @@
         "price": 26.9,
         "rating": 4.7,
         "stock": 41,
-        "imageUrl": "/assets/images/products/tijera-trauma.png",
+        "imageUrl": "/assets/images/productosTienda/tijera-trauma.jpg",
         "tags": [
           "Corte",
           "Rescate"
@@ -5125,7 +5137,7 @@
         "price": 7.9,
         "rating": 4,
         "stock": 70,
-        "imageUrl": "/assets/images/products/pinza-esteril.png",
+        "imageUrl": "/assets/images/productosTienda/pinza-esteril.jpg",
         "tags": [
           "Curacion",
           "Esteril"
@@ -5143,7 +5155,7 @@
         "price": 21.9,
         "rating": 4.6,
         "stock": 52,
-        "imageUrl": "/assets/images/products/manual-primeros-auxilios.png",
+        "imageUrl": "/assets/images/productosTienda/manual-primeros-auxilios.jpg",
         "tags": [
           "Guia",
           "Aprendizaje"
@@ -5231,6 +5243,24 @@
       }
     ],
     "orders": [
+      {
+        "id": "ord-1778565282091",
+        "userId": "usr-001",
+        "total": 424.1,
+        "status": "Comprado",
+        "items": [
+          "mascarilla-rcp",
+          "mascarilla-rcp",
+          "mascarilla-rcp",
+          "mascarilla-rcp",
+          "mascarilla-rcp",
+          "mascarilla-rcp",
+          "mascarilla-rcp",
+          "mochila-emergencia",
+          "kit-hogar"
+        ],
+        "createdAt": "2026-05-12"
+      },
       {
         "id": "ord-001",
         "userId": "usr-001",
@@ -5738,27 +5768,6 @@
     ],
     "cartItems": [
       {
-        "id": "cart-1",
-        "userId": "usr-001",
-        "productId": "kit-hogar",
-        "quantity": 2,
-        "addedAt": "2025-05-04T10:00:00Z"
-      },
-      {
-        "id": "cart-2",
-        "userId": "usr-001",
-        "productId": "mochila-emergencia",
-        "quantity": 1,
-        "addedAt": "2025-05-04T10:05:00Z"
-      },
-      {
-        "id": "cart-3",
-        "userId": "usr-001",
-        "productId": "mascarilla-rcp",
-        "quantity": 3,
-        "addedAt": "2025-05-04T10:10:00Z"
-      },
-      {
         "id": "cart-4",
         "userId": "usr-002",
         "productId": "apposito-quemaduras",
@@ -5976,7 +5985,7 @@
             "quantity": 1
           }
         ],
-        "imageUrl": "/assets/images/kits/earthquake-kit.jpg",
+        "imageUrl": "/assets/images/productosTienda/mochila-sismos.jpg",
         "isPopular": true,
         "createdAt": "2025-01-10T00:00:00Z"
       },
@@ -6011,7 +6020,7 @@
             "quantity": 1
           }
         ],
-        "imageUrl": "/assets/images/kits/home-first-aid-kit.jpg",
+        "imageUrl": "/assets/images/productosTienda/kit-emergencia-familiar.png",
         "isPopular": true,
         "createdAt": "2025-01-10T00:00:00Z"
       },
@@ -6042,7 +6051,7 @@
             "quantity": 1
           }
         ],
-        "imageUrl": "/assets/images/kits/cpr-kit.jpg",
+        "imageUrl": "/assets/images/productosTienda/kit-rcp-entrenamiento.jpeg",
         "isPopular": false,
         "createdAt": "2025-02-15T00:00:00Z"
       },
@@ -6077,7 +6086,7 @@
             "quantity": 1
           }
         ],
-        "imageUrl": "/assets/images/kits/hemorrhage-kit.jpg",
+        "imageUrl": "/assets/images/productosTienda/kit-control-hemorragia.jpg",
         "isPopular": false,
         "createdAt": "2025-02-20T00:00:00Z"
       }

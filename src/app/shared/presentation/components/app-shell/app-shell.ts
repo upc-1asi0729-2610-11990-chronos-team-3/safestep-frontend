@@ -40,7 +40,6 @@ export class AppShell {
   protected readonly navItems = [
     { label: 'nav.dashboard', path: '/app/dashboard', icon: 'dashboard' },
     { label: 'nav.simulations', path: '/app/simulaciones', icon: 'health_and_safety' },
-    { label: 'nav.learning', path: '/app/aprendizaje', icon: 'menu_book' },
     { label: 'nav.progress', path: '/app/estadisticas', icon: 'trending_up' },
     { label: 'nav.gamification', path: '/app/gamificacion', icon: 'emoji_events' },
     { label: 'nav.store', path: '/app/tienda', icon: 'shopping_bag' },

@@ -16,4 +16,8 @@ export class EcommerceApi extends BaseApi {
   getEcommerce(): Promise<EcommerceData> {
     return firstValueFrom(this.http.get<EcommerceData>(this.endpointUrl));
   }
+
+  updateEcommerce(data: EcommerceData): Promise<EcommerceData> {
+    return firstValueFrom(this.http.patch<EcommerceData>(this.endpointUrl, data));
+  }
 }

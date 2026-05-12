@@ -16,4 +16,8 @@ export class MedicalSimulationApi extends BaseApi {
   getMedicalSimulations(): Promise<MedicalSimulationData> {
     return firstValueFrom(this.http.get<MedicalSimulationData>(this.endpointUrl));
   }
+
+  updateMedicalSimulations(data: MedicalSimulationData): Promise<MedicalSimulationData> {
+    return firstValueFrom(this.http.patch<MedicalSimulationData>(this.endpointUrl, data));
+  }
 }

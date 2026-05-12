@@ -165,13 +165,34 @@ h2 {
 
 .panel mat-card-header {
   padding: 22px 22px 0;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .mission-list,
-.coin-history {
+.coin-history,
+.mission-card-grid,
+.mission-sections,
+.badge-inventory {
   display: grid;
   gap: 14px;
   padding: 22px;
+}
+
+.mission-sections,
+.badge-inventory {
+  gap: 24px;
+}
+
+.mission-sections h3,
+.badge-inventory h3 {
+  margin: 0 0 12px;
+  color: #111827;
+}
+
+.mission-card-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  padding: 0;
 }
 
 .mission-card,
@@ -180,6 +201,28 @@ h2 {
   border: 1px solid #e5e7eb;
   border-radius: 16px;
   background: #f8fafc;
+}
+
+.mission-active {
+  border-color: #bfdbfe;
+  background: #eff6ff;
+}
+
+.mission-available {
+  border-color: #bbf7d0;
+  background: #f0fdf4;
+}
+
+.mission-locked {
+  border-color: #e5e7eb;
+  background: #f8fafc;
+  opacity: 0.72;
+}
+
+.panel-action {
+  justify-self: start;
+  min-height: 42px;
+  font-weight: 900;
 }
 
 .coin-transaction {
@@ -225,6 +268,23 @@ mat-progress-bar {
   background: #ecfdf5;
 }
 
+.user-rank-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 14px 18px;
+  padding: 14px;
+  border-radius: 14px;
+  background: #fffbeb;
+  color: #111827;
+}
+
+.user-rank-card small,
+.badge-card small {
+  display: block;
+  color: #6b7280;
+}
+
 .rank-badge {
   width: 36px;
   height: 36px;
@@ -241,6 +301,11 @@ mat-progress-bar {
   padding: 22px;
 }
 
+.inventory-badge-grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  padding: 0;
+}
+
 .badge-card {
   min-height: 190px;
   padding: 18px;
@@ -252,13 +317,17 @@ mat-progress-bar {
     box-shadow 0.25s ease;
 }
 
+.badge-action {
+  align-self: center;
+}
+
 .badge-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 10px 25px rgba(15, 23, 42, 0.1);
 }
 
 .badge-card mat-icon {
-  color: #f59e0b;
+  color: currentColor;
 }
 
 .badge-card h4 {
@@ -274,6 +343,42 @@ mat-progress-bar {
 
 .badge-card.locked {
   opacity: 0.62;
+}
+
+.rarity-comun {
+  border-color: #bbf7d0;
+  color: #15803d;
+}
+
+.rarity-rara {
+  border-color: #bfdbfe;
+  color: #2563eb;
+}
+
+.rarity-epica {
+  border-color: #ddd6fe;
+  color: #7c3aed;
+}
+
+.rarity-legendaria {
+  border-color: #fde68a;
+  color: #d97706;
+}
+
+.rarity-comun mat-chip {
+  background: #dcfce7;
+}
+
+.rarity-rara mat-chip {
+  background: #dbeafe;
+}
+
+.rarity-epica mat-chip {
+  background: #ede9fe;
+}
+
+.rarity-legendaria mat-chip {
+  background: #fef3c7;
 }
 
 .loading-state {
@@ -305,7 +410,9 @@ mat-progress-bar {
   .game-hero,
   .content-grid,
   .reward-grid,
-  .badge-grid {
+  .badge-grid,
+  .mission-card-grid,
+  .inventory-badge-grid {
     grid-template-columns: 1fr;
   }
 }

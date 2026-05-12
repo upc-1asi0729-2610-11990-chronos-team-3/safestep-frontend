@@ -6,30 +6,61 @@
       {{ 'simulations.description' | translate }}
     </p>
   </div>
+  <label class="simulation-search">
+    <mat-icon>search</mat-icon>
+    <input type="search" placeholder="Buscar simulacion por nombre" (input)="setSearchQuery($event)" />
+  </label>
 </section>
 
 <section class="simulation-grid">
-  @for (simulation of simulations(); track simulation.id) {
+  @for (simulation of filteredSimulations(); track simulation.id) {
     <mat-card class="simulation-card card-hover">
-      <div class="media" [style.background-image]="'linear-gradient(135deg, rgba(15,23,42,.28), rgba(14,165,233,.12)), url(' + simulation.imageUrl + ')'">
+      <div class="media" [style.background-image]="'linear-gradient(180deg, rgba(15,23,42,.05), rgba(15,23,42,.28)), url(' + simulation.imageUrl + ')'">
         <mat-chip>{{ simulation.emergencyType }}</mat-chip>
+        @if (isCompleted(simulation)) {
+          <span class="completed-pill">
+            <mat-icon>check_circle</mat-icon>
+            Completada {{ completedCount(simulation) }} {{ completedCount(simulation) === 1 ? 'vez' : 'veces' }}
+          </span>
+        }
       </div>
       <mat-card-content class="body">
-        <mat-chip-set>
-          <mat-chip>{{ simulation.difficulty }}</mat-chip>
-          <mat-chip>{{ simulation.durationMinutes }} min</mat-chip>
-          <mat-chip>{{ simulation.xpReward }} XP</mat-chip>
-          <mat-chip>{{ simulation.coinReward }} SafeCoins</mat-chip>
-        </mat-chip-set>
         <h3>{{ simulation.title }}</h3>
         <p>{{ simulation.description }}</p>
+        <div class="info-grid">
+          <span>
+            <mat-icon>signal_cellular_alt</mat-icon>
+            {{ simulation.difficulty }}
+          </span>
+          <span>
+            <mat-icon>schedule</mat-icon>
+            {{ simulation.durationMinutes }} min
+          </span>
+          <span>
+            <mat-icon>bolt</mat-icon>
+            {{ simulation.xpReward }} XP
+          </span>
+          <span>
+            <mat-icon>paid</mat-icon>
+            {{ simulation.coinReward }} coins
+          </span>
+        </div>
         <mat-progress-bar mode="determinate" [value]="simulation.completion" />
         <div class="footer-row">
-          <strong>{{ simulation.status }}</strong>
+          <strong [class.completed-status]="isCompleted(simulation)">
+            {{ isCompleted(simulation) ? 'Completada' : simulation.status }}
+          </strong>
           <a mat-flat-button color="primary" [routerLink]="['/app/simulaciones', simulation.id]">
-            {{ (simulation.status === 'Completado' ? 'shared.review' : 'shared.train') | translate }}
+            {{ (isCompleted(simulation) ? 'shared.review' : 'shared.train') | translate }}
           </a>
         </div>
+      </mat-card-content>
+    </mat-card>
+  } @empty {
+    <mat-card class="empty-state" appearance="outlined">
+      <mat-card-content>
+        <mat-icon>search_off</mat-icon>
+        <strong>No se encontraron simulaciones con ese nombre.</strong>
       </mat-card-content>
     </mat-card>
   }

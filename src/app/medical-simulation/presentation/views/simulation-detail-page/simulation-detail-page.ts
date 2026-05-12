@@ -6,7 +6,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MedicalSimulationApi } from '../../../infrastructure/medical-simulation-api';
-import { MedicalSimulation } from '../../../domain/model/medical-simulation.entity';
+import { MedicalSimulation, MedicalSimulationData, SimulationAttempt } from '../../../domain/model/medical-simulation.entity';
 import { EcommerceApi } from '../../../../ecommerce/infrastructure/ecommerce-api';
 import { StoreProduct } from '../../../../ecommerce/domain/model/ecommerce.entity';
 import { IdentityAccessApi } from '../../../../identity-access/infrastructure/identity-access-api';
@@ -23,6 +23,7 @@ import { SafeCoinsWalletStore } from '../../../../shared/application/safe-coins-
 })
 export class SimulationDetailPage {
   protected readonly simulation = signal<MedicalSimulation | null>(null);
+  protected readonly simulationData = signal<MedicalSimulationData | null>(null);
   protected readonly products = signal<StoreProduct[]>([]);
   protected readonly identity = signal<IdentityAccessData | null>(null);
   protected readonly gamification = signal<GamificationData | null>(null);
@@ -93,6 +94,8 @@ export class SimulationDetailPage {
     this.rewardError.set(null);
 
     const currentBalance = identity.sampleUser.safeCoins;
+    const medicalSimulationData = this.simulationData();
+    const previousAttempts = medicalSimulationData?.attempts ?? [];
     const previousTransactions = gamification.coinTransactions ?? [];
     const userTransactions = previousTransactions.filter(
       (transaction) => transaction.userId === identity.sampleUser.id && transaction.simulationId === current.id,
@@ -117,6 +120,30 @@ export class SimulationDetailPage {
       successful,
       createdAt: new Date().toISOString(),
     };
+    const now = new Date();
+    const startedAt = new Date(now.getTime() - current.durationMinutes * 60_000).toISOString();
+    const attemptErrors = current.steps
+      .map((step, index) => ({ step, index }))
+      .filter(({ step }) => this.selectedOptions()[step.id] !== step.correctOptionId)
+      .map(({ step, index }) => ({
+        stepNumber: index + 1,
+        error: step.prompt,
+        severity: 'warning',
+      }));
+    const attempt: SimulationAttempt = {
+      id: Math.max(0, ...previousAttempts.map((item) => item.id)) + 1,
+      userId: 1,
+      scenarioId: this.simulationIndex(current.id) + 1,
+      scenarioSlug: current.id,
+      mode: 'practice',
+      startedAt,
+      completedAt: now.toISOString(),
+      score: this.accuracyPercent(),
+      totalSteps: current.steps.length,
+      correctSteps: this.score(),
+      timeElapsed: current.durationMinutes * 60,
+      errors: attemptErrors,
+    };
 
     const updatedIdentity: IdentityAccessData = {
       ...identity,
@@ -133,14 +160,38 @@ export class SimulationDetailPage {
       },
       coinTransactions: [transaction, ...previousTransactions],
     };
+    const updatedMedicalSimulationData: MedicalSimulationData | null = medicalSimulationData
+      ? {
+          ...medicalSimulationData,
+          simulations: medicalSimulationData.simulations.map((simulation) =>
+            simulation.id === current.id
+              ? {
+                  ...simulation,
+                  status: successful ? 'Completado' : simulation.status,
+                  completion: successful ? 100 : Math.max(simulation.completion, this.accuracyPercent()),
+                }
+              : simulation,
+          ),
+          attempts: [...previousAttempts, attempt],
+        }
+      : null;
 
     try {
-      const [savedIdentity, savedGamification] = await Promise.all([
+      const [savedIdentity, savedGamification, savedMedicalSimulationData] = await Promise.all([
         this.identityAccessApi.updateIdentity(updatedIdentity),
         this.gamificationApi.updateGamification(updatedGamification),
+        updatedMedicalSimulationData
+          ? this.medicalSimulationApi.updateMedicalSimulations(updatedMedicalSimulationData)
+          : Promise.resolve(null),
       ]);
       this.identity.set(savedIdentity);
       this.gamification.set(savedGamification);
+      if (savedMedicalSimulationData) {
+        this.simulationData.set(savedMedicalSimulationData);
+        this.simulation.set(
+          savedMedicalSimulationData.simulations.find((simulation) => simulation.id === current.id) ?? current,
+        );
+      }
       this.previousBalance.set(currentBalance);
       this.earnedCoins.set(normalizedCoins);
       this.appliedMultiplier.set(multiplier);
@@ -174,11 +225,16 @@ export class SimulationDetailPage {
       this.gamificationApi.getGamification(),
     ]);
     const simulation = simulationData.simulations.find((item) => item.id === id) ?? null;
+    this.simulationData.set(simulationData);
     this.simulation.set(simulation);
     this.identity.set(identity);
     this.gamification.set(gamification);
     this.wallet.setBalance(identity.sampleUser.safeCoins);
     const suggestedIds = new Set(simulation?.productSuggestions.map((item) => item.productId) ?? []);
     this.products.set(ecommerceData.products.filter((product) => suggestedIds.has(product.id)));
+  }
+
+  private simulationIndex(simulationId: string): number {
+    return this.simulationData()?.simulations.findIndex((simulation) => simulation.id === simulationId) ?? 0;
   }
 }

@@ -1,88 +1,81 @@
-@if (data(); as stats) {
+@if (loaded()) {
   <section class="stats-hero">
     <div class="hero-copy">
-      <mat-chip>{{ 'stats.eyebrow' | translate }}</mat-chip>
-      <h2>{{ 'stats.title' | translate }}</h2>
+      <mat-chip>Progreso real</mat-chip>
+      <h2>Analitica basada en tu actividad dentro de SafeStep</h2>
       <p>
-        {{ 'stats.description' | translate }}
+        Este panel calcula tu avance desde simulaciones completadas, intentos, errores, SafeCoins, misiones,
+        insignias y ranking semanal.
       </p>
     </div>
 
     <aside class="score-card">
       <span class="score-ring">
-        <strong>{{ stats.simulationTypes[0].accuracy }}%</strong>
-        <small>{{ 'stats.accuracy' | translate }}</small>
+        <strong>{{ averageAccuracy() }}%</strong>
+        <small>precision promedio</small>
       </span>
       <div>
-        <strong>{{ stats.weeklyActivity.length }}</strong>
-        <span>{{ 'stats.measuredDays' | translate }}</span>
+        <strong>{{ completedSimulations() }} / {{ simulations().length }}</strong>
+        <span>simulaciones completadas</span>
       </div>
     </aside>
   </section>
 
   <section class="summary-grid">
-    @for (item of stats.summary; track item.label; let i = $index) {
-      <mat-card class="summary-card card-hover">
-        <mat-card-content>
-          <mat-icon>{{ summaryIcons[i] || 'analytics' }}</mat-icon>
-          <span class="label">{{ item.label }}</span>
-          <strong>{{ item.value }}</strong>
-          <small>{{ item.trend }}</small>
-        </mat-card-content>
-      </mat-card>
-    }
-  </section>
-
-  <section class="analytics-grid">
-    <mat-card class="panel">
-      <mat-card-header>
-        <mat-card-title>{{ 'stats.weeklyActivity' | translate }}</mat-card-title>
-        <mat-card-subtitle>{{ 'stats.xpPerDay' | translate }}</mat-card-subtitle>
-      </mat-card-header>
-      <div class="bar-chart">
-        @for (day of stats.weeklyActivity; track day.day) {
-          <div class="bar-item">
-            <span class="bar-fill" [style.height.%]="(day.xp / maxWeeklyXp()) * 100"></span>
-            <strong>{{ day.day }}</strong>
-            <small>{{ day.xp }} XP</small>
-          </div>
-        }
-      </div>
+    <mat-card class="summary-card card-hover">
+      <mat-card-content>
+        <mat-icon>fact_check</mat-icon>
+        <span class="label">Intentos realizados</span>
+        <strong>{{ totalAttempts() }}</strong>
+        <small>{{ completedSimulations() }} simulaciones con finalizacion exitosa</small>
+      </mat-card-content>
     </mat-card>
-
-    <mat-card class="panel">
-      <mat-card-header>
-        <mat-card-title>{{ 'stats.simulationTypes' | translate }}</mat-card-title>
-        <mat-card-subtitle>{{ 'stats.completedAndAccuracy' | translate }}</mat-card-subtitle>
-      </mat-card-header>
-      <div class="type-list">
-        @for (item of stats.simulationTypes; track item.type) {
-          <article class="type-card">
-            <div>
-              <strong>{{ item.type }}</strong>
-              <span>{{ item.completed }} {{ 'stats.completed' | translate }} - {{ item.accuracy }}% {{ 'stats.accuracy' | translate }}</span>
-            </div>
-            <div class="progress-track">
-              <i [style.width.%]="item.accuracy"></i>
-            </div>
-          </article>
-        }
-      </div>
+    <mat-card class="summary-card card-hover">
+      <mat-card-content>
+        <mat-icon>bolt</mat-icon>
+        <span class="label">XP ganado estimado</span>
+        <strong>{{ totalXp() }}</strong>
+        <small>Calculado desde recompensas de simulacion completada</small>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="summary-card card-hover">
+      <mat-card-content>
+        <mat-icon>paid</mat-icon>
+        <span class="label">SafeCoins ganadas</span>
+        <strong>{{ totalCoins() }}</strong>
+        <small>Registradas en transacciones de gamificacion</small>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="summary-card card-hover">
+      <mat-card-content>
+        <mat-icon>timer</mat-icon>
+        <span class="label">Tiempo entrenado</span>
+        <strong>{{ trainedMinutes() }} min</strong>
+        <small>Duracion estimada de simulaciones finalizadas</small>
+      </mat-card-content>
     </mat-card>
   </section>
 
   <mat-card class="panel">
     <mat-card-header>
-      <mat-card-title>{{ 'stats.frequentMistakes' | translate }}</mat-card-title>
-      <mat-card-subtitle>{{ 'stats.trainingPriorities' | translate }}</mat-card-subtitle>
+      <mat-card-title>Rendimiento en simulaciones</mat-card-title>
+      <mat-card-subtitle>Intentos, repeticiones, mejor puntaje y ultima practica</mat-card-subtitle>
     </mat-card-header>
-    <div class="mistake-grid">
-      @for (mistake of stats.commonMistakes; track mistake.topic) {
-        <article class="mistake-card">
-          <mat-icon>report_problem</mat-icon>
-          <strong>{{ mistake.topic }}</strong>
-          <span>{{ mistake.mistakes }} {{ 'stats.errors' | translate }}</span>
-          <p>{{ mistake.recommendation }}</p>
+    <div class="simulation-performance-grid">
+      @for (item of performanceBySimulation(); track item.simulation.id) {
+        <article class="simulation-performance-card" [class.pending]="item.completions === 0">
+          <strong>{{ item.simulation.title }}</strong>
+          <span>{{ item.simulation.emergencyType }} - {{ item.simulation.difficulty }}</span>
+          <div class="mini-metrics">
+            <small>{{ item.completions }} completadas</small>
+            <small>{{ item.attempts }} intentos</small>
+            <small>Mejor {{ item.bestScore }}%</small>
+            <small>Prom. {{ item.averageAccuracy }}%</small>
+          </div>
+          <div class="progress-track">
+            <i [style.width.%]="item.completions ? 100 : item.simulation.completion"></i>
+          </div>
+          <small>Ultimo intento: {{ formatDate(item.lastAttempt) }}</small>
         </article>
       }
     </div>
@@ -91,20 +84,23 @@
   <section class="analytics-grid extra-analytics">
     <mat-card class="panel">
       <mat-card-header>
-        <mat-card-title>Progreso por escenario</mat-card-title>
-        <mat-card-subtitle>Intentos, puntaje y errores comunes</mat-card-subtitle>
+        <mat-card-title>Errores y areas debiles</mat-card-title>
+        <mat-card-subtitle>Calculado desde errores registrados en intentos</mat-card-subtitle>
       </mat-card-header>
-      <div class="type-list">
-        @for (visual of stats.progressVisuals ?? []; track visual.id) {
-          <article class="type-card">
-            <div>
-              <strong>{{ visual.scenarioName }}</strong>
-              <span>{{ visual.totalAttempts }} intentos - mejor {{ visual.bestScore }}% - promedio {{ visual.averageScore }}%</span>
-            </div>
-            <div class="progress-track">
-              <i [style.width.%]="visual.completionPercentage"></i>
-            </div>
-            <small>{{ visual.commonErrors.join(' - ') }}</small>
+      <div class="mistake-grid">
+        @for (mistake of commonMistakes(); track mistake.topic) {
+          <article class="mistake-card">
+            <mat-icon>report_problem</mat-icon>
+            <strong>{{ mistake.topic }}</strong>
+            <span>{{ mistake.count }} errores</span>
+            <p>{{ mistake.recommendation }}</p>
+          </article>
+        } @empty {
+          <article class="mistake-card">
+            <mat-icon>verified</mat-icon>
+            <strong>Sin errores registrados</strong>
+            <span>0 errores</span>
+            <p>Completa mas intentos para construir un diagnostico de areas debiles.</p>
           </article>
         }
       </div>
@@ -112,39 +108,59 @@
 
     <mat-card class="panel">
       <mat-card-header>
-        <mat-card-title>Certificados y recomendaciones</mat-card-title>
-        <mat-card-subtitle>Resultados listos para accionar</mat-card-subtitle>
+        <mat-card-title>Progreso de gamificacion</mat-card-title>
+        <mat-card-subtitle>Misiones, insignias, ranking y monedas</mat-card-subtitle>
       </mat-card-header>
-      <div class="type-list">
-        @for (certificate of stats.certificates ?? []; track certificate.id) {
-          <article class="type-card certificate-card">
-            <strong>{{ certificate.moduleName }}</strong>
-            <span>{{ certificate.achievementLevel }} - {{ certificate.score }}%</span>
-            <small>{{ certificate.verificationCode }}</small>
-          </article>
-        }
-        @for (recommendation of stats.recommendations ?? []; track recommendation.id) {
+      @if (gamification(); as game) {
+        <div class="type-list gamification-list">
           <article class="type-card">
-            <strong>{{ recommendation.title }}</strong>
-            <span>{{ recommendation.priority }}</span>
-            <small>{{ recommendation.action }}</small>
+            <strong>{{ game.missions.length }}</strong>
+            <span>misiones totales - {{ completedMissions() }} completadas</span>
           </article>
-        }
-      </div>
+          <article class="type-card">
+            <strong>{{ unlockedBadges() }} / {{ game.badges.length }}</strong>
+            <span>insignias desbloqueadas</span>
+          </article>
+          <article class="type-card">
+            <strong>#{{ game.levelSummary.weeklyRank }}</strong>
+            <span>posicion semanal del usuario</span>
+          </article>
+          <article class="type-card">
+            <strong>{{ totalCoins() }}</strong>
+            <span>SafeCoins ganadas por simulaciones</span>
+          </article>
+        </div>
+      }
     </mat-card>
   </section>
+
+  <mat-card class="panel">
+    <mat-card-header>
+      <mat-card-title>Recomendaciones accionables</mat-card-title>
+      <mat-card-subtitle>Siguientes pasos derivados de tu progreso real</mat-card-subtitle>
+    </mat-card-header>
+    <div class="recommendation-grid">
+      @for (recommendation of actionRecommendations(); track recommendation.title) {
+        <article class="recommendation-card">
+          <mat-icon>{{ recommendation.icon }}</mat-icon>
+          <strong>{{ recommendation.title }}</strong>
+          <p>{{ recommendation.detail }}</p>
+        </article>
+      }
+    </div>
+  </mat-card>
 } @else if (error(); as message) {
   <mat-card class="loading-state error-state">
     <mat-card-content>
       <mat-icon>error</mat-icon>
-      <strong>{{ message | translate }}</strong>
+      <strong>{{ message }}</strong>
     </mat-card-content>
   </mat-card>
 } @else {
   <mat-card class="loading-state">
     <mat-card-content>
       <mat-icon>analytics</mat-icon>
-      <strong>{{ 'stats.loading' | translate }}</strong>
+      <strong>Cargando progreso...</strong>
       <mat-progress-bar mode="indeterminate" />
     </mat-card-content>
   </mat-card>

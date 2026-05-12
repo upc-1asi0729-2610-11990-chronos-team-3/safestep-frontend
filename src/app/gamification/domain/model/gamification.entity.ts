@@ -8,6 +8,9 @@ export interface Mission extends BaseEntity<string> {
   goal: number;
   rewardXp: number;
   rewardCoins: number;
+  status?: 'Activa' | 'Disponible' | 'Bloqueada';
+  instructions?: string;
+  unlockRequirement?: string;
 }
 
 export interface Badge extends BaseEntity<string> {
@@ -16,6 +19,7 @@ export interface Badge extends BaseEntity<string> {
   rarity: string;
   unlocked: boolean;
   description: string;
+  unlockRequirement?: string;
 }
 
 export interface LeaderboardEntry {

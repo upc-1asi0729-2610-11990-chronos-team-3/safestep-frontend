@@ -50,6 +50,8 @@ export interface SimulationAttempt {
   scenarioId: number;
   scenarioSlug?: string;
   mode: string;
+  startedAt?: string;
+  completedAt?: string;
   score: number;
   totalSteps: number;
   correctSteps: number;
