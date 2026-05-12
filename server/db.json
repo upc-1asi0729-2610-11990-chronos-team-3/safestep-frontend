@@ -10,7 +10,7 @@
       "level": 12,
       "xp": 6840,
       "nextLevelXp": 8000,
-      "safeCoins": 1338,
+      "safeCoins": 1410,
       "streakDays": 18,
       "completedSimulations": 24
     },
@@ -2976,7 +2976,7 @@
       "level": 12,
       "xp": 6840,
       "nextLevelXp": 8000,
-      "safeCoins": 1338,
+      "safeCoins": 1410,
       "streakDays": 18,
       "weeklyRank": 4
     },
@@ -4470,6 +4470,20 @@
       }
     ],
     "coinTransactions": [
+      {
+        "id": "coin-tx-1778558456043",
+        "userId": "usr-001",
+        "simulationId": "quemaduras",
+        "simulationTitle": "Atencion inicial de quemaduras",
+        "attemptNumber": 1,
+        "successfulAttemptNumber": 1,
+        "baseCoins": 72,
+        "multiplier": 1,
+        "accuracy": 1,
+        "earnedCoins": 72,
+        "successful": true,
+        "createdAt": "2026-05-12T04:00:56.043Z"
+      },
       {
         "id": "coin-tx-1778221857771",
         "userId": "usr-001",
