@@ -85,7 +85,7 @@
         <mat-card appearance="outlined" class="mission-card">
           <mat-card-content>
             <strong>{{ mission.title }}</strong>
-            <span>{{ mission.cadence }} · {{ mission.rewardXp }} XP · {{ mission.rewardCoins }} coins</span>
+            <span>{{ mission.cadence }} - {{ mission.rewardXp }} XP - {{ mission.rewardCoins }} coins</span>
             <mat-progress-bar
               mode="determinate"
               [value]="mission.progress >= mission.goal ? 100 : (mission.progress / mission.goal) * 100"

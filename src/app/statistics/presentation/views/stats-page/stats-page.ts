@@ -183,7 +183,7 @@ export class StatsPage {
           }
         : {
             icon: 'verified',
-            title: 'Mantén tu precision',
+            title: 'Manten tu precision',
             detail: 'No hay simulaciones con precision baja en tus intentos actuales.',
           },
       pending
