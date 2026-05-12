@@ -207,3 +207,30 @@ mat-progress-bar {
     grid-template-columns: 1fr;
   }
 }
+
+@media (max-width: 560px) {
+  .page-head {
+    padding: 18px;
+  }
+
+  .page-head h2 {
+    font-size: 1.8rem;
+  }
+
+  .media {
+    min-height: 128px;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .footer-row a {
+    justify-content: center;
+  }
+}

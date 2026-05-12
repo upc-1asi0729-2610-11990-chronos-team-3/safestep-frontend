@@ -6,16 +6,16 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { TranslatePipe } from '@ngx-translate/core';
-import { IdentityAccessApi } from '../../../../identity-access/infrastructure/identity-access-api';
 import { UserProfile } from '../../../../identity-access/domain/model/user-profile.entity';
-import { MedicalSimulationApi } from '../../../../medical-simulation/infrastructure/medical-simulation-api';
+import { IdentityAccessStore } from '../../../../identity-access/application/identity-access-store';
 import { MedicalSimulationData } from '../../../../medical-simulation/domain/model/medical-simulation.entity';
-import { GamificationApi } from '../../../../gamification/infrastructure/gamification-api';
+import { MedicalSimulationStore } from '../../../../medical-simulation/application/medical-simulation-store';
 import { GamificationData } from '../../../../gamification/domain/model/gamification.entity';
-import { EcommerceApi } from '../../../../ecommerce/infrastructure/ecommerce-api';
+import { GamificationStore } from '../../../../gamification/application/gamification-store';
 import { StoreProduct } from '../../../../ecommerce/domain/model/ecommerce.entity';
-import { StatisticsApi } from '../../../../statistics/infrastructure/statistics-api';
+import { EcommerceStore } from '../../../../ecommerce/application/ecommerce-store';
 import { StatsData } from '../../../../statistics/domain/model/statistics.entity';
+import { StatisticsStore } from '../../../../statistics/application/statistics-store';
 
 @Component({
   selector: 'app-dashboard-page',
@@ -44,22 +44,22 @@ export class DashboardPage {
   );
 
   constructor(
-    private readonly identityAccessApi: IdentityAccessApi,
-    private readonly medicalSimulationApi: MedicalSimulationApi,
-    private readonly gamificationApi: GamificationApi,
-    private readonly statisticsApi: StatisticsApi,
-    private readonly ecommerceApi: EcommerceApi,
+    private readonly identityAccessStore: IdentityAccessStore,
+    private readonly medicalSimulationStore: MedicalSimulationStore,
+    private readonly gamificationStore: GamificationStore,
+    private readonly statisticsStore: StatisticsStore,
+    private readonly ecommerceStore: EcommerceStore,
   ) {
     void this.load();
   }
 
   private async load(): Promise<void> {
     const [identity, simulations, gamification, stats, ecommerce] = await Promise.all([
-      this.identityAccessApi.getIdentity(),
-      this.medicalSimulationApi.getMedicalSimulations(),
-      this.gamificationApi.getGamification(),
-      this.statisticsApi.getStats(),
-      this.ecommerceApi.getEcommerce(),
+      this.identityAccessStore.load(),
+      this.medicalSimulationStore.load(),
+      this.gamificationStore.load(),
+      this.statisticsStore.load(),
+      this.ecommerceStore.load(),
     ]);
     this.user.set(identity.sampleUser);
     this.simulations.set(simulations);

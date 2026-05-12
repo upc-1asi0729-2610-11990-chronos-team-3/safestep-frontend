@@ -1,5 +1,11 @@
 <mat-sidenav-container class="app-frame">
-  <mat-sidenav class="sidebar" mode="side" opened>
+  <mat-sidenav
+    #drawer
+    class="sidebar"
+    [mode]="isMobile() ? 'over' : 'side'"
+    [opened]="!isMobile()"
+    [fixedInViewport]="isMobile()"
+  >
     <a class="brand" routerLink="/app/dashboard" aria-label="Ir al dashboard">
       <span class="brand-mark">S</span>
       <span>
@@ -15,6 +21,7 @@
           [routerLink]="item.path"
           routerLinkActive="active"
           [routerLinkActiveOptions]="{ exact: item.path.endsWith('dashboard') }"
+          (click)="closeNavigation(drawer)"
         >
           <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
           <span matListItemTitle>{{ item.label | translate }}</span>
@@ -48,6 +55,9 @@
 
   <mat-sidenav-content class="content-area">
     <mat-toolbar class="topbar">
+      <button mat-icon-button class="menu-button" type="button" aria-label="Abrir menu" (click)="drawer.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
       <div>
         <h1>{{ 'shell.title' | translate }}</h1>
         <p class="eyebrow">{{ 'shell.subtitle' | translate }}</p>

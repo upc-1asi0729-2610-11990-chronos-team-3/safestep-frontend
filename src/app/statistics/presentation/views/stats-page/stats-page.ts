@@ -3,12 +3,12 @@ import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MedicalSimulationApi } from '../../../../medical-simulation/infrastructure/medical-simulation-api';
+import { MedicalSimulationStore } from '../../../../medical-simulation/application/medical-simulation-store';
 import {
   MedicalSimulation,
   SimulationAttempt,
 } from '../../../../medical-simulation/domain/model/medical-simulation.entity';
-import { GamificationApi } from '../../../../gamification/infrastructure/gamification-api';
+import { GamificationStore } from '../../../../gamification/application/gamification-store';
 import { CoinTransaction, GamificationData } from '../../../../gamification/domain/model/gamification.entity';
 
 interface SimulationPerformance {
@@ -87,8 +87,8 @@ export class StatsPage {
   );
 
   constructor(
-    private readonly medicalSimulationApi: MedicalSimulationApi,
-    private readonly gamificationApi: GamificationApi,
+    private readonly medicalSimulationStore: MedicalSimulationStore,
+    private readonly gamificationStore: GamificationStore,
   ) {
     void this.load();
   }
@@ -103,8 +103,8 @@ export class StatsPage {
   private async load(): Promise<void> {
     try {
       const [medicalSimulationData, gamification] = await Promise.all([
-        this.medicalSimulationApi.getMedicalSimulations(),
-        this.gamificationApi.getGamification(),
+        this.medicalSimulationStore.load(),
+        this.gamificationStore.load(),
       ]);
       this.simulations.set(medicalSimulationData.simulations);
       this.attempts.set(medicalSimulationData.attempts ?? []);

@@ -156,6 +156,8 @@ p {
 
 .panel mat-card-header {
   padding: 22px 22px 0;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .panel > .bar-chart,
@@ -323,6 +325,35 @@ p {
   .mistake-grid,
   .simulation-performance-grid,
   .recommendation-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 620px) {
+  .stats-hero {
+    min-height: auto;
+    padding: 20px;
+  }
+
+  h2 {
+    font-size: 1.9rem;
+  }
+
+  .score-ring {
+    width: 120px;
+    height: 120px;
+  }
+
+  .panel > .bar-chart,
+  .panel > .type-list,
+  .panel > .mistake-grid,
+  .panel > .simulation-performance-grid,
+  .panel > .recommendation-grid,
+  .gamification-list {
+    padding: 16px;
+  }
+
+  .mini-metrics {
     grid-template-columns: 1fr;
   }
 }

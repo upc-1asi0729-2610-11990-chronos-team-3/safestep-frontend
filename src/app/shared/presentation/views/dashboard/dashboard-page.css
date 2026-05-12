@@ -126,6 +126,8 @@ a {
 
 .panel mat-card-header {
   align-items: flex-start;
+  gap: 10px;
+  flex-wrap: wrap;
   margin-bottom: 18px;
 }
 
@@ -241,5 +243,26 @@ mat-progress-bar {
   .metric-grid,
   .product-row {
     grid-template-columns: 1fr;
+  }
+
+  .hero-panel {
+    padding: 22px;
+  }
+
+  .hero-panel h2 {
+    font-size: 2rem;
+  }
+
+  .hero-actions a {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .simulation-card {
+    gap: 14px;
+  }
+
+  .image-placeholder {
+    min-height: 128px;
   }
 }

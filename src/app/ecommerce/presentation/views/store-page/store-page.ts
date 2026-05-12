@@ -7,7 +7,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslatePipe } from '@ngx-translate/core';
-import { EcommerceApi } from '../../../infrastructure/ecommerce-api';
+import { EcommerceStore } from '../../../application/ecommerce-store';
 import {
   Coupon,
   CartItem,
@@ -21,7 +21,7 @@ import {
   ShippingAddress,
   StoreProduct,
 } from '../../../domain/model/ecommerce.entity';
-import { IdentityAccessApi } from '../../../../identity-access/infrastructure/identity-access-api';
+import { IdentityAccessStore } from '../../../../identity-access/application/identity-access-store';
 import { SafeCoinsWalletStore } from '../../../../shared/application/safe-coins-wallet-store';
 
 @Component({
@@ -126,8 +126,8 @@ export class StorePage {
   );
 
   constructor(
-    private readonly ecommerceApi: EcommerceApi,
-    private readonly identityAccessApi: IdentityAccessApi,
+    private readonly ecommerceStore: EcommerceStore,
+    private readonly identityAccessStore: IdentityAccessStore,
     protected readonly wallet: SafeCoinsWalletStore,
   ) {
     void this.load();
@@ -330,14 +330,14 @@ export class StorePage {
     if (!current) {
       return;
     }
-    const saved = await this.ecommerceApi.updateEcommerce({ ...current, ...partial });
+    const saved = await this.ecommerceStore.update({ ...current, ...partial });
     this.applyEcommerceData(saved);
   }
 
   private async load(): Promise<void> {
     const [data, identity] = await Promise.all([
-      this.ecommerceApi.getEcommerce(),
-      this.identityAccessApi.getIdentity(),
+      this.ecommerceStore.load(),
+      this.identityAccessStore.load(),
     ]);
     this.applyEcommerceData(data);
     this.wallet.setBalance(identity.sampleUser.safeCoins);

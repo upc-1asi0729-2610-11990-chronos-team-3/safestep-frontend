@@ -135,6 +135,7 @@ a[mat-flat-button] {
 @media (max-width: 900px) {
   .auth-layout {
     grid-template-columns: 1fr;
+    gap: 28px;
   }
 
   .brand {
@@ -143,5 +144,24 @@ a[mat-flat-button] {
 
   .proof-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .auth-layout {
+    padding: 18px;
+  }
+
+  h1 {
+    font-size: 2.35rem;
+  }
+
+  .auth-card {
+    padding: 22px;
+  }
+
+  .form-row {
+    align-items: flex-start;
+    flex-direction: column;
   }
 }

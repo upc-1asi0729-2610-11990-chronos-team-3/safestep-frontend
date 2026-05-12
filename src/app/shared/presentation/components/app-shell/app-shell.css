@@ -11,6 +11,11 @@
   border-right: 1px solid #e5e7eb;
 }
 
+.menu-button {
+  display: none;
+  flex: 0 0 auto;
+}
+
 .brand {
   height: 92px;
   display: flex;
@@ -165,6 +170,7 @@ mat-nav-list a.active {
   top: 0;
   z-index: 10;
   min-height: 82px;
+  height: auto;
   padding: 16px 32px;
   background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(18px);
@@ -197,6 +203,9 @@ mat-nav-list a.active {
 .coin-chip {
   margin-left: 12px;
   text-decoration: none;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .user-chip mat-icon,
@@ -213,25 +222,81 @@ mat-nav-list a.active {
 
 main {
   padding: 28px 32px 44px;
+  overflow-x: hidden;
 }
 
 @media (max-width: 920px) {
-  .sidebar {
-    width: 248px;
+  .topbar {
+    min-height: 92px;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 18px;
   }
 
-  .topbar {
-    min-height: 116px;
-    align-items: flex-start;
-    flex-direction: column;
-    padding: 18px;
+  .menu-button {
+    display: inline-flex;
   }
 
   .toolbar-spacer {
     display: none;
   }
 
+  .topbar h1 {
+    font-size: 1.15rem;
+  }
+
+  .topbar > div {
+    min-width: 0;
+    flex: 1 1 220px;
+  }
+
+  .user-chip,
+  .coin-chip {
+    margin-left: 0;
+  }
+
   main {
     padding: 18px;
+  }
+}
+
+@media (max-width: 640px) {
+  .sidebar {
+    width: min(84vw, 288px);
+  }
+
+  .brand {
+    height: 78px;
+    padding: 0 18px;
+  }
+
+  mat-nav-list {
+    padding: 10px;
+  }
+
+  .topbar {
+    align-items: flex-start;
+  }
+
+  .topbar > div {
+    flex-basis: calc(100% - 58px);
+  }
+
+  .eyebrow {
+    font-size: 0.78rem;
+  }
+
+  .coin-chip {
+    flex: 1 1 auto;
+  }
+
+  .user-chip {
+    max-width: 100%;
+    flex: 1 1 100%;
+  }
+
+  main {
+    padding: 14px;
   }
 }

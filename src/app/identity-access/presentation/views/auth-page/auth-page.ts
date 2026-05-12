@@ -8,7 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { TranslatePipe } from '@ngx-translate/core';
-import { IdentityAccessApi } from '../../../infrastructure/identity-access-api';
+import { IdentityAccessStore } from '../../../application/identity-access-store';
 import { IdentityAccessData } from '../../../domain/model/identity-access-data.entity';
 
 @Component({
@@ -30,11 +30,11 @@ import { IdentityAccessData } from '../../../domain/model/identity-access-data.e
 export class AuthPage {
   protected readonly identity = signal<IdentityAccessData | null>(null);
 
-  constructor(private readonly identityAccessApi: IdentityAccessApi) {
+  constructor(private readonly identityAccessStore: IdentityAccessStore) {
     void this.load();
   }
 
   private async load(): Promise<void> {
-    this.identity.set(await this.identityAccessApi.getIdentity());
+    this.identity.set(await this.identityAccessStore.load());
   }
 }

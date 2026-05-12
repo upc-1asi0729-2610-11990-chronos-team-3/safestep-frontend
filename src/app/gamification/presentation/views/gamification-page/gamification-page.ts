@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { TranslatePipe } from '@ngx-translate/core';
-import { GamificationApi } from '../../../infrastructure/gamification-api';
+import { GamificationStore } from '../../../application/gamification-store';
 import { Badge, GamificationData, LeaderboardEntry, Mission } from '../../../domain/model/gamification.entity';
 
 @Component({
@@ -60,13 +60,13 @@ export class GamificationPage {
     return `rarity-${badge.rarity.toLowerCase()}`;
   }
 
-  constructor(private readonly gamificationApi: GamificationApi) {
+  constructor(private readonly gamificationStore: GamificationStore) {
     void this.load();
   }
 
   private async load(): Promise<void> {
     try {
-      this.data.set(await this.gamificationApi.getGamification());
+      this.data.set(await this.gamificationStore.load());
     } catch {
       this.error.set('gamification.loadError');
     }

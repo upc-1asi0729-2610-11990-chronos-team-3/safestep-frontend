@@ -164,6 +164,7 @@ p {
   justify-content: space-between;
   gap: 14px;
   margin: 20px 0 12px;
+  flex-wrap: wrap;
 }
 
 .coupon-grid,
@@ -435,6 +436,7 @@ button[mat-flat-button] {
 
 .cart-item h3 {
   margin-bottom: 4px;
+  overflow-wrap: anywhere;
 }
 
 .quantity-controls {
@@ -532,10 +534,18 @@ button[mat-flat-button] {
 }
 
 @media (max-width: 1180px) {
-  .store-topbar,
   .product-grid,
   .kit-strip {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .store-topbar {
+    grid-template-columns: minmax(190px, 0.7fr) minmax(260px, 1fr) repeat(2, auto);
+  }
+
+  .delivery-button,
+  .history-button {
+    grid-column: span 1;
   }
 
   .detail-layout,
@@ -555,13 +565,46 @@ button[mat-flat-button] {
     grid-template-columns: 1fr;
   }
 
+  .store-topbar {
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .brand-lockup,
+  .search-box,
+  .delivery-button,
+  .points-button,
+  .history-button,
+  .cart-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .search-box {
+    justify-content: flex-start;
+  }
+
+  .store-hero,
+  .coupon-panel {
+    padding: 20px;
+  }
+
   .detail-grid,
   .checkout-form {
     grid-template-columns: 1fr;
   }
 
+  .gallery-main {
+    min-height: 280px;
+  }
+
+  .thumb-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
   .cart-item {
     grid-template-columns: 82px minmax(0, 1fr);
+    align-items: start;
   }
 
   .cart-image {
@@ -573,5 +616,12 @@ button[mat-flat-button] {
   .remove-button {
     grid-column: 2;
     width: fit-content;
+  }
+
+  .history-head,
+  .history-products div,
+  .spec-row {
+    align-items: flex-start;
+    flex-direction: column;
   }
 }

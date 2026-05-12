@@ -6,9 +6,9 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { TranslatePipe } from '@ngx-translate/core';
-import { MedicalSimulationApi } from '../../../infrastructure/medical-simulation-api';
 import { MedicalSimulation } from '../../../domain/model/medical-simulation.entity';
-import { GamificationApi } from '../../../../gamification/infrastructure/gamification-api';
+import { MedicalSimulationStore } from '../../../application/medical-simulation-store';
+import { GamificationStore } from '../../../../gamification/application/gamification-store';
 
 @Component({
   selector: 'app-simulations-page',
@@ -29,8 +29,8 @@ export class SimulationsPage {
   });
 
   constructor(
-    private readonly medicalSimulationApi: MedicalSimulationApi,
-    private readonly gamificationApi: GamificationApi,
+    private readonly medicalSimulationStore: MedicalSimulationStore,
+    private readonly gamificationStore: GamificationStore,
   ) {
     void this.load();
   }
@@ -50,8 +50,8 @@ export class SimulationsPage {
 
   private async load(): Promise<void> {
     const [data, gamification] = await Promise.all([
-      this.medicalSimulationApi.getMedicalSimulations(),
-      this.gamificationApi.getGamification(),
+      this.medicalSimulationStore.load(),
+      this.gamificationStore.load(),
     ]);
     const counts = (gamification.coinTransactions ?? [])
       .filter((transaction) => transaction.userId === 'usr-001' && transaction.successful)

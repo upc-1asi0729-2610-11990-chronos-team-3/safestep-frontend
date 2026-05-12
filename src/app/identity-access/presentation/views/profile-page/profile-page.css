@@ -87,3 +87,23 @@ input {
     flex-direction: column;
   }
 }
+
+@media (max-width: 560px) {
+  .profile-card,
+  .settings-grid article {
+    padding: 20px;
+  }
+
+  .avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 18px;
+    font-size: 2rem;
+  }
+
+  label {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 12px 0;
+  }
+}

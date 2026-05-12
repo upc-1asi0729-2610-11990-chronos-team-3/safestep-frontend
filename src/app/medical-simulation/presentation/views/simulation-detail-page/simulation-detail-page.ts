@@ -5,14 +5,14 @@ import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslatePipe } from '@ngx-translate/core';
-import { MedicalSimulationApi } from '../../../infrastructure/medical-simulation-api';
 import { MedicalSimulation, MedicalSimulationData, SimulationAttempt } from '../../../domain/model/medical-simulation.entity';
-import { EcommerceApi } from '../../../../ecommerce/infrastructure/ecommerce-api';
+import { MedicalSimulationStore } from '../../../application/medical-simulation-store';
 import { StoreProduct } from '../../../../ecommerce/domain/model/ecommerce.entity';
-import { IdentityAccessApi } from '../../../../identity-access/infrastructure/identity-access-api';
+import { EcommerceStore } from '../../../../ecommerce/application/ecommerce-store';
 import { IdentityAccessData } from '../../../../identity-access/domain/model/identity-access-data.entity';
-import { GamificationApi } from '../../../../gamification/infrastructure/gamification-api';
+import { IdentityAccessStore } from '../../../../identity-access/application/identity-access-store';
 import { CoinTransaction, GamificationData } from '../../../../gamification/domain/model/gamification.entity';
+import { GamificationStore } from '../../../../gamification/application/gamification-store';
 import { SafeCoinsWalletStore } from '../../../../shared/application/safe-coins-wallet-store';
 
 @Component({
@@ -65,10 +65,10 @@ export class SimulationDetailPage {
 
   constructor(
     private readonly route: ActivatedRoute,
-    private readonly medicalSimulationApi: MedicalSimulationApi,
-    private readonly ecommerceApi: EcommerceApi,
-    private readonly identityAccessApi: IdentityAccessApi,
-    private readonly gamificationApi: GamificationApi,
+    private readonly medicalSimulationStore: MedicalSimulationStore,
+    private readonly ecommerceStore: EcommerceStore,
+    private readonly identityAccessStore: IdentityAccessStore,
+    private readonly gamificationStore: GamificationStore,
     private readonly wallet: SafeCoinsWalletStore,
   ) {
     void this.load();
@@ -178,10 +178,10 @@ export class SimulationDetailPage {
 
     try {
       const [savedIdentity, savedGamification, savedMedicalSimulationData] = await Promise.all([
-        this.identityAccessApi.updateIdentity(updatedIdentity),
-        this.gamificationApi.updateGamification(updatedGamification),
+        this.identityAccessStore.update(updatedIdentity),
+        this.gamificationStore.update(updatedGamification),
         updatedMedicalSimulationData
-          ? this.medicalSimulationApi.updateMedicalSimulations(updatedMedicalSimulationData)
+          ? this.medicalSimulationStore.update(updatedMedicalSimulationData)
           : Promise.resolve(null),
       ]);
       this.identity.set(savedIdentity);
@@ -219,10 +219,10 @@ export class SimulationDetailPage {
   private async load(): Promise<void> {
     const id = this.route.snapshot.paramMap.get('id');
     const [simulationData, ecommerceData, identity, gamification] = await Promise.all([
-      this.medicalSimulationApi.getMedicalSimulations(),
-      this.ecommerceApi.getEcommerce(),
-      this.identityAccessApi.getIdentity(),
-      this.gamificationApi.getGamification(),
+      this.medicalSimulationStore.load(),
+      this.ecommerceStore.load(),
+      this.identityAccessStore.load(),
+      this.gamificationStore.load(),
     ]);
     const simulation = simulationData.simulations.find((item) => item.id === id) ?? null;
     this.simulationData.set(simulationData);

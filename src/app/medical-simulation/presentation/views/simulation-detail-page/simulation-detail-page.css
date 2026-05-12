@@ -262,3 +262,31 @@ p {
     grid-template-columns: 1fr;
   }
 }
+
+@media (max-width: 560px) {
+  .detail-head,
+  .step-card,
+  .result-panel,
+  .empty-state,
+  .coin-result {
+    padding: 18px;
+  }
+
+  h2 {
+    font-size: 1.9rem;
+  }
+
+  .options button {
+    min-height: 54px;
+  }
+
+  .result-grid strong,
+  .coin-grid strong {
+    font-size: 1.45rem;
+  }
+
+  .finish-button {
+    width: 100%;
+    justify-content: center;
+  }
+}
