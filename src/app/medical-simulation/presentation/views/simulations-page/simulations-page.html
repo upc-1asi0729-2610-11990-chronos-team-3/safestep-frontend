@@ -1,67 +1,114 @@
+@if (medicalSimulationStore.loading()) {
+  <mat-progress-bar mode="indeterminate" />
+}
+
+@if (medicalSimulationStore.error(); as err) {
+  <div class="error-banner">
+    <mat-icon>error_outline</mat-icon>
+    <p>{{ err }}</p>
+  </div>
+}
+
 <section class="page-head">
   <div>
     <p class="eyebrow">{{ 'shared.medicalSimulation' | translate }}</p>
     <h2>{{ 'simulations.title' | translate }}</h2>
-    <p>
-      {{ 'simulations.description' | translate }}
-    </p>
+    <p>{{ 'simulations.description' | translate }}</p>
   </div>
-  <label class="simulation-search">
-    <mat-icon>search</mat-icon>
-    <input type="search" placeholder="Buscar simulacion por nombre" (input)="setSearchQuery($event)" />
-  </label>
+  <a mat-flat-button color="primary" routerLink="/app/simulations/admin">
+    <mat-icon>admin_panel_settings</mat-icon>
+    {{ 'admin.manageSimulations' | translate }}
+  </a>
+</section>
+
+<section class="filter-rail">
+  <button
+    type="button"
+    class="filter-pill"
+    [class.active]="activeFilter() === null"
+    (click)="setFilter(null)"
+  >
+    {{ 'simulations.allFilter' | translate }}
+  </button>
+  @for (type of emergencyTypes(); track type) {
+    <button
+      type="button"
+      class="filter-pill"
+      [class.active]="activeFilter() === type"
+      (click)="setFilter(type)"
+    >
+      {{ type }}
+    </button>
+  }
 </section>
 
 <section class="simulation-grid">
+  @if (inProgressSim(); as inProgress) {
+    <mat-card class="simulation-card continue-card card-hover" routerLink="/app/simulations">
+      <div class="continue-overlay">
+        <mat-icon class="continue-icon">play_circle</mat-icon>
+        <div class="continue-text">
+          <span class="chip chip-orange">{{ inProgress.emergencyType }}</span>
+          <strong>{{ 'simulations.continueWhereLeft' | translate }}</strong>
+          <span class="body-sm">{{ inProgress.title }} — {{ inProgress.completion }}% completado</span>
+        </div>
+      </div>
+      <div class="progress"><div class="progress-fill" [style.width]="inProgress.completion + '%'"></div></div>
+    </mat-card>
+  }
+
   @for (simulation of filteredSimulations(); track simulation.id) {
     <mat-card class="simulation-card card-hover">
-      <div class="media" [style.background-image]="'linear-gradient(180deg, rgba(15,23,42,.05), rgba(15,23,42,.28)), url(' + simulation.imageUrl + ')'">
-        <mat-chip>{{ simulation.emergencyType }}</mat-chip>
-        @if (isCompleted(simulation)) {
-          <span class="completed-pill">
-            <mat-icon>check_circle</mat-icon>
-            Completada {{ completedCount(simulation) }} {{ completedCount(simulation) === 1 ? 'vez' : 'veces' }}
+      <div
+        class="sim-media"
+        [style.background-image]="'linear-gradient(135deg, rgba(15,23,42,.32), rgba(14,165,233,.14)), url(' + simulation.imageUrl + ')'"
+      >
+        <span class="chip-orange chip">{{ simulation.emergencyType }}</span>
+        @if (simulation.status === 'Completado') {
+          <span class="completed-chip">
+            <mat-icon>check_circle</mat-icon> {{ 'simulations.completed' | translate }}
           </span>
         }
       </div>
-      <mat-card-content class="body">
+      <div class="sim-body">
+        <div class="info-grid">
+          <span class="chip chip-blue">{{ simulation.difficulty }}</span>
+          <span class="chip">&#9200; {{ simulation.durationMinutes }} min</span>
+          <span class="chip">+{{ simulation.xpReward }} XP</span>
+          <span class="chip">+{{ simulation.coinReward }} <mat-icon style="font-size:inherit;">paid</mat-icon></span>
+        </div>
         <h3>{{ simulation.title }}</h3>
         <p>{{ simulation.description }}</p>
-        <div class="info-grid">
-          <span>
-            <mat-icon>signal_cellular_alt</mat-icon>
-            {{ simulation.difficulty }}
-          </span>
-          <span>
-            <mat-icon>schedule</mat-icon>
-            {{ simulation.durationMinutes }} min
-          </span>
-          <span>
-            <mat-icon>bolt</mat-icon>
-            {{ simulation.xpReward }} XP
-          </span>
-          <span>
-            <mat-icon>paid</mat-icon>
-            {{ simulation.coinReward }} coins
-          </span>
-        </div>
-        <mat-progress-bar mode="determinate" [value]="simulation.completion" />
-        <div class="footer-row">
-          <strong [class.completed-status]="isCompleted(simulation)">
-            {{ isCompleted(simulation) ? 'Completada' : simulation.status }}
+        <div class="progress"><div class="progress-fill" [style.width]="simulation.completion + '%'" [class.green]="simulation.completion === 100"></div></div>
+        <div class="sim-footer">
+          <strong class="body-sm" [style.color]="simulation.status === 'Completado' ? 'var(--safe-green)' : simulation.status === 'En progreso' ? 'var(--safe-primary)' : 'var(--safe-gray-500)'">
+            @if (simulation.status === 'Completado') {
+              <mat-icon style="font-size:1rem;vertical-align:text-bottom;">check_circle</mat-icon> 100%
+            } @else if (simulation.completion > 0) {
+              {{ simulation.completion }}%
+            } @else {
+              {{ 'shared.notStarted' | translate }}
+            }
           </strong>
-          <a mat-flat-button color="primary" [routerLink]="['/app/simulaciones', simulation.id]">
-            {{ (isCompleted(simulation) ? 'shared.review' : 'shared.train') | translate }}
+          <a mat-flat-button color="primary" [routerLink]="['/app/simulations', simulation.id]">
+            @if (simulation.status === 'Completado') {
+              {{ 'shared.review' | translate }}
+            } @else if (simulation.completion > 0) {
+              {{ 'shared.continue' | translate }}
+            } @else {
+              {{ 'shared.start' | translate }}
+            }
           </a>
         </div>
-      </mat-card-content>
+      </div>
     </mat-card>
-  } @empty {
-    <mat-card class="empty-state" appearance="outlined">
-      <mat-card-content>
-        <mat-icon>search_off</mat-icon>
-        <strong>No se encontraron simulaciones con ese nombre.</strong>
-      </mat-card-content>
-    </mat-card>
+  }
+
+  @if (filteredSimulations().length === 0) {
+    <div class="empty-state">
+      <mat-icon>search_off</mat-icon>
+      <strong>{{ 'simulations.noSimulations' | translate }}</strong>
+      <span class="body-sm">{{ 'simulations.noResultsFilter' | translate }}</span>
+    </div>
   }
 </section>
