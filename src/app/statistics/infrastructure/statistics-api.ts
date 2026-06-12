@@ -1,22 +1,35 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { firstValueFrom } from 'rxjs';
+import { Observable } from 'rxjs';
 import { BaseApi } from '../../shared/infrastructure/base-api';
-import { environment } from '../../../environments/environment';
-import { StatsData } from '../domain/model/statistics.entity';
-import { StatisticsAssembler } from './assemblers/statistics.assembler';
-import { StatisticsResource } from './resources/statistics.resource';
+import { StatisticsDataApiEndpoint } from './statistics-data-api-endpoint';
+import { RecommendationsApiEndpoint } from './recommendations-api-endpoint';
+import { ProgressVisualsApiEndpoint } from './progress-visuals-api-endpoint';
+import { CertificatesApiEndpoint } from './certificates-api-endpoint';
+import { StatisticsData } from '../domain/model/statistics-data.entity';
+import { RecommendationEntry } from '../domain/model/recommendation-entry.entity';
+import { ProgressVisualEntry } from '../domain/model/progress-visual-entry.entity';
+import { CertificateEntry } from '../domain/model/certificate-entry.entity';
 
 @Injectable({ providedIn: 'root' })
 export class StatisticsApi extends BaseApi {
-  private readonly endpointUrl = `${environment.platformProviderApiBaseUrl}${environment.statisticsEndpointPath}`;
+  private readonly statisticsDataEndpoint: StatisticsDataApiEndpoint;
+  private readonly recommendationsEndpoint: RecommendationsApiEndpoint;
+  private readonly progressVisualsEndpoint: ProgressVisualsApiEndpoint;
+  private readonly certificatesEndpoint: CertificatesApiEndpoint;
 
-  constructor(private readonly http: HttpClient) {
+  constructor(http: HttpClient) {
     super();
+    this.statisticsDataEndpoint = new StatisticsDataApiEndpoint(http);
+    this.recommendationsEndpoint = new RecommendationsApiEndpoint(http);
+    this.progressVisualsEndpoint = new ProgressVisualsApiEndpoint(http);
+    this.certificatesEndpoint = new CertificatesApiEndpoint(http);
   }
 
-  async getStats(): Promise<StatsData> {
-    const resource = await firstValueFrom(this.http.get<StatisticsResource>(this.endpointUrl));
-    return StatisticsAssembler.toEntity(resource);
-  }
+  getStatistics(): Observable<StatisticsData> { return this.statisticsDataEndpoint.getStatistics(); }
+  updateStatistics(data: StatisticsData): Observable<StatisticsData> { return this.statisticsDataEndpoint.updateStatistics(data); }
+
+  getRecommendations(): Observable<RecommendationEntry[]> { return this.recommendationsEndpoint.getAll(); }
+  getProgressVisuals(): Observable<ProgressVisualEntry[]> { return this.progressVisualsEndpoint.getAll(); }
+  getCertificates(): Observable<CertificateEntry[]> { return this.certificatesEndpoint.getAll(); }
 }
