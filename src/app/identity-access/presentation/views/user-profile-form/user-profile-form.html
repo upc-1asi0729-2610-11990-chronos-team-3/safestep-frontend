@@ -1,0 +1,60 @@
+<section class="form-page">
+  <h2>{{ isEdit ? ('admin.editProfile' | translate) : ('admin.addProfile' | translate) }}</h2>
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <mat-form-field>
+      <mat-label>{{ 'common.id' | translate }}</mat-label>
+      <input matInput formControlName="id" />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>{{ 'profileForm.fullName' | translate }}</mat-label>
+      <input matInput formControlName="fullName" />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>{{ 'common.email' | translate }}</mat-label>
+      <input matInput type="email" formControlName="email" />
+      @if (form.controls.email.hasError('email')) {
+        <mat-error>{{ 'profileForm.invalidEmail' | translate }}</mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>{{ 'common.rol' | translate }}</mat-label>
+      <input matInput formControlName="role" />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>{{ 'common.city' | translate }}</mat-label>
+      <input matInput formControlName="city" />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>{{ 'common.avatarUrl' | translate }}</mat-label>
+      <input matInput formControlName="avatarUrl" />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>{{ 'common.level' | translate }}</mat-label>
+      <input matInput type="number" formControlName="level" />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>{{ 'common.xp' | translate }}</mat-label>
+      <input matInput type="number" formControlName="xp" />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>{{ 'common.nextLevelXp' | translate }}</mat-label>
+      <input matInput type="number" formControlName="nextLevelXp" />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>{{ 'common.safeCoins' | translate }}</mat-label>
+      <input matInput type="number" formControlName="safeCoins" />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>{{ 'common.streakDays' | translate }}</mat-label>
+      <input matInput type="number" formControlName="streakDays" />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>{{ 'common.completedSimulations' | translate }}</mat-label>
+      <input matInput type="number" formControlName="completedSimulations" />
+    </mat-form-field>
+    <div class="actions">
+      <button mat-button type="button" (click)="cancel()">{{ 'common.cancel' | translate }}</button>
+      <button mat-flat-button color="primary" type="submit">{{ isEdit ? ('common.update' | translate) : ('common.add' | translate) }}</button>
+    </div>
+  </form>
+</section>

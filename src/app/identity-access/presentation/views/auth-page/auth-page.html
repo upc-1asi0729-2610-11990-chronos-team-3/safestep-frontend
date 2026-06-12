@@ -1,31 +1,33 @@
 <section class="auth-layout">
+  @if (store.loading()) {
+    <p>{{ 'shared.loading' | translate }}</p>
+  }
+  @if (store.error(); as err) {
+    <p class="error">{{ err }}</p>
+  }
+
   <div class="auth-copy">
-    <a class="brand" routerLink="/auth">SafeStep</a>
+      <a class="brand" routerLink="/auth">
+        <span class="brand-mark">S</span>
+        {{ 'shell.safeStep' | translate }}
+      </a>
     <p class="eyebrow">{{ 'auth.eyebrow' | translate }}</p>
-    <h1>{{ 'auth.title' | translate }}</h1>
-    <p>
-      {{ 'auth.description' | translate }}
-    </p>
+    <h1 class="display">{{ 'auth.title' | translate }}</h1>
+    <p>{{ 'auth.description' | translate }}</p>
 
     <div class="proof-grid">
-      <mat-card appearance="outlined">
-        <mat-card-content>
-          <strong>24</strong>
-          <span>{{ 'auth.completedSimulations' | translate }}</span>
-        </mat-card-content>
-      </mat-card>
-      <mat-card appearance="outlined">
-        <mat-card-content>
-          <strong>18</strong>
-          <span>{{ 'auth.activeStreakDays' | translate }}</span>
-        </mat-card-content>
-      </mat-card>
-      <mat-card appearance="outlined">
-        <mat-card-content>
-          <strong>1,260</strong>
-          <span>{{ 'shell.safeCoinsAvailable' | translate }}</span>
-        </mat-card-content>
-      </mat-card>
+      <div class="proof-card">
+        <strong>24</strong>
+        <span>{{ 'auth.completedSimulations' | translate }}</span>
+      </div>
+      <div class="proof-card">
+        <strong>18</strong>
+        <span>{{ 'auth.activeStreakDays' | translate }}</span>
+      </div>
+      <div class="proof-card">
+        <strong>1,260</strong>
+        <span>{{ 'shell.safeCoinsAvailable' | translate }}</span>
+      </div>
     </div>
   </div>
 
@@ -54,28 +56,26 @@
           <a href="#">{{ 'auth.recoverAccess' | translate }}</a>
         </div>
 
-        <a mat-flat-button color="primary" routerLink="/app/dashboard">{{ 'auth.enter' | translate }}</a>
+        <a mat-flat-button color="primary" routerLink="/app/dashboard" (click)="store.login()">{{ 'auth.enter' | translate }}</a>
       </form>
 
-      @if (identity(); as data) {
-        <div class="providers">
-          <span>{{ 'auth.alsoWith' | translate }}</span>
-          @for (provider of data.authProviders; track provider.id) {
-            <button mat-stroked-button type="button" [disabled]="!provider.enabled">
-              {{ provider.name }}
-            </button>
-          }
-        </div>
+       <div class="providers">
+         <span>{{ 'auth.alsoWith' | translate }}</span>
+         @for (provider of authProviders(); track provider.id) {
+           <button mat-stroked-button type="button" disabled>
+             {{ provider.name }}
+           </button>
+         }
+       </div>
 
-        <div class="rules">
-          <strong>{{ 'auth.securityRules' | translate }}</strong>
-          <mat-chip-set>
-            @for (rule of data.passwordRules; track rule) {
-              <mat-chip>{{ rule }}</mat-chip>
-            }
-          </mat-chip-set>
-        </div>
-      }
+       <div class="rules">
+         <strong>{{ 'auth.securityRules' | translate }}</strong>
+         <mat-chip-set>
+           @for (rule of passwordRules(); track rule) {
+             <mat-chip>{{ rule }}</mat-chip>
+           }
+         </mat-chip-set>
+       </div>
     </mat-card-content>
   </mat-card>
 </section>

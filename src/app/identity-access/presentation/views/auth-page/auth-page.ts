@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -9,7 +9,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { TranslatePipe } from '@ngx-translate/core';
 import { IdentityAccessStore } from '../../../application/identity-access-store';
-import { IdentityAccessData } from '../../../domain/model/identity-access-data.entity';
 
 @Component({
   selector: 'app-auth-page',
@@ -28,13 +27,16 @@ import { IdentityAccessData } from '../../../domain/model/identity-access-data.e
   styleUrl: './auth-page.css',
 })
 export class AuthPage {
-  protected readonly identity = signal<IdentityAccessData | null>(null);
+  protected readonly store = inject(IdentityAccessStore);
+  protected readonly authProviders = this.store.authProviders;
+  protected readonly passwordRules = signal<string[]>([
+    'Mínimo 8 caracteres',
+    'Al menos una mayúscula',
+    'Al menos un número',
+    'Al menos un caracter especial',
+  ]);
 
-  constructor(private readonly identityAccessStore: IdentityAccessStore) {
-    void this.load();
-  }
-
-  private async load(): Promise<void> {
-    this.identity.set(await this.identityAccessStore.load());
+  constructor() {
+    // Store auto-loads in its constructor.
   }
 }

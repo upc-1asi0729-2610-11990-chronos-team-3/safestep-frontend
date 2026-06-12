@@ -1,25 +1,22 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, computed } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { TranslatePipe } from '@ngx-translate/core';
+import { RouterLink } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
 import { IdentityAccessStore } from '../../../application/identity-access-store';
-import { UserProfile } from '../../../domain/model/user-profile.entity';
 
 @Component({
   selector: 'app-profile-page',
-  imports: [MatCardModule, MatCheckboxModule, TranslatePipe],
+  imports: [RouterLink, MatButtonModule, MatCardModule, MatCheckboxModule, TranslatePipe],
   templateUrl: './profile-page.html',
   styleUrl: './profile-page.css',
 })
 export class ProfilePage {
-  protected readonly user = signal<UserProfile | null>(null);
+  protected readonly store = inject(IdentityAccessStore);
+  protected readonly user = computed(() => this.store.getCurrentUser());
 
-  constructor(private readonly identityAccessStore: IdentityAccessStore) {
-    void this.load();
-  }
-
-  private async load(): Promise<void> {
-    const data = await this.identityAccessStore.load();
-    this.user.set(data.sampleUser);
+  constructor() {
+    // Store auto-loads in its constructor.
   }
 }
