@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -16,11 +16,14 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatListModule } from '@angular/material/list';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatRadioModule } from '@angular/material/radio';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { EcommerceStore } from '../../../application/ecommerce-store';
 import { IdentityAccessStore } from '../../../../identity-access/application/identity-access-store';
 import { CartItem } from '../../../domain/model/cart-item.entity';
 import { Order } from '../../../domain/model/order.entity';
+import { FormGroup } from '@angular/forms';
+import { ShippingAddress } from '../../../domain/model/shipping-address.entity';
 import { formatPrice } from '../../../../shared/infrastructure/format-price';
 
 @Component({
@@ -31,6 +34,7 @@ import { formatPrice } from '../../../../shared/infrastructure/format-price';
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     MatCardModule,
     MatButtonModule,
     MatIconModule,
@@ -44,6 +48,7 @@ import { formatPrice } from '../../../../shared/infrastructure/format-price';
     MatMenuModule,
     MatListModule,
     MatDialogModule,
+    MatRadioModule,
     RouterLink,
     TranslateModule,
   ],
@@ -53,6 +58,14 @@ export class StorePage implements OnInit {
   selectedCategory = '';
   searchQuery = '';
   selectedProductId: string | null = null;
+  currentStep = signal(0);
+  purchaseComplete = false;
+  showHistory = signal(false);
+  selectedAddressId: number | null = null;
+  shippingForm: FormGroup;
+  selectedPaymentMethodId: number | null = null;
+  couponCode = '';
+  couponError = false;
 
   formatPrice = formatPrice;
 
@@ -62,7 +75,16 @@ export class StorePage implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     public translate: TranslateService,
-  ) {}
+    private fb: FormBuilder,
+  ) {
+    this.shippingForm = this.fb.group({
+      recipientName: ['', [Validators.required, Validators.minLength(3)]],
+      city: ['', [Validators.required, Validators.minLength(2)]],
+      district: ['', [Validators.required, Validators.minLength(2)]],
+      address: ['', [Validators.required, Validators.minLength(5)]],
+      label: [''],
+    });
+  }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
@@ -126,12 +148,24 @@ export class StorePage implements OnInit {
     return this.store.buildOrderLines(this.userOrders[0], this.store.products(), this.store.emergencyKits());
   }
 
+  get selectedPaymentMethod() {
+    return this.store.paymentMethods().find((m) => m.id === this.selectedPaymentMethodId) ?? null;
+  }
+
+  get discountAmount(): number {
+    return this.store.calculateDiscount(this.cartTotal);
+  }
+
+  get finalTotal(): number {
+    return Math.max(0, this.cartTotal - this.discountAmount);
+  }
+
   selectCategory(category: string): void {
     this.selectedCategory = category;
   }
 
   viewProduct(productId: string): void {
-    this.router.navigate(['/app/store', productId]);
+    this.router.navigate(['/app/store/products', productId]);
   }
 
   goBackToStore(): void {
@@ -164,7 +198,76 @@ export class StorePage implements OnInit {
     }
   }
 
+  selectAddress(addr: ShippingAddress): void {
+    this.selectedAddressId = addr.id;
+    this.shippingForm.patchValue({
+      recipientName: addr.recipientName,
+      city: addr.city,
+      district: addr.district,
+      label: addr.label,
+    });
+    this.shippingForm.markAllAsTouched();
+  }
+
+  clearAddressSelection(): void {
+    this.selectedAddressId = null;
+    this.shippingForm.reset();
+  }
+
+  applyCoupon(): void {
+    this.couponError = false;
+    if (!this.couponCode.trim()) {
+      return;
+    }
+    const success = this.store.applyCoupon(this.couponCode.trim());
+    if (!success) {
+      this.couponError = true;
+    }
+  }
+
+  removeCoupon(): void {
+    this.store.clearCoupon();
+    this.couponCode = '';
+    this.couponError = false;
+  }
+
   checkout(): void {
+    if (this.cartLines.length === 0) {
+      return;
+    }
+    this.currentStep.set(1);
+    this.purchaseComplete = false;
+  }
+
+  nextStep(): void {
+    if (this.currentStep() < 4) {
+      this.currentStep.update((s) => s + 1);
+    }
+  }
+
+  prevStep(): void {
+    if (this.currentStep() > 1 && !this.purchaseComplete) {
+      this.currentStep.update((s) => s - 1);
+    }
+  }
+
+  viewHistory(): void {
+    this.currentStep.set(0);
+    this.showHistory.set(true);
+    this.purchaseComplete = false;
+  }
+
+  closeCheckout(): void {
+    this.currentStep.set(0);
+    this.purchaseComplete = false;
+    this.showHistory.set(false);
+  }
+
+  getOrderLines(order: Order) {
+    return this.store.buildOrderLines(order, this.store.products(), this.store.emergencyKits());
+  }
+
+  confirmOrder(): void {
     if (this.cartLines.length === 0) {
       return;
     }
@@ -172,12 +275,19 @@ export class StorePage implements OnInit {
       id: '',
       userId: this.currentUserId,
       items: this.cartLines.flatMap((line) => Array(line.item.quantity).fill(line.product.id)),
-      total: this.cartTotal,
+      total: this.finalTotal,
       status: 'pending',
       createdAt: new Date().toISOString(),
+      shippingAddressId: this.selectedAddressId,
+      paymentMethodId: this.selectedPaymentMethodId,
+      couponCode: this.store.appliedCoupon()?.title ?? '',
+      discountApplied: this.discountAmount,
     }));
     this.cartLines.forEach((line) => {
       this.store.deleteCartItem(line.item.id);
     });
+    this.purchaseComplete = true;
+    this.store.clearCoupon();
+    this.selectedPaymentMethodId = null;
   }
 }

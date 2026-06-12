@@ -4171,6 +4171,39 @@
         "mochila-emergencia"
       ],
       "createdAt": "2026-06-11"
+    },
+    {
+      "id": "v1jWe44",
+      "userId": "usr-001",
+      "total": 249.8,
+      "status": "pending",
+      "items": [
+        "kit-hogar",
+        "mochila-emergencia"
+      ],
+      "createdAt": "2026-06-12T19:38:54.557Z"
+    },
+    {
+      "id": "0ym-eLE",
+      "userId": "usr-001",
+      "total": 184.8,
+      "status": "pending",
+      "items": [
+        "mochila-emergencia",
+        "mascarilla-rcp"
+      ],
+      "createdAt": "2026-06-12T19:39:23.528Z"
+    },
+    {
+      "id": "_ltfF9-",
+      "userId": "usr-001",
+      "total": 44.8,
+      "status": "pending",
+      "items": [
+        "mascarilla-rcp",
+        "apposito-quemaduras"
+      ],
+      "createdAt": "2026-06-12T20:32:15.088Z"
     }
   ],
   "ecommerce": {},

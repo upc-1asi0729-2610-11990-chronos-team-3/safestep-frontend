@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -29,12 +29,18 @@ import { IdentityAccessStore } from '../../../application/identity-access-store'
 export class AuthPage {
   protected readonly store = inject(IdentityAccessStore);
   protected readonly authProviders = this.store.authProviders;
+  private readonly router = inject(Router);
   protected readonly passwordRules = signal<string[]>([
     'Mínimo 8 caracteres',
     'Al menos una mayúscula',
     'Al menos un número',
     'Al menos un caracter especial',
   ]);
+
+  protected handleLogin(): void {
+    this.store.login();
+    this.router.navigate(['/app/dashboard']);
+  }
 
   constructor() {
     // Store auto-loads in its constructor.

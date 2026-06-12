@@ -39,6 +39,7 @@ export class EcommerceStore {
   private readonly emergencyKitsSignal = signal<EmergencyKit[]>([]);
   private readonly loadingSignal = signal<boolean>(false);
   private readonly errorSignal = signal<string | null>(null);
+  private readonly appliedCouponSignal = signal<Coupon | null>(null);
 
   readonly products = this.productsSignal.asReadonly();
   readonly coupons = this.couponsSignal.asReadonly();
@@ -52,6 +53,7 @@ export class EcommerceStore {
   readonly emergencyKits = this.emergencyKitsSignal.asReadonly();
   readonly loading = this.loadingSignal.asReadonly();
   readonly error = this.errorSignal.asReadonly();
+  readonly appliedCoupon = this.appliedCouponSignal.asReadonly();
 
   readonly productCount = computed(() => this.products().length);
   readonly orderCount = computed(() => this.orders().length);
@@ -166,6 +168,37 @@ export class EcommerceStore {
 
   getCouponById(id: string | null): Coupon | undefined {
     return this.coupons().find((coupon) => coupon.id === id);
+  }
+
+  getCouponByTitle(title: string): Coupon | undefined {
+    return this.coupons().find((c) => c.title.toLowerCase() === title.toLowerCase());
+  }
+
+  applyCoupon(title: string): boolean {
+    const coupon = this.getCouponByTitle(title);
+    if (coupon) {
+      this.appliedCouponSignal.set(coupon);
+      return true;
+    }
+    return false;
+  }
+
+  clearCoupon(): void {
+    this.appliedCouponSignal.set(null);
+  }
+
+  calculateDiscount(total: number): number {
+    const coupon = this.appliedCouponSignal();
+    if (!coupon) {
+      return 0;
+    }
+    const discount = coupon.discount.trim();
+    if (discount.includes('%')) {
+      const pct = parseFloat(discount.replace('%', '').trim());
+      return total * (pct / 100);
+    }
+    const fixed = parseFloat(discount.replace(/[^0-9.]/g, ''));
+    return Math.min(fixed, total);
   }
 
   addOrder(order: Order): void {

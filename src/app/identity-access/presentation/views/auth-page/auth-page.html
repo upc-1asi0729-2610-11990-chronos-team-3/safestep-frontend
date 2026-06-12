@@ -56,7 +56,7 @@
           <a href="#">{{ 'auth.recoverAccess' | translate }}</a>
         </div>
 
-        <a mat-flat-button color="primary" routerLink="/app/dashboard" (click)="store.login()">{{ 'auth.enter' | translate }}</a>
+        <a mat-flat-button color="primary" (click)="handleLogin()">{{ 'auth.enter' | translate }}</a>
       </form>
 
        <div class="providers">
