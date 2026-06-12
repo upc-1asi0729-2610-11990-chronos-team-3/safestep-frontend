@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, inject, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -6,15 +6,10 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { TranslatePipe } from '@ngx-translate/core';
-import { UserProfile } from '../../../../identity-access/domain/model/user-profile.entity';
 import { IdentityAccessStore } from '../../../../identity-access/application/identity-access-store';
-import { MedicalSimulationData } from '../../../../medical-simulation/domain/model/medical-simulation.entity';
 import { MedicalSimulationStore } from '../../../../medical-simulation/application/medical-simulation-store';
-import { GamificationData } from '../../../../gamification/domain/model/gamification.entity';
 import { GamificationStore } from '../../../../gamification/application/gamification-store';
-import { StoreProduct } from '../../../../ecommerce/domain/model/ecommerce.entity';
 import { EcommerceStore } from '../../../../ecommerce/application/ecommerce-store';
-import { StatsData } from '../../../../statistics/domain/model/statistics.entity';
 import { StatisticsStore } from '../../../../statistics/application/statistics-store';
 
 @Component({
@@ -32,39 +27,62 @@ import { StatisticsStore } from '../../../../statistics/application/statistics-s
   styleUrl: './dashboard-page.css',
 })
 export class DashboardPage {
-  protected readonly user = signal<UserProfile | null>(null);
-  protected readonly simulations = signal<MedicalSimulationData | null>(null);
-  protected readonly gamification = signal<GamificationData | null>(null);
-  protected readonly stats = signal<StatsData | null>(null);
-  protected readonly products = signal<StoreProduct[]>([]);
-  protected readonly nextSimulation = computed(
-    () =>
-      this.simulations()?.simulations.find((simulation) => simulation.status !== 'Completado') ??
-      null,
+  private readonly identityAccessStore = inject(IdentityAccessStore);
+  private readonly medicalSimulationStore = inject(MedicalSimulationStore);
+  private readonly gamificationStore = inject(GamificationStore);
+  private readonly statisticsStore = inject(StatisticsStore);
+  private readonly ecommerceStore = inject(EcommerceStore);
+
+  protected readonly user = computed(() => this.identityAccessStore.getCurrentUser());
+  protected readonly simulations = this.medicalSimulationStore.simulations;
+  protected readonly missions = this.gamificationStore.missions;
+  protected readonly coinTransactions = this.gamificationStore.coinTransactions;
+  protected readonly badges = this.gamificationStore.badges;
+  protected readonly stats = computed(() => {
+    const transactions = this.statisticsStore.getSuccessfulTransactions(this.coinTransactions(), 'usr-001');
+    const userAttempts = this.statisticsStore.getUserAttempts(this.medicalSimulationStore.attempts(), 1);
+    const coins = this.statisticsStore.getTotalCoins(transactions);
+    const xp = this.statisticsStore.getTotalXp(transactions, this.simulations());
+    const minutes = this.statisticsStore.getTrainedMinutes(transactions, this.simulations());
+    const accuracy = this.statisticsStore.getAverageAttemptAccuracy(userAttempts);
+    return [
+      { label: 'SafeCoins', value: `${coins}`, trend: '+0% hoy' },
+      { label: 'XP Total', value: `${xp}`, trend: '+0% hoy' },
+      { label: 'Minutos', value: `${minutes}`, trend: '+0% hoy' },
+      { label: 'Precisión', value: `${accuracy}%`, trend: '+0% hoy' },
+    ];
+  });
+  protected readonly products = computed(() => this.ecommerceStore.getFeaturedProducts(this.ecommerceStore.products()));
+  protected readonly nextSimulations = computed(() => {
+    return this.simulations().filter((s) => s.status !== 'Completado').slice(0, 2);
+  });
+
+  protected readonly loading = computed(() =>
+    this.identityAccessStore.loading() ||
+    this.medicalSimulationStore.loading() ||
+    this.gamificationStore.loading() ||
+    this.statisticsStore.loading() ||
+    this.ecommerceStore.loading(),
   );
 
-  constructor(
-    private readonly identityAccessStore: IdentityAccessStore,
-    private readonly medicalSimulationStore: MedicalSimulationStore,
-    private readonly gamificationStore: GamificationStore,
-    private readonly statisticsStore: StatisticsStore,
-    private readonly ecommerceStore: EcommerceStore,
-  ) {
-    void this.load();
-  }
+  protected readonly errors = computed(() => {
+    const errs: string[] = [];
+    const identityErr = this.identityAccessStore.error();
+    if (identityErr) errs.push(identityErr);
+    const simErr = this.medicalSimulationStore.error();
+    if (simErr) errs.push(simErr);
+    const gameErr = this.gamificationStore.error();
+    if (gameErr) errs.push(gameErr);
+    const statErr = this.statisticsStore.error();
+    if (statErr) errs.push(statErr);
+    const ecomErr = this.ecommerceStore.error();
+    if (ecomErr) errs.push(ecomErr);
+    return errs;
+  });
 
-  private async load(): Promise<void> {
-    const [identity, simulations, gamification, stats, ecommerce] = await Promise.all([
-      this.identityAccessStore.load(),
-      this.medicalSimulationStore.load(),
-      this.gamificationStore.load(),
-      this.statisticsStore.load(),
-      this.ecommerceStore.load(),
-    ]);
-    this.user.set(identity.sampleUser);
-    this.simulations.set(simulations);
-    this.gamification.set(gamification);
-    this.stats.set(stats);
-    this.products.set(ecommerce.products.slice(0, 3));
+  protected readonly hasErrors = computed(() => this.errors().length > 0);
+
+  protected retry(): void {
+    // Stores auto-load in their constructors; no manual retry needed.
   }
 }

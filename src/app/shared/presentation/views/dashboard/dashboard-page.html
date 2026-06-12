@@ -1,41 +1,64 @@
-@if (user(); as currentUser) {
-<mat-card class="hero-panel">
-  <mat-card-content>
-    <div>
-      <p class="eyebrow">{{ 'dashboard.eyebrow' | translate }}</p>
-      <h2>{{ 'dashboard.welcome' | translate: { name: currentUser.fullName.split(' ')[0] } }}</h2>
-      <p>
-        {{ 'dashboard.description' | translate }}
-      </p>
-      <div class="hero-actions">
-        <a mat-flat-button color="primary" routerLink="/app/simulaciones">
-          <mat-icon>play_circle</mat-icon>
-          {{ 'dashboard.continueSimulation' | translate }}
-        </a>
-        <a mat-stroked-button routerLink="/app/tienda">
-          <mat-icon>shopping_bag</mat-icon>
-          {{ 'dashboard.viewRecommendations' | translate }}
-        </a>
-      </div>
-    </div>
-    <aside>
-      <mat-icon class="streak-fire">local_fire_department</mat-icon>
-      <span>{{ currentUser.streakDays }}</span>
-      <strong>{{ 'dashboard.consecutiveDays' | translate }}</strong>
-      <p>{{ currentUser.completedSimulations }} {{ 'dashboard.completedSimulations' | translate }}</p>
-    </aside>
-  </mat-card-content>
-</mat-card>
+@if (loading()) {
+<mat-progress-bar mode="indeterminate" />
 }
 
-@if (stats(); as statsData) {
+@if (hasErrors()) {
+<div class="error-banner">
+  <mat-icon>error_outline</mat-icon>
+  <div class="error-banner-text">
+    @for (error of errors(); track error) {
+    <p>{{ error }}</p>
+    }
+  </div>
+  <button mat-stroked-button (click)="retry()">
+    <mat-icon>refresh</mat-icon>
+    {{ 'shared.retry' | translate }}
+  </button>
+</div>
+}
+
+@if (user(); as currentUser) {
+<section class="hero-panel">
+  <div class="hero-copy">
+    <p class="eyebrow">{{ 'dashboard.eyebrow' | translate }}</p>
+    <h2 class="display">{{ 'dashboard.welcome' | translate: { name: currentUser.fullName.split(' ')[0] } }}</h2>
+    <p>{{ 'dashboard.description' | translate }}</p>
+    <div class="hero-actions">
+      <a mat-flat-button color="primary" routerLink="/app/simulations">
+        <mat-icon>play_circle</mat-icon>
+        {{ 'dashboard.continueSimulation' | translate }}
+      </a>
+      <a mat-stroked-button routerLink="/app/store">
+        <mat-icon>shopping_bag</mat-icon>
+        {{ 'dashboard.viewRecommendations' | translate }}
+      </a>
+    </div>
+  </div>
+  <aside class="hero-stats-grid">
+    <div class="hero-stat">
+      <mat-icon>local_fire_department</mat-icon>
+      <strong>{{ currentUser.streakDays }}</strong>
+      <span>{{ 'dashboard.consecutiveDays' | translate }}</span>
+    </div>
+    <div class="hero-stat">
+      <mat-icon>check_circle</mat-icon>
+      <strong>{{ currentUser.completedSimulations }}</strong>
+      <span>{{ 'dashboard.completedSimulations' | translate }}</span>
+    </div>
+  </aside>
+</section>
+}
+
+@if (stats(); as items) {
 <section class="metric-grid">
-  @for (item of statsData.summary; track item.label) {
-  <mat-card appearance="outlined" class="card-hover">
+  @for (item of items; track item.label) {
+  <mat-card appearance="outlined" class="metric-card card-hover">
     <mat-card-content>
-      <span>{{ item.label }}</span>
-      <strong>{{ item.value }}</strong>
-      <small>{{ item.trend }}</small>
+      <div class="metric-body">
+        <span class="metric-label">{{ item.label }}</span>
+        <strong class="metric-value">{{ item.value }}</strong>
+        <small class="metric-trend">{{ item.trend }}</small>
+      </div>
     </mat-card-content>
   </mat-card>
   }
@@ -45,26 +68,40 @@
 <section class="dashboard-grid">
   <mat-card class="panel simulation-panel card-hover">
     <mat-card-header>
-      <mat-card-title>{{ 'dashboard.nextTraining' | translate }}</mat-card-title>
-      <mat-card-subtitle>{{ 'shared.medicalSimulation' | translate }}</mat-card-subtitle>
-      <a mat-button color="primary" routerLink="/app/simulaciones">{{ 'shared.viewAll' | translate }}</a>
+      <div>
+        <mat-card-title>{{ 'dashboard.nextTraining' | translate }}</mat-card-title>
+        <mat-card-subtitle>{{ 'shared.medicalSimulation' | translate }}</mat-card-subtitle>
+      </div>
+      <a mat-button color="primary" routerLink="/app/simulations">{{ 'shared.viewAll' | translate }}</a>
     </mat-card-header>
 
     <mat-card-content>
-      @if (nextSimulation(); as simulation) {
+      @for (simulation of nextSimulations(); track simulation.id) {
       <div class="simulation-card">
-        <div class="image-placeholder" [style.background-image]="'linear-gradient(135deg, rgba(14,165,233,.15), rgba(34,197,94,.18)), url(' + simulation.imageUrl + ')'"></div>
-        <div>
-          <mat-chip-set>
-            <mat-chip>{{ simulation.status }}</mat-chip>
-            <mat-chip>{{ simulation.difficulty }}</mat-chip>
-          </mat-chip-set>
-          <h4>{{ simulation.title }}</h4>
+        <div class="sim-media" [style.background-image]="'linear-gradient(135deg, rgba(15,23,42,.32), rgba(14,165,233,.14)), url(' + simulation.imageUrl + ')'">
+          <span class="chip chip-orange">{{ simulation.emergencyType }}</span>
+        </div>
+        <div class="sim-body">
+          <div class="info-grid">
+            <span class="chip chip-blue">{{ simulation.difficulty }}</span>
+            <span class="chip">&#9200; {{ simulation.durationMinutes }} min</span>
+            <span class="chip">+{{ simulation.xpReward }} XP</span>
+          </div>
+          <h3>{{ simulation.title }}</h3>
           <p>{{ simulation.description }}</p>
-          <mat-progress-bar mode="determinate" [value]="simulation.completion" />
-          <a mat-flat-button color="primary" [routerLink]="['/app/simulaciones', simulation.id]">
-            {{ 'dashboard.practiceNow' | translate }}
-          </a>
+          <div class="progress"><div class="progress-fill" [style.width]="simulation.completion + '%'"></div></div>
+          <div class="sim-footer">
+            <strong class="body-sm" [style.color]="simulation.completion > 0 ? 'var(--safe-green)' : 'var(--safe-gray-500)'">
+              @if (simulation.completion > 0) {
+                {{ simulation.completion }}{{ 'dashboard.percentCompleted' | translate }}
+              } @else {
+                {{ 'shared.notStarted' | translate }}
+              }
+            </strong>
+            <a mat-flat-button color="primary" routerLink="/app/simulations">
+              {{ simulation.completion > 0 ? ('dashboard.practiceNow' | translate) : ('dashboard.startSimulation' | translate) }}
+            </a>
+          </div>
         </div>
       </div>
       }
@@ -73,52 +110,56 @@
 
   <mat-card class="panel card-hover">
     <mat-card-header>
-      <mat-card-title>{{ 'dashboard.activeMissions' | translate }}</mat-card-title>
-      <mat-card-subtitle>{{ 'nav.gamification' | translate }}</mat-card-subtitle>
-      <a mat-button color="primary" routerLink="/app/gamificacion">{{ 'shared.open' | translate }}</a>
+      <div>
+        <mat-card-title>{{ 'dashboard.activeMissions' | translate }}</mat-card-title>
+        <mat-card-subtitle>{{ 'nav.gamification' | translate }}</mat-card-subtitle>
+      </div>
+      <a mat-button color="primary" routerLink="/app/gamification">{{ 'shared.open' | translate }}</a>
     </mat-card-header>
 
     <mat-card-content>
-      @if (gamification(); as gameData) {
       <div class="mission-list">
-        @for (mission of gameData.missions.slice(0, 3); track mission.id) {
-        <mat-card appearance="outlined" class="mission-card">
-          <mat-card-content>
-            <strong>{{ mission.title }}</strong>
-            <span>{{ mission.cadence }} - {{ mission.rewardXp }} XP - {{ mission.rewardCoins }} coins</span>
-            <mat-progress-bar
-              mode="determinate"
-              [value]="mission.progress >= mission.goal ? 100 : (mission.progress / mission.goal) * 100"
-            />
-          </mat-card-content>
-        </mat-card>
+        @for (mission of missions().slice(0, 3); track mission.id) {
+        <div class="mission-card">
+          <div class="mission-head">
+            <strong class="mission-title">{{ mission.title }}</strong>
+            <span class="chip chip-green">{{ mission.cadence }}</span>
+          </div>
+          <div class="mission-body">
+            <span class="body-sm">{{ 'dashboard.missionProgress' | translate }}</span>
+            <div class="progress"><div class="progress-fill green" [style.width]="(mission.progress / mission.goal) * 100 + '%'"></div></div>
+            <div class="mission-footer">
+              <span class="body-sm">{{ mission.progress }}/{{ mission.goal }}</span>
+              <span class="reward-pills">
+                <span class="chip">+{{ mission.rewardXp }} XP</span>
+                <span class="chip">+{{ mission.rewardCoins }} <mat-icon style="font-size:inherit;vertical-align:text-bottom;">paid</mat-icon></span>
+              </span>
+            </div>
+          </div>
+        </div>
         }
       </div>
-      }
     </mat-card-content>
   </mat-card>
 </section>
 
 <mat-card class="panel card-hover">
   <mat-card-header>
-    <mat-card-title>{{ 'dashboard.suggestedProducts' | translate }}</mat-card-title>
-    <mat-card-subtitle>{{ 'nav.store' | translate }}</mat-card-subtitle>
-    <a mat-button color="primary" routerLink="/app/tienda">{{ 'dashboard.goToStore' | translate }}</a>
+    <div>
+      <mat-card-title>{{ 'dashboard.suggestedProducts' | translate }}</mat-card-title>
+      <mat-card-subtitle>{{ 'nav.store' | translate }}</mat-card-subtitle>
+    </div>
+    <a mat-button color="primary" routerLink="/app/store">{{ 'dashboard.goToStore' | translate }}</a>
   </mat-card-header>
 
   <mat-card-content class="product-row">
     @for (product of products(); track product.id) {
     <mat-card appearance="outlined" class="product-card card-hover">
-      <div
-        class="image-placeholder"
-        [style.background-image]="'linear-gradient(135deg, rgba(14,165,233,.16), rgba(34,197,94,.18)), url(' + product.imageUrl + ')'"
-      ></div>
+      <div class="product-media" [style.background-image]="'linear-gradient(135deg, rgba(14,165,233,.16), rgba(34,197,94,.18)), url(' + product.imageUrl + ')'"></div>
       <mat-card-content>
-        <mat-chip-set>
-          <mat-chip>{{ product.category }}</mat-chip>
-        </mat-chip-set>
+        <span class="chip chip-blue">{{ product.category }}</span>
         <h4>{{ product.name }}</h4>
-        <p>S/ {{ product.price }}</p>
+        <span class="product-price">S/ {{ product.price }}</span>
       </mat-card-content>
     </mat-card>
     }

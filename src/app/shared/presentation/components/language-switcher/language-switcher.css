@@ -6,7 +6,7 @@
   background: #f8fafc;
 }
 
-.language-switcher ::ng-deep .mat-button-toggle-button {
+.mat-button-toggle-button {
   height: 40px;
   font-weight: 900;
 }
