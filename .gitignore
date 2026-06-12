@@ -8,7 +8,10 @@
 
 # Node
 /node_modules
+logs
+*.log
 npm-debug.log
+yarn-debug.log*
 yarn-error.log
 
 # IDEs and editors
@@ -42,3 +45,7 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+package-lock.json
+.firebaserc
+.firebase
+firebase.json
