@@ -1,28 +1,42 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { firstValueFrom } from 'rxjs';
+import { Observable } from 'rxjs';
 import { BaseApi } from '../../shared/infrastructure/base-api';
-import { environment } from '../../../environments/environment';
-import { GamificationData } from '../domain/model/gamification.entity';
-import { GamificationAssembler } from './assemblers/gamification.assembler';
-import { GamificationResource } from './resources/gamification.resource';
+import { MissionsApiEndpoint } from './missions-api-endpoint';
+import { BadgesApiEndpoint } from './badges-api-endpoint';
+import { CoinTransactionsApiEndpoint } from './coin-transactions-api-endpoint';
+import { LeaderboardEntriesApiEndpoint } from './leaderboard-entries-api-endpoint';
+import { Mission } from '../domain/model/mission.entity';
+import { Badge } from '../domain/model/badge.entity';
+import { CoinTransaction } from '../domain/model/coin-transaction.entity';
+import { LeaderboardEntry } from '../domain/model/leaderboard-entry.entity';
 
 @Injectable({ providedIn: 'root' })
 export class GamificationApi extends BaseApi {
-  private readonly endpointUrl = `${environment.platformProviderApiBaseUrl}${environment.gamificationEndpointPath}`;
+  private readonly missionsEndpoint: MissionsApiEndpoint;
+  private readonly badgesEndpoint: BadgesApiEndpoint;
+  private readonly coinTransactionsEndpoint: CoinTransactionsApiEndpoint;
+  private readonly leaderboardEndpoint: LeaderboardEntriesApiEndpoint;
 
-  constructor(private readonly http: HttpClient) {
+  constructor(http: HttpClient) {
     super();
+    this.missionsEndpoint = new MissionsApiEndpoint(http);
+    this.badgesEndpoint = new BadgesApiEndpoint(http);
+    this.coinTransactionsEndpoint = new CoinTransactionsApiEndpoint(http);
+    this.leaderboardEndpoint = new LeaderboardEntriesApiEndpoint(http);
   }
 
-  async getGamification(): Promise<GamificationData> {
-    const resource = await firstValueFrom(this.http.get<GamificationResource>(this.endpointUrl));
-    return GamificationAssembler.toEntity(resource);
-  }
-
-  async updateGamification(data: GamificationData): Promise<GamificationData> {
-    const resource = GamificationAssembler.toResource(data);
-    const saved = await firstValueFrom(this.http.patch<GamificationResource>(this.endpointUrl, resource));
-    return GamificationAssembler.toEntity(saved);
-  }
+  getMissions(): Observable<Mission[]> { return this.missionsEndpoint.getAll(); }
+  getBadges(): Observable<Badge[]> { return this.badgesEndpoint.getAll(); }
+  getCoinTransactions(): Observable<CoinTransaction[]> { return this.coinTransactionsEndpoint.getAll(); }
+  getLeaderboard(): Observable<LeaderboardEntry[]> { return this.leaderboardEndpoint.getAll(); }
+  createMission(mission: Mission): Observable<Mission> { return this.missionsEndpoint.create(mission); }
+  updateMission(mission: Mission, id: string): Observable<Mission> { return this.missionsEndpoint.update(mission, id); }
+  deleteMission(id: string): Observable<void> { return this.missionsEndpoint.delete(id); }
+  createBadge(badge: Badge): Observable<Badge> { return this.badgesEndpoint.create(badge); }
+  updateBadge(badge: Badge, id: string): Observable<Badge> { return this.badgesEndpoint.update(badge, id); }
+  deleteBadge(id: string): Observable<void> { return this.badgesEndpoint.delete(id); }
+  createCoinTransaction(transaction: CoinTransaction): Observable<CoinTransaction> { return this.coinTransactionsEndpoint.create(transaction); }
+  updateCoinTransaction(transaction: CoinTransaction, id: string): Observable<CoinTransaction> { return this.coinTransactionsEndpoint.update(transaction, id); }
+  deleteCoinTransaction(id: string): Observable<void> { return this.coinTransactionsEndpoint.delete(id); }
 }

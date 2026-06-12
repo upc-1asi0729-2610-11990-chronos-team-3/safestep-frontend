@@ -20,9 +20,7 @@
   gap: 14px;
 }
 
-h2,
-h4,
-p {
+h2, h4, p {
   margin-top: 0;
 }
 
@@ -270,23 +268,6 @@ mat-progress-bar {
   background: #ecfdf5;
 }
 
-.user-rank-card {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin: 0 14px 18px;
-  padding: 14px;
-  border-radius: 14px;
-  background: #fffbeb;
-  color: #111827;
-}
-
-.user-rank-card small,
-.badge-card small {
-  display: block;
-  color: #6b7280;
-}
-
 .rank-badge {
   width: 36px;
   height: 36px;
@@ -314,9 +295,7 @@ mat-progress-bar {
   border: 1px solid #e5e7eb;
   border-radius: 18px;
   background: linear-gradient(180deg, #ffffff, #f8fafc);
-  transition:
-    transform 0.25s ease,
-    box-shadow 0.25s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .badge-action {
@@ -367,20 +346,42 @@ mat-progress-bar {
   color: #d97706;
 }
 
-.rarity-comun mat-chip {
-  background: #dcfce7;
+.admin-actions {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  gap: 8px;
+  z-index: 10;
 }
 
-.rarity-rara mat-chip {
+.game-hero {
+  position: relative;
+}
+
+.chip {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.chip-blue {
   background: #dbeafe;
+  color: #2563eb;
 }
 
-.rarity-epica mat-chip {
-  background: #ede9fe;
+.chip-green {
+  background: #dcfce7;
+  color: #15803d;
 }
 
-.rarity-legendaria mat-chip {
-  background: #fef3c7;
+.chip-gray {
+  background: #f3f4f6;
+  color: #6b7280;
 }
 
 .loading-state {
@@ -449,8 +450,7 @@ mat-progress-bar {
   }
 
   .mission-head,
-  .coin-transaction,
-  .user-rank-card {
+  .coin-transaction {
     align-items: flex-start;
     flex-direction: column;
   }
