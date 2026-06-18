@@ -1,10 +1,9 @@
 export const environment = {
   production: false,
-  platformProviderApiBaseUrl:
-    'http://localhost:3000/api/v1',
-  identityAccessEndpointPath: '/identityAccess',
-  medicalSimulationsEndpointPath: '/medicalSimulations',
-  gamificationEndpointPath: '/gamification',
-  ecommerceEndpointPath: '/ecommerce',
+  platformProviderApiBaseUrl: 'https://safestep-json-server.onrender.com',
+  identityAccessEndpointPath: '',
+  medicalSimulationsEndpointPath: '',
+  gamificationEndpointPath: '',
+  ecommerceEndpointPath: '',
   statisticsEndpointPath: '/statistics',
 };
