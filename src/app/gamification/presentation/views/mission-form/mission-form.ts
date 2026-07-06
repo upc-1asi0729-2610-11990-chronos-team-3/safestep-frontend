@@ -65,6 +65,10 @@ export class MissionForm implements OnInit {
   }
 
   save(): void {
+    if (!this.model.id.trim()) {
+      return;
+    }
+
     if (this.editMode && this.missionId) {
       this.store.updateMission(this.model, this.missionId);
     } else {

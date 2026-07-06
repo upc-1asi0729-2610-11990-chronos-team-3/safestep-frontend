@@ -64,6 +64,10 @@ export class BadgeForm implements OnInit {
   }
 
   save(): void {
+    if (!this.model.id.trim()) {
+      return;
+    }
+
     if (this.editMode && this.badgeId) {
       this.store.updateBadge(this.model, this.badgeId);
     } else {

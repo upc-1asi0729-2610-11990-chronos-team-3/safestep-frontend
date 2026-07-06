@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -33,6 +33,7 @@ type AuthMode = 'login' | 'register';
 export class AuthPage {
   protected readonly store = inject(IdentityAccessStore);
   private readonly fb = inject(FormBuilder);
+  private readonly router = inject(Router);
   protected readonly mode = signal<AuthMode>('login');
   protected readonly showPassword = signal(false);
   protected readonly showConfirmPassword = signal(false);
@@ -73,7 +74,7 @@ export class AuthPage {
     if (this.mode() === 'login') {
       this.store.login(username.trim(), password).subscribe({
         next: () => {
-          window.location.assign('/app/dashboard');
+          void this.router.navigate(['/app/dashboard']);
         },
       });
       return;

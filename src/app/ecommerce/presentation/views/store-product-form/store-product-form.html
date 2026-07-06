@@ -10,6 +10,11 @@
     <mat-card-content>
       <div class="form-grid">
         <mat-form-field appearance="outline">
+          <mat-label>ID</mat-label>
+          <input matInput [(ngModel)]="model.id" [disabled]="editMode" required />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
           <mat-label>{{ 'admin.products.name' | translate }}</mat-label>
           <input matInput [(ngModel)]="model.name" required />
         </mat-form-field>

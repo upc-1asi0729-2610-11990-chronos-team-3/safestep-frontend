@@ -79,6 +79,10 @@ export class StoreProductForm implements OnInit {
   }
 
   save(): void {
+    if (!this.model.id.trim()) {
+      return;
+    }
+
     if (this.editMode && this.productId) {
       this.store.updateProduct(this.model, this.productId);
     } else {

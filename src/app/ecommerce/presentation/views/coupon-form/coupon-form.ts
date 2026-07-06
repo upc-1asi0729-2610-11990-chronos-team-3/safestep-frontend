@@ -54,6 +54,10 @@ export class CouponForm implements OnInit {
   }
 
   save(): void {
+    if (!this.model.id.trim()) {
+      return;
+    }
+
     if (this.editMode && this.couponId) {
       this.store.updateCoupon(this.model, this.couponId);
     } else {
