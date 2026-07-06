@@ -319,6 +319,36 @@ export class EcommerceStore {
     );
   }
 
+  confirmStripePayment(orderId: string, sessionId: string): void {
+    this.loadingSignal.set(true);
+    this.errorSignal.set(null);
+    this.ecommerceApi.confirmStripePayment(orderId, sessionId).pipe(retry(2)).subscribe({
+      next: (updated) => {
+        this.ordersSignal.update((list) => [updated, ...list.filter((order) => order.id !== updated.id)]);
+        this.loadingSignal.set(false);
+      },
+      error: (err) => {
+        this.errorSignal.set(this.formatError(err, 'Failed to confirm Stripe payment'));
+        this.loadOrders();
+      },
+    });
+  }
+
+  cancelStripePayment(orderId: string, sessionId: string | null): void {
+    this.loadingSignal.set(true);
+    this.errorSignal.set(null);
+    this.ecommerceApi.cancelStripePayment(orderId, sessionId).pipe(retry(2)).subscribe({
+      next: (updated) => {
+        this.ordersSignal.update((list) => [updated, ...list.filter((order) => order.id !== updated.id)]);
+        this.loadingSignal.set(false);
+      },
+      error: (err) => {
+        this.errorSignal.set(this.formatError(err, 'Failed to cancel Stripe payment'));
+        this.loadOrders();
+      },
+    });
+  }
+
   getRelevantProducts(products: StoreProduct[], recommendations: PersonalizedRecommendation[]): StoreProduct[] {
     const recommendedIds = recommendations.map((recommendation) => recommendation.productId);
     const recommended = products.filter((product) => recommendedIds.includes(product.id));
@@ -418,8 +448,21 @@ export class EcommerceStore {
 
   getUserOrders(orders: Order[], userId: string): Order[] {
     return orders
-      .filter((order) => order.userId === userId)
+      .filter((order) => order.userId === userId && this.isPaidOrder(order))
       .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  }
+
+  private isPaidOrder(order: Order): boolean {
+    const paymentStatus = (order.paymentStatus ?? '').trim().toUpperCase();
+    const orderStatus = (order.status ?? '').trim().toUpperCase();
+
+    return (
+      paymentStatus === 'PAID' ||
+      orderStatus === 'PAID' ||
+      orderStatus === 'SHIPPED' ||
+      orderStatus === 'DELIVERED' ||
+      Boolean(order.stripePaymentIntentId)
+    );
   }
 
   buildOrderLines(order: Order, products: StoreProduct[], kits: EmergencyKit[]): OrderLine[] {

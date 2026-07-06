@@ -70,6 +70,8 @@ export class EcommerceApi extends BaseApi {
   createOrder(_order: Order): Observable<Order> { return this.ordersEndpoint.createPendingOrder(); }
   createPendingOrder(): Observable<Order> { return this.ordersEndpoint.createPendingOrder(); }
   createStripeCheckoutSession(orderId: string): Observable<StripeCheckoutSessionResponse> { return this.ordersEndpoint.createStripeCheckoutSession(orderId); }
+  confirmStripePayment(orderId: string, sessionId: string): Observable<Order> { return this.ordersEndpoint.confirmStripePayment(orderId, sessionId); }
+  cancelStripePayment(orderId: string, sessionId: string | null): Observable<Order> { return this.ordersEndpoint.cancelStripePayment(orderId, sessionId); }
   updateOrder(order: Order, id: string): Observable<Order> { return this.ordersEndpoint.update(order, id); }
   deleteOrder(id: string): Observable<void> { return this.ordersEndpoint.delete(id); }
   createCartItem(item: CartItem): Observable<CartItem> { return this.cartItemsEndpoint.addToCart(item.productId, item.quantity); }

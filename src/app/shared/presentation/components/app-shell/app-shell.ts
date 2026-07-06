@@ -11,6 +11,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { TranslatePipe } from '@ngx-translate/core';
+import { EcommerceStore } from '../../../../ecommerce/application/ecommerce-store';
 import { IdentityAccessStore } from '../../../../identity-access/application/identity-access-store';
 import { LanguageSwitcher } from '../language-switcher/language-switcher';
 
@@ -36,9 +37,17 @@ import { LanguageSwitcher } from '../language-switcher/language-switcher';
 })
 export class AppShell {
   protected readonly identityAccessStore = inject(IdentityAccessStore);
+  private readonly ecommerceStore = inject(EcommerceStore);
   private readonly breakpointObserver = inject(BreakpointObserver);
 
   protected readonly user = computed(() => this.identityAccessStore.getCurrentUser());
+  protected readonly cartCount = computed(() => {
+    const currentUser = this.identityAccessStore.authenticatedUser();
+    const userId = currentUser?.username ?? this.identityAccessStore.getCurrentUser()?.id ?? '';
+    const userCartItems = this.ecommerceStore.getCartItemsForUser(this.ecommerceStore.cartItems(), userId);
+
+    return this.ecommerceStore.getCartItemCount(userCartItems);
+  });
   protected readonly isMobile = signal(false);
   protected readonly navItems = [
     { label: 'nav.dashboard', path: '/app/dashboard', icon: 'dashboard' },

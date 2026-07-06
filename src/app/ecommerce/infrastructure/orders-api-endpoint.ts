@@ -36,4 +36,21 @@ export class OrdersApiEndpoint extends BaseApiEndpoint<Order, OrderResource, Ord
   createStripeCheckoutSession(orderId: string): Observable<StripeCheckoutSessionResponse> {
     return this.http.post<StripeCheckoutSessionResponse>(`${this.endpointUrl}/${orderId}/payments/stripe-checkout`, {});
   }
+
+  confirmStripePayment(orderId: string, sessionId: string): Observable<Order> {
+    return this.http.post<OrderResource>(
+      `${this.endpointUrl}/${orderId}/payments/stripe-confirm`,
+      {},
+      { params: { sessionId } },
+    ).pipe(
+      map((order) => this.assembler.toEntityFromResource(order)),
+    );
+  }
+
+  cancelStripePayment(orderId: string, sessionId: string | null): Observable<Order> {
+    const options = sessionId ? { params: { sessionId } } : {};
+    return this.http.post<OrderResource>(`${this.endpointUrl}/${orderId}/payments/stripe-cancel`, {}, options).pipe(
+      map((order) => this.assembler.toEntityFromResource(order)),
+    );
+  }
 }

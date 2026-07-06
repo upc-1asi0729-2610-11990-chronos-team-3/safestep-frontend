@@ -25,8 +25,8 @@
         >
           <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
           <span matListItemTitle>{{ item.label | translate }}</span>
-          @if (item.label === 'nav.store') {
-            <span matListItemMeta class="nav-badge">{{ 3 }}</span>
+          @if (item.label === 'nav.store' && cartCount() > 0) {
+            <span matListItemMeta class="nav-badge">{{ cartCount() }}</span>
           }
         </a>
       }
