@@ -6,7 +6,8 @@
   align-items: center;
   padding: clamp(var(--space-6), 5vw, 72px);
   background:
-    linear-gradient(130deg, rgba(14, 165, 233, 0.92), rgba(15, 23, 42, 0.96)),
+    linear-gradient(130deg, rgba(8, 47, 73, 0.68), rgba(15, 23, 42, 0.62)),
+    url('/assets/images/design/imagenLogin.png') center / cover no-repeat,
     #0f172a;
 }
 
@@ -27,17 +28,11 @@
   margin-bottom: var(--space-16);
 }
 
-.brand-mark {
+.brand-logo {
   width: 40px;
   height: 40px;
-  border-radius: var(--radius-md);
-  display: grid;
-  place-items: center;
-  background: linear-gradient(135deg, var(--safe-primary), var(--safe-green));
-  color: var(--safe-white);
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 1.25rem;
+  object-fit: contain;
+  flex: 0 0 auto;
 }
 
 .eyebrow {
@@ -68,37 +63,41 @@
   margin: 0;
 }
 
-.proof-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--space-3);
+.brand-message {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
   margin-top: var(--space-8);
-}
-
-.proof-card {
   padding: var(--space-5);
   border-radius: var(--radius-md);
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.12);
   backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.14);
   color: var(--safe-white);
-  text-align: center;
+  max-width: 460px;
 }
 
-.proof-card strong {
+.brand-message img {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  flex: 0 0 auto;
+}
+
+.brand-message strong {
   display: block;
   font-family: var(--font-display);
-  font-size: 1.75rem;
+  font-size: 1.35rem;
   font-weight: 700;
   line-height: 1;
 }
 
-.proof-card span {
+.brand-message span {
   display: block;
   color: rgba(255, 255, 255, 0.72);
   font-family: var(--font-body);
-  font-size: 0.8125rem;
-  margin-top: var(--space-1);
+  font-size: 0.95rem;
+  margin-top: var(--space-2);
 }
 
 .auth-card {
@@ -225,7 +224,7 @@ button[mat-flat-button] {
 
   .brand { margin-bottom: var(--space-8); }
 
-  .proof-grid { grid-template-columns: 1fr; }
+  .brand-message { max-width: none; }
 }
 
 @media (max-width: 560px) {

@@ -27,17 +27,11 @@
   border-bottom: 1px solid var(--safe-gray-100);
 }
 
-.brand-mark {
+.brand-logo {
   width: 48px;
   height: 48px;
-  border-radius: 14px;
-  display: grid;
-  place-items: center;
-  background: linear-gradient(135deg, var(--safe-primary), var(--safe-green));
-  color: var(--safe-white);
-  font-family: var(--font-display);
-  font-weight: 800;
-  box-shadow: 0 12px 24px rgba(14, 165, 233, 0.28);
+  object-fit: contain;
+  flex: 0 0 auto;
 }
 
 .brand strong {
@@ -170,6 +164,7 @@ mat-nav-list a.active {
 
 .content-area {
   min-width: 0;
+  background: url('/assets/images/design/fondodashboard.png') center / cover fixed no-repeat;
 }
 
 .topbar {
@@ -267,6 +262,7 @@ mat-nav-list a.active {
 main {
   padding: var(--space-7) var(--space-8) var(--space-12);
   overflow-x: hidden;
+  min-height: calc(100vh - 64px);
 }
 
 @media (max-width: 1024px) {

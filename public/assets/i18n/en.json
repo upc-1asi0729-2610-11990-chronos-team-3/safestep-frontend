@@ -492,6 +492,7 @@
   },
   "profile": {
     "title": "User profile",
+    "safeStepUser": "SafeStep user",
     "learningPreferences": "Learning preferences",
     "dailyReminders": "Receive daily reminders",
     "productRecommendations": "Show product recommendations",

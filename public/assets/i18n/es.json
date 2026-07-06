@@ -492,6 +492,7 @@
   },
   "profile": {
     "title": "Perfil de usuario",
+    "safeStepUser": "Usuario de SafeStep",
     "learningPreferences": "Preferencias de aprendizaje",
     "dailyReminders": "Recibir recordatorios diarios",
     "productRecommendations": "Mostrar recomendaciones de productos",
