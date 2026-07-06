@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { BaseApiEndpoint } from '../../shared/infrastructure/base-api-endpoint';
 import { StatisticsData } from '../domain/model/statistics-data.entity';
@@ -16,7 +16,4 @@ export class StatisticsDataApiEndpoint extends BaseApiEndpoint<StatisticsData, S
     return this.getAll().pipe(map(data => data[0]));
   }
 
-  updateStatistics(data: StatisticsData): Observable<StatisticsData> {
-    return of(data);
-  }
 }

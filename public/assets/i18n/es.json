@@ -492,7 +492,6 @@
   },
   "profile": {
     "title": "Perfil de usuario",
-    "manageProfiles": "Gestionar perfiles",
     "learningPreferences": "Preferencias de aprendizaje",
     "dailyReminders": "Recibir recordatorios diarios",
     "productRecommendations": "Mostrar recomendaciones de productos",

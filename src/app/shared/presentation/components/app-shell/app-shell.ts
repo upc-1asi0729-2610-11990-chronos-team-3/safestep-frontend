@@ -39,7 +39,6 @@ export class AppShell {
   private readonly breakpointObserver = inject(BreakpointObserver);
 
   protected readonly user = computed(() => this.identityAccessStore.getCurrentUser());
-  protected readonly unreadNotifications = computed(() => this.identityAccessStore.getUnreadNotificationCount());
   protected readonly isMobile = signal(false);
   protected readonly navItems = [
     { label: 'nav.dashboard', path: '/app/dashboard', icon: 'dashboard' },

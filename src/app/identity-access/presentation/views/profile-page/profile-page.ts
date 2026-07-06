@@ -2,13 +2,11 @@ import { Component, inject, computed } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { TranslatePipe } from '@ngx-translate/core';
-import { RouterLink } from '@angular/router';
-import { MatButtonModule } from '@angular/material/button';
 import { IdentityAccessStore } from '../../../application/identity-access-store';
 
 @Component({
   selector: 'app-profile-page',
-  imports: [RouterLink, MatButtonModule, MatCardModule, MatCheckboxModule, TranslatePipe],
+  imports: [MatCardModule, MatCheckboxModule, TranslatePipe],
   templateUrl: './profile-page.html',
   styleUrl: './profile-page.css',
 })

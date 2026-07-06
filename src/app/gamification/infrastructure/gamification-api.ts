@@ -44,6 +44,4 @@ export class GamificationApi extends BaseApi {
   updateBadge(badge: Badge, id: string): Observable<Badge> { return this.badgesEndpoint.update(badge, id); }
   deleteBadge(id: string): Observable<void> { return this.badgesEndpoint.delete(id); }
   createCoinTransaction(transaction: CoinTransaction): Observable<CoinTransaction> { return this.coinTransactionsEndpoint.create(transaction); }
-  updateCoinTransaction(transaction: CoinTransaction, id: string): Observable<CoinTransaction> { return this.coinTransactionsEndpoint.update(transaction, id); }
-  deleteCoinTransaction(id: string): Observable<void> { return this.coinTransactionsEndpoint.delete(id); }
 }

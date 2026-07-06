@@ -8,8 +8,6 @@ import { AuthSessionStorage } from './auth-session-storage';
 const PUBLIC_AUTH_PATHS = [
   '/authentication/sign-in',
   '/authentication/sign-up',
-  '/authentication/forgot-password',
-  '/authentication/reset-password',
 ];
 
 export const authInterceptor: HttpInterceptorFn = (request, next) => {

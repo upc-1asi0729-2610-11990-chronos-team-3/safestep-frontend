@@ -27,7 +27,6 @@ export class StatisticsApi extends BaseApi {
   }
 
   getStatistics(): Observable<StatisticsData> { return this.statisticsDataEndpoint.getStatistics(); }
-  updateStatistics(data: StatisticsData): Observable<StatisticsData> { return this.statisticsDataEndpoint.updateStatistics(data); }
 
   getRecommendations(): Observable<RecommendationEntry[]> { return this.recommendationsEndpoint.getAll(); }
   getProgressVisuals(): Observable<ProgressVisualEntry[]> { return this.progressVisualsEndpoint.getAll(); }

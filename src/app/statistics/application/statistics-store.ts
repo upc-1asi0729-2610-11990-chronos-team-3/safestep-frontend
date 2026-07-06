@@ -1,6 +1,5 @@
 import { DestroyRef, Injectable, computed, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { retry } from 'rxjs';
 import { StatisticsData } from '../domain/model/statistics-data.entity';
 import { RecommendationEntry } from '../domain/model/recommendation-entry.entity';
 import { ProgressVisualEntry } from '../domain/model/progress-visual-entry.entity';
@@ -47,21 +46,6 @@ export class StatisticsStore {
     private destroyRef: DestroyRef,
   ) {
     this.loadStatistics();
-  }
-
-  updateStatistics(data: StatisticsData): void {
-    this.loadingSignal.set(true);
-    this.errorSignal.set(null);
-    this.statisticsApi.updateStatistics(data).pipe(retry(2)).subscribe({
-      next: (response) => {
-        this.populateSignals(response);
-        this.loadingSignal.set(false);
-      },
-      error: (err) => {
-        this.errorSignal.set(this.formatError(err, 'Failed to update statistics data'));
-        this.loadingSignal.set(false);
-      },
-    });
   }
 
   getSuccessfulTransactions(transactions: CoinTransaction[], userId?: string): CoinTransaction[] {

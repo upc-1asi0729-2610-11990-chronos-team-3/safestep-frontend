@@ -1,31 +1,20 @@
 import { Injectable, computed, signal } from '@angular/core';
 import { Observable, catchError, finalize, map, of, switchMap, tap, throwError } from 'rxjs';
 import { UserProfile } from '../domain/model/user-profile.entity';
-import { AuthProvider } from '../domain/model/auth-provider.entity';
-import { SecurityEvent } from '../domain/model/security-event.entity';
-import { Notification } from '../domain/model/notification.entity';
 import { IdentityAccessApi } from '../infrastructure/identity-access-api';
 import { AuthSessionStorage } from '../infrastructure/auth-session-storage';
 import { AuthenticatedUserResponse } from '../infrastructure/authentication.resources';
-import { ProfileResource, UpdateProfileRequest } from '../infrastructure/profile.resources';
+import { ProfileResource } from '../infrastructure/profile.resources';
 import { GamificationApi } from '../../gamification/infrastructure/gamification-api';
 import { GamificationSummaryResource } from '../../gamification/infrastructure/gamification-summary.resource';
 
 @Injectable({ providedIn: 'root' })
 export class IdentityAccessStore {
-  private readonly userProfilesSignal = signal<UserProfile[]>([]);
-  private readonly authProvidersSignal = signal<AuthProvider[]>([]);
-  private readonly securityEventsSignal = signal<SecurityEvent[]>([]);
-  private readonly notificationsSignal = signal<Notification[]>([]);
   private readonly loadingSignal = signal<boolean>(false);
   private readonly errorSignal = signal<string | null>(null);
   private readonly authenticatedUserSignal = signal<AuthenticatedUserResponse | null>(null);
   private readonly currentProfileSignal = signal<UserProfile | null>(null);
 
-  readonly userProfiles = this.userProfilesSignal.asReadonly();
-  readonly authProviders = this.authProvidersSignal.asReadonly();
-  readonly securityEvents = this.securityEventsSignal.asReadonly();
-  readonly notifications = this.notificationsSignal.asReadonly();
   readonly loading = this.loadingSignal.asReadonly();
   readonly error = this.errorSignal.asReadonly();
   readonly currentUser = this.currentProfileSignal.asReadonly();
@@ -33,8 +22,6 @@ export class IdentityAccessStore {
   readonly isAuthenticated = computed(() => !!this.authenticatedUserSignal() && !!this.sessionStorage.getAccessToken());
 
   readonly safeCoins = computed(() => this.getCurrentUser()?.safeCoins ?? 0);
-  readonly userProfileCount = computed(() => this.userProfiles().length);
-  readonly authProviderCount = computed(() => this.authProviders().length);
 
   constructor(
     private identityAccessApi: IdentityAccessApi,
@@ -84,7 +71,6 @@ export class IdentityAccessStore {
           map((updatedProfile) => {
             const mappedProfile = this.toUserProfile(updatedProfile);
             this.currentProfileSignal.set(mappedProfile);
-            this.userProfilesSignal.set([mappedProfile]);
             return user;
           }),
         );
@@ -149,7 +135,6 @@ export class IdentityAccessStore {
     this.sessionStorage.clear();
     this.authenticatedUserSignal.set(null);
     this.currentProfileSignal.set(null);
-    this.userProfilesSignal.set([]);
   }
 
   loadMyProfile(): Observable<UserProfile | null> {
@@ -157,7 +142,6 @@ export class IdentityAccessStore {
     return this.identityAccessApi.getMyProfile().pipe(
       map((profile) => this.toUserProfile(profile)),
       tap((profile) => this.currentProfileSignal.set(profile)),
-      tap((profile) => this.userProfilesSignal.set([profile])),
       catchError(() => of(this.currentProfileSignal())),
     );
   }
@@ -172,29 +156,6 @@ export class IdentityAccessStore {
 
   getCurrentUser(): UserProfile | null {
     return this.currentProfileSignal() ?? this.toFallbackProfile(this.authenticatedUserSignal());
-  }
-
-  getUserProfileById(id: string | null): UserProfile | undefined {
-    return this.userProfiles().find((profile) => profile.id === id);
-  }
-
-  getUnreadNotificationCount(): number {
-    return this.notifications().filter((notification) => !notification.isRead).length;
-  }
-
-  addUserProfile(profile: UserProfile): void {
-    this.userProfilesSignal.update((list) => [...list, profile]);
-  }
-
-  updateUserProfile(profile: UserProfile, id: string): void {
-    this.userProfilesSignal.update((list) => list.map((p) => (p.id === id ? profile : p)));
-    if (this.currentProfileSignal()?.id === id) {
-      this.currentProfileSignal.set(profile);
-      this.identityAccessApi.updateMyProfile(this.toUpdateProfileRequest(profile)).subscribe({
-        next: (updated) => this.currentProfileSignal.set(this.toUserProfile(updated)),
-        error: (err) => this.errorSignal.set(this.formatError(err, 'Failed to update profile')),
-      });
-    }
   }
 
   updateSafeCoinsLocally(newBalance: number): void {
@@ -215,7 +176,6 @@ export class IdentityAccessStore {
       completedSimulations: current.completedSimulations,
     });
     this.currentProfileSignal.set(updated);
-    this.userProfilesSignal.set([updated]);
   }
 
   applyGamificationSummary(summary: GamificationSummaryResource): void {
@@ -237,19 +197,6 @@ export class IdentityAccessStore {
       completedSimulations: summary.completedSimulations,
     });
     this.currentProfileSignal.set(updated);
-    this.userProfilesSignal.set([updated]);
-  }
-
-  deleteUserProfile(id: string): void {
-    this.userProfilesSignal.update((list) => list.filter((p) => p.id !== id));
-  }
-
-  updateAuthProvider(provider: AuthProvider, id: string): void {
-    this.authProvidersSignal.update((list) => list.map((p) => (p.id === id ? provider : p)));
-  }
-
-  deleteNotification(id: string): void {
-    this.notificationsSignal.update((list) => list.filter((n) => n.id !== id));
   }
 
   private setSession(user: AuthenticatedUserResponse): void {
@@ -293,20 +240,6 @@ export class IdentityAccessStore {
       streakDays: 0,
       completedSimulations: 0,
     });
-  }
-
-  private toUpdateProfileRequest(profile: UserProfile): UpdateProfileRequest {
-    const [firstName, ...lastNameParts] = profile.fullName.trim().split(/\s+/);
-    return {
-      firstName: firstName || profile.fullName,
-      lastName: lastNameParts.join(' ') || 'User',
-      email: profile.email,
-      street: 'SafeStep Street',
-      number: '',
-      city: profile.city || 'SafeStep',
-      postalCode: '00000',
-      country: 'Peru',
-    };
   }
 
   private cityFromStreetAddress(streetAddress: string): string {
