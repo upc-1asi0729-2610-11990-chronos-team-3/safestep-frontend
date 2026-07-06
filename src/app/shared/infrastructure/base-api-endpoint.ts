@@ -24,6 +24,9 @@ export abstract class BaseApiEndpoint<
         if (Array.isArray(response)) {
           return response.map((resource) => this.assembler.toEntityFromResource(resource));
         }
+        if (this.hasValueCollection(response)) {
+          return response.value.map((resource) => this.assembler.toEntityFromResource(resource));
+        }
         return this.assembler.toEntitiesFromResponse(response as TResponse);
       }),
       catchError(this.handleError('Failed to fetch entities')),
@@ -72,5 +75,12 @@ export abstract class BaseApiEndpoint<
       }
       return throwError(() => new Error(errorMessage));
     };
+  }
+
+  private hasValueCollection(response: unknown): response is { value: TResource[] } {
+    return typeof response === 'object'
+      && response !== null
+      && 'value' in response
+      && Array.isArray((response as { value?: unknown }).value);
   }
 }

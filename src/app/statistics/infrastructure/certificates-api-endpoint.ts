@@ -7,6 +7,6 @@ import { environment } from '../../../environments/environment';
 
 export class CertificatesApiEndpoint extends BaseApiEndpoint<CertificateEntry, CertificateResource, CertificatesResponse, CertificateAssembler> {
   constructor(http: HttpClient) {
-    super(http, `${environment.platformProviderApiBaseUrl}${environment.statisticsEndpointPath}`, new CertificateAssembler());
+    super(http, `${environment.platformProviderApiBaseUrl}${environment.statisticsEndpointPath}/certificates/me`, new CertificateAssembler());
   }
 }

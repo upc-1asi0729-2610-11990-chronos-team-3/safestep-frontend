@@ -7,7 +7,7 @@ export interface StoreProductsResponse extends BaseResponse {
 export interface StoreProductResource extends BaseResource<string> {
   name: string;
   category: string;
-  type: 'Producto' | 'Kit';
+  type: 'Producto' | 'Kit' | 'PRODUCT' | 'KIT' | string;
   price: number;
   oldPrice?: number;
   rating: number;
@@ -15,7 +15,7 @@ export interface StoreProductResource extends BaseResource<string> {
   imageUrl: string;
   tags: string[];
   description: string;
-  recommendedFor: string[];
+  recommendedFor?: string[];
   longDescription?: string;
   images?: string[];
   specifications?: Record<string, string>;

@@ -11,8 +11,12 @@ export class Order implements BaseEntity<string> {
   private _paymentMethodId: number | null;
   private _couponCode: string;
   private _discountApplied: number;
+  private _paymentProvider: string | null;
+  private _paymentStatus: string | null;
+  private _stripeCheckoutSessionId: string | null;
+  private _stripePaymentIntentId: string | null;
 
-  constructor(order: { id: string; userId: string; total: number; status: string; items: string[]; createdAt: string; shippingAddressId?: number | null; paymentMethodId?: number | null; couponCode?: string; discountApplied?: number }) {
+  constructor(order: { id: string; userId: string; total: number; status: string; items: string[]; createdAt: string; shippingAddressId?: number | null; paymentMethodId?: number | null; couponCode?: string; discountApplied?: number; paymentProvider?: string | null; paymentStatus?: string | null; stripeCheckoutSessionId?: string | null; stripePaymentIntentId?: string | null }) {
     this._id = order.id;
     this._userId = order.userId;
     this._total = order.total;
@@ -23,6 +27,10 @@ export class Order implements BaseEntity<string> {
     this._paymentMethodId = order.paymentMethodId ?? null;
     this._couponCode = order.couponCode ?? '';
     this._discountApplied = order.discountApplied ?? 0;
+    this._paymentProvider = order.paymentProvider ?? null;
+    this._paymentStatus = order.paymentStatus ?? null;
+    this._stripeCheckoutSessionId = order.stripeCheckoutSessionId ?? null;
+    this._stripePaymentIntentId = order.stripePaymentIntentId ?? null;
   }
 
   get id(): string { return this._id; }
@@ -45,4 +53,12 @@ export class Order implements BaseEntity<string> {
   set couponCode(value: string) { this._couponCode = value; }
   get discountApplied(): number { return this._discountApplied; }
   set discountApplied(value: number) { this._discountApplied = value; }
+  get paymentProvider(): string | null { return this._paymentProvider; }
+  set paymentProvider(value: string | null) { this._paymentProvider = value; }
+  get paymentStatus(): string | null { return this._paymentStatus; }
+  set paymentStatus(value: string | null) { this._paymentStatus = value; }
+  get stripeCheckoutSessionId(): string | null { return this._stripeCheckoutSessionId; }
+  set stripeCheckoutSessionId(value: string | null) { this._stripeCheckoutSessionId = value; }
+  get stripePaymentIntentId(): string | null { return this._stripePaymentIntentId; }
+  set stripePaymentIntentId(value: string | null) { this._stripePaymentIntentId = value; }
 }

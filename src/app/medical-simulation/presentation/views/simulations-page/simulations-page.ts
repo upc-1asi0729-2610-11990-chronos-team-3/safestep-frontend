@@ -24,6 +24,7 @@ export class SimulationsPage {
   protected readonly medicalSimulationStore = inject(MedicalSimulationStore);
 
   protected readonly simulations = computed(() => this.medicalSimulationStore.simulations());
+  protected readonly attempts = computed(() => this.medicalSimulationStore.attempts());
 
   protected readonly activeFilter = signal<string | null>(null);
 
@@ -39,14 +40,22 @@ export class SimulationsPage {
   });
 
   protected readonly inProgressSim = computed(() => {
-    return this.simulations().find((s) => s.status === 'En progreso');
+    return this.simulations().find((s) => this.simulationStatus(s) === 'En progreso');
   });
 
   protected readonly inProgressCount = computed(() => {
-    return this.simulations().filter((s) => s.status === 'En progreso').length;
+    return this.simulations().filter((s) => this.simulationStatus(s) === 'En progreso').length;
   });
 
   protected setFilter(type: string | null): void {
     this.activeFilter.set(type);
+  }
+
+  protected simulationCompletion(simulation: ReturnType<typeof this.simulations>[number]): number {
+    return this.medicalSimulationStore.getUserCompletion(simulation, this.attempts());
+  }
+
+  protected simulationStatus(simulation: ReturnType<typeof this.simulations>[number]): string {
+    return this.medicalSimulationStore.getUserStatus(simulation, this.attempts());
   }
 }

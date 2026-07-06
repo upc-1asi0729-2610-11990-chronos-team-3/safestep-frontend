@@ -7,6 +7,6 @@ import { environment } from '../../../environments/environment';
 
 export class RecommendationsApiEndpoint extends BaseApiEndpoint<RecommendationEntry, RecommendationResource, RecommendationsResponse, RecommendationAssembler> {
   constructor(http: HttpClient) {
-    super(http, `${environment.platformProviderApiBaseUrl}${environment.statisticsEndpointPath}`, new RecommendationAssembler());
+    super(http, `${environment.platformProviderApiBaseUrl}/commerce/recommendations/me`, new RecommendationAssembler());
   }
 }

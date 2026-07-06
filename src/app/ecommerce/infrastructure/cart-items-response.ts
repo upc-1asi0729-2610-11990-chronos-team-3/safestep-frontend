@@ -10,3 +10,12 @@ export interface CartItemResource extends BaseResource<string> {
   quantity: number;
   addedAt: string;
 }
+
+export interface AddCartItemRequest {
+  productId: string;
+  quantity: number;
+}
+
+export interface UpdateCartItemRequest {
+  quantity: number;
+}

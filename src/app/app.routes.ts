@@ -48,5 +48,7 @@ export const routes: Routes = [
     ],
   },
   { path: '', pathMatch: 'full', redirectTo: 'auth' },
+  { path: 'payment/success', pathMatch: 'full', redirectTo: 'app/payment/success' },
+  { path: 'payment/cancel', pathMatch: 'full', redirectTo: 'app/payment/cancel' },
   { path: '**', redirectTo: 'auth' },
 ];

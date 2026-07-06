@@ -11,6 +11,7 @@ import { MedicalSimulationStore } from '../../../../medical-simulation/applicati
 import { GamificationStore } from '../../../../gamification/application/gamification-store';
 import { EcommerceStore } from '../../../../ecommerce/application/ecommerce-store';
 import { StatisticsStore } from '../../../../statistics/application/statistics-store';
+import { MedicalSimulation } from '../../../../medical-simulation/domain/model/medical-simulation.entity';
 
 @Component({
   selector: 'app-dashboard-page',
@@ -35,15 +36,16 @@ export class DashboardPage {
 
   protected readonly user = computed(() => this.identityAccessStore.getCurrentUser());
   protected readonly simulations = this.medicalSimulationStore.simulations;
+  protected readonly attempts = this.medicalSimulationStore.attempts;
   protected readonly missions = this.gamificationStore.missions;
   protected readonly coinTransactions = this.gamificationStore.coinTransactions;
   protected readonly badges = this.gamificationStore.badges;
   protected readonly stats = computed(() => {
-    const transactions = this.statisticsStore.getSuccessfulTransactions(this.coinTransactions(), 'usr-001');
-    const userAttempts = this.statisticsStore.getUserAttempts(this.medicalSimulationStore.attempts(), 1);
-    const coins = this.statisticsStore.getTotalCoins(transactions);
-    const xp = this.statisticsStore.getTotalXp(transactions, this.simulations());
-    const minutes = this.statisticsStore.getTrainedMinutes(transactions, this.simulations());
+    const transactions = this.statisticsStore.getSuccessfulTransactions(this.coinTransactions());
+    const userAttempts = this.statisticsStore.getUserAttempts(this.attempts());
+    const coins = this.user()?.safeCoins ?? this.statisticsStore.getTotalCoins(transactions);
+    const xp = this.user()?.xp ?? this.statisticsStore.getTotalXp(transactions, this.simulations());
+    const minutes = this.statisticsStore.getTrainedMinutesFromAttempts(userAttempts);
     const accuracy = this.statisticsStore.getAverageAttemptAccuracy(userAttempts);
     return [
       { label: 'SafeCoins', value: `${coins}`, trend: '+0% hoy' },
@@ -54,15 +56,15 @@ export class DashboardPage {
   });
   protected readonly products = computed(() => this.ecommerceStore.getFeaturedProducts(this.ecommerceStore.products()));
   protected readonly nextSimulations = computed(() => {
-    return this.simulations().filter((s) => s.status !== 'Completado').slice(0, 2);
+    return this.simulations()
+      .filter((simulation) => this.simulationStatus(simulation) !== 'Completado')
+      .slice(0, 2);
   });
 
   protected readonly loading = computed(() =>
     this.identityAccessStore.loading() ||
     this.medicalSimulationStore.loading() ||
-    this.gamificationStore.loading() ||
-    this.statisticsStore.loading() ||
-    this.ecommerceStore.loading(),
+    this.gamificationStore.loading(),
   );
 
   protected readonly errors = computed(() => {
@@ -73,10 +75,6 @@ export class DashboardPage {
     if (simErr) errs.push(simErr);
     const gameErr = this.gamificationStore.error();
     if (gameErr) errs.push(gameErr);
-    const statErr = this.statisticsStore.error();
-    if (statErr) errs.push(statErr);
-    const ecomErr = this.ecommerceStore.error();
-    if (ecomErr) errs.push(ecomErr);
     return errs;
   });
 
@@ -84,5 +82,13 @@ export class DashboardPage {
 
   protected retry(): void {
     // Stores auto-load in their constructors; no manual retry needed.
+  }
+
+  protected simulationCompletion(simulation: MedicalSimulation): number {
+    return this.medicalSimulationStore.getUserCompletion(simulation, this.attempts());
+  }
+
+  protected simulationStatus(simulation: MedicalSimulation): string {
+    return this.medicalSimulationStore.getUserStatus(simulation, this.attempts());
   }
 }

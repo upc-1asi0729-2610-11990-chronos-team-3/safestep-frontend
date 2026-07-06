@@ -61,9 +61,11 @@ export class StorePage implements OnInit {
   currentStep = signal(0);
   purchaseComplete = false;
   showHistory = signal(false);
+  cartOpen = signal(false);
   selectedAddressId: number | null = null;
   shippingForm: FormGroup;
   selectedPaymentMethodId: number | null = null;
+  processingPayment = signal(false);
   couponCode = '';
   couponError = false;
 
@@ -90,10 +92,15 @@ export class StorePage implements OnInit {
     this.route.paramMap.subscribe((params) => {
       this.selectedProductId = params.get('id');
     });
+    this.route.queryParamMap.subscribe((params) => {
+      if (params.get('history') === 'true') {
+        this.openHistory(false);
+      }
+    });
   }
 
   get currentUserId(): string {
-    return this.identityStore.getCurrentUser()?.id ?? '';
+    return this.identityStore.authenticatedUser()?.username ?? this.identityStore.getCurrentUser()?.id ?? '';
   }
 
   onSearchChange(value: string): void {
@@ -150,6 +157,10 @@ export class StorePage implements OnInit {
 
   get selectedPaymentMethod() {
     return this.store.paymentMethods().find((m) => m.id === this.selectedPaymentMethodId) ?? null;
+  }
+
+  get canContinuePayment(): boolean {
+    return this.store.paymentMethods().length === 0 || !!this.selectedPaymentMethodId;
   }
 
   get discountAmount(): number {
@@ -231,10 +242,19 @@ export class StorePage implements OnInit {
     this.couponError = false;
   }
 
+  openCart(): void {
+    this.cartOpen.set(true);
+  }
+
+  closeCart(): void {
+    this.cartOpen.set(false);
+  }
+
   checkout(): void {
     if (this.cartLines.length === 0) {
       return;
     }
+    this.closeCart();
     this.currentStep.set(1);
     this.purchaseComplete = false;
   }
@@ -252,15 +272,26 @@ export class StorePage implements OnInit {
   }
 
   viewHistory(): void {
+    this.openHistory(true);
+  }
+
+  private openHistory(updateUrl: boolean): void {
     this.currentStep.set(0);
     this.showHistory.set(true);
     this.purchaseComplete = false;
+    this.store.refreshOrders();
+    if (updateUrl) {
+      this.router.navigate(['/app/store'], { queryParams: { history: true } });
+    }
   }
 
   closeCheckout(): void {
     this.currentStep.set(0);
     this.purchaseComplete = false;
     this.showHistory.set(false);
+    if (this.route.snapshot.queryParamMap.has('history')) {
+      this.router.navigate(['/app/store'], { replaceUrl: true });
+    }
   }
 
   getOrderLines(order: Order) {
@@ -271,23 +302,9 @@ export class StorePage implements OnInit {
     if (this.cartLines.length === 0) {
       return;
     }
-    this.store.addOrder(new Order({
-      id: '',
-      userId: this.currentUserId,
-      items: this.cartLines.flatMap((line) => Array(line.item.quantity).fill(line.product.id)),
-      total: this.finalTotal,
-      status: 'pending',
-      createdAt: new Date().toISOString(),
-      shippingAddressId: this.selectedAddressId,
-      paymentMethodId: this.selectedPaymentMethodId,
-      couponCode: this.store.appliedCoupon()?.title ?? '',
-      discountApplied: this.discountAmount,
-    }));
-    this.cartLines.forEach((line) => {
-      this.store.deleteCartItem(line.item.id);
+    this.processingPayment.set(true);
+    this.store.checkoutWithStripe().subscribe({
+      error: () => this.processingPayment.set(false),
     });
-    this.purchaseComplete = true;
-    this.store.clearCoupon();
-    this.selectedPaymentMethodId = null;
   }
 }

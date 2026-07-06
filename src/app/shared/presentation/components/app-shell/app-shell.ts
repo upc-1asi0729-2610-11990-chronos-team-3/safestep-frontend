@@ -61,4 +61,12 @@ export class AppShell {
       void drawer.close();
     }
   }
+
+  protected logout(): void {
+    this.identityAccessStore.logout().subscribe({
+      next: () => {
+        window.location.assign('/auth');
+      },
+    });
+  }
 }

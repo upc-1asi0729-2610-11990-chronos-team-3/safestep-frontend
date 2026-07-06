@@ -7,6 +7,6 @@ import { environment } from '../../../environments/environment';
 
 export class EmergencyKitsApiEndpoint extends BaseApiEndpoint<EmergencyKit, EmergencyKitResource, EmergencyKitsResponse, EmergencyKitAssembler> {
   constructor(http: HttpClient) {
-    super(http, `${environment.platformProviderApiBaseUrl}${environment.ecommerceEndpointPath}/emergencyKits`, new EmergencyKitAssembler());
+    super(http, `${environment.platformProviderApiBaseUrl}${environment.ecommerceEndpointPath}/kits`, new EmergencyKitAssembler());
   }
 }

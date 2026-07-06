@@ -45,7 +45,6 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
-package-lock.json
 .firebaserc
 .firebase
 firebase.json

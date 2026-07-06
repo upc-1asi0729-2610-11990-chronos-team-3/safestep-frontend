@@ -10,6 +10,8 @@ import { Mission } from '../domain/model/mission.entity';
 import { Badge } from '../domain/model/badge.entity';
 import { CoinTransaction } from '../domain/model/coin-transaction.entity';
 import { LeaderboardEntry } from '../domain/model/leaderboard-entry.entity';
+import { GamificationSummaryResource } from './gamification-summary.resource';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class GamificationApi extends BaseApi {
@@ -18,7 +20,7 @@ export class GamificationApi extends BaseApi {
   private readonly coinTransactionsEndpoint: CoinTransactionsApiEndpoint;
   private readonly leaderboardEndpoint: LeaderboardEntriesApiEndpoint;
 
-  constructor(http: HttpClient) {
+  constructor(private http: HttpClient) {
     super();
     this.missionsEndpoint = new MissionsApiEndpoint(http);
     this.badgesEndpoint = new BadgesApiEndpoint(http);
@@ -30,6 +32,11 @@ export class GamificationApi extends BaseApi {
   getBadges(): Observable<Badge[]> { return this.badgesEndpoint.getAll(); }
   getCoinTransactions(): Observable<CoinTransaction[]> { return this.coinTransactionsEndpoint.getAll(); }
   getLeaderboard(): Observable<LeaderboardEntry[]> { return this.leaderboardEndpoint.getAll(); }
+  getSummary(): Observable<GamificationSummaryResource> {
+    return this.http.get<GamificationSummaryResource>(
+      `${environment.platformProviderApiBaseUrl}${environment.gamificationEndpointPath}/summary/me`,
+    );
+  }
   createMission(mission: Mission): Observable<Mission> { return this.missionsEndpoint.create(mission); }
   updateMission(mission: Mission, id: string): Observable<Mission> { return this.missionsEndpoint.update(mission, id); }
   deleteMission(id: string): Observable<void> { return this.missionsEndpoint.delete(id); }

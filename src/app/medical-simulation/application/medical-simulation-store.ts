@@ -1,6 +1,6 @@
-import { Injectable, computed, signal } from '@angular/core';
+import { DestroyRef, Injectable, computed, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { retry } from 'rxjs';
+import { Observable, retry, tap } from 'rxjs';
 import { MedicalSimulation } from '../domain/model/medical-simulation.entity';
 import { SimulationAttempt } from '../domain/model/simulation-attempt.entity';
 import { MedicalSimulationApi } from '../infrastructure/medical-simulation-api';
@@ -21,6 +21,9 @@ type SimulationReward = {
 };
 
 const STATUS_COMPLETED = 'Completado';
+const STATUS_IN_PROGRESS = 'En progreso';
+const STATUS_AVAILABLE = 'Disponible';
+const COMPLETION_THRESHOLD = 70;
 
 @Injectable({ providedIn: 'root' })
 export class MedicalSimulationStore {
@@ -37,7 +40,10 @@ export class MedicalSimulationStore {
   readonly simulationCount = computed(() => this.simulations().length);
   readonly attemptCount = computed(() => this.attempts().length);
 
-  constructor(private medicalSimulationApi: MedicalSimulationApi) {
+  constructor(
+    private medicalSimulationApi: MedicalSimulationApi,
+    private destroyRef: DestroyRef,
+  ) {
     this.loadSimulations();
     this.loadAttempts();
   }
@@ -102,12 +108,52 @@ export class MedicalSimulationStore {
     });
   }
 
+  completeAttempt(attempt: SimulationAttempt): Observable<SimulationAttempt> {
+    this.loadingSignal.set(true);
+    this.errorSignal.set(null);
+    return this.medicalSimulationApi.createAttempt(attempt).pipe(
+      tap({
+        next: (created) => {
+        this.attemptsSignal.update((list) => [created, ...list]);
+        this.loadSimulations();
+        this.loadingSignal.set(false);
+      },
+        error: (err) => {
+        this.errorSignal.set(this.formatError(err, 'Failed to complete simulation attempt'));
+        this.loadingSignal.set(false);
+      },
+      }),
+    );
+  }
+
   getSimulationById(simulations: MedicalSimulation[], id: string | null): MedicalSimulation | null {
     return simulations.find((simulation) => simulation.id === id) ?? null;
   }
 
   getNextSimulation(simulations: MedicalSimulation[]): MedicalSimulation | null {
     return simulations.find((simulation) => simulation.status !== STATUS_COMPLETED) ?? null;
+  }
+
+  getAttemptsForSimulation(simulationId: string, attempts: SimulationAttempt[]): SimulationAttempt[] {
+    return attempts.filter((attempt) => attempt.scenarioSlug === simulationId || attempt.scenarioId?.toString() === simulationId);
+  }
+
+  getUserCompletion(simulation: MedicalSimulation, attempts: SimulationAttempt[]): number {
+    const simulationAttempts = this.getAttemptsForSimulation(simulation.id, attempts);
+    if (!simulationAttempts.length) return 0;
+    const bestScore = Math.max(...simulationAttempts.map((attempt) => attempt.score));
+    return bestScore >= COMPLETION_THRESHOLD ? 100 : bestScore;
+  }
+
+  getUserStatus(simulation: MedicalSimulation, attempts: SimulationAttempt[]): string {
+    const completion = this.getUserCompletion(simulation, attempts);
+    if (completion >= 100) return STATUS_COMPLETED;
+    if (completion > 0) return STATUS_IN_PROGRESS;
+    return STATUS_AVAILABLE;
+  }
+
+  isUserCompleted(simulation: MedicalSimulation, attempts: SimulationAttempt[]): boolean {
+    return this.getUserCompletion(simulation, attempts) >= 100;
   }
 
   getSuggestedProducts(simulation: MedicalSimulation | null, products: StoreProduct[]): StoreProduct[] {
@@ -296,7 +342,7 @@ export class MedicalSimulationStore {
   private loadSimulations(): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.medicalSimulationApi.getSimulations().pipe(takeUntilDestroyed()).subscribe({
+    this.medicalSimulationApi.getSimulations().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (simulations) => {
         this.simulationsSignal.set(simulations);
         this.loadingSignal.set(false);
@@ -311,7 +357,7 @@ export class MedicalSimulationStore {
   private loadAttempts(): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.medicalSimulationApi.getAttempts().pipe(takeUntilDestroyed()).subscribe({
+    this.medicalSimulationApi.getAttempts().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (attempts) => {
         this.attemptsSignal.set(attempts);
         this.loadingSignal.set(false);

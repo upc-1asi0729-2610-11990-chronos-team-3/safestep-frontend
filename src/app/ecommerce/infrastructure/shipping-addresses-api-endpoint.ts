@@ -7,6 +7,6 @@ import { environment } from '../../../environments/environment';
 
 export class ShippingAddressesApiEndpoint extends BaseApiEndpoint<ShippingAddress, ShippingAddressResource, ShippingAddressesResponse, ShippingAddressAssembler> {
   constructor(http: HttpClient) {
-    super(http, `${environment.platformProviderApiBaseUrl}${environment.ecommerceEndpointPath}/shippingAddresses`, new ShippingAddressAssembler());
+    super(http, `${environment.platformProviderApiBaseUrl}${environment.ecommerceEndpointPath}/shipping-addresses/me`, new ShippingAddressAssembler());
   }
 }

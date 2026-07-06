@@ -128,6 +128,12 @@ form {
 
 mat-form-field { width: 100%; }
 
+.name-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
 .form-row {
   display: flex;
   align-items: center;
@@ -147,11 +153,43 @@ mat-form-field { width: 100%; }
   min-height: 44px;
 }
 
-a[mat-flat-button] {
+button[mat-flat-button] {
   min-height: 48px;
   font-family: var(--font-display);
   font-weight: 600;
   font-size: 0.9375rem;
+}
+
+.mode-switch {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+}
+
+.mode-switch button.active {
+  border-color: var(--safe-primary);
+  color: var(--safe-primary-dark);
+  background: #f0f9ff;
+}
+
+.error {
+  margin: var(--space-4) 0 0;
+  color: var(--safe-danger);
+  font-family: var(--font-body);
+  font-weight: 600;
+}
+
+.success {
+  margin: var(--space-4) 0 0;
+  color: var(--safe-green-dark);
+  background: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.28);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.875rem;
 }
 
 .providers,
@@ -196,6 +234,11 @@ a[mat-flat-button] {
   .auth-copy h1.display { font-size: 2rem; }
 
   .auth-card { padding: var(--space-5); }
+
+  .name-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
 
   .form-row { flex-direction: column; align-items: flex-start; }
 }

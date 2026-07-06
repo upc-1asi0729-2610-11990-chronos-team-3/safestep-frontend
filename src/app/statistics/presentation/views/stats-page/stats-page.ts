@@ -10,6 +10,7 @@ import { StatisticsStore } from '../../../application/statistics-store';
 import { MedicalSimulation } from '../../../../medical-simulation/domain/model/medical-simulation.entity';
 import { Badge } from '../../../../gamification/domain/model/badge.entity';
 import { Mission } from '../../../../gamification/domain/model/mission.entity';
+import { IdentityAccessStore } from '../../../../identity-access/application/identity-access-store';
 
 @Component({
   selector: 'app-stats-page',
@@ -21,6 +22,7 @@ export class StatsPage {
   private readonly medicalSimulationStore = inject(MedicalSimulationStore);
   private readonly gamificationStore = inject(GamificationStore);
   private readonly statisticsStore = inject(StatisticsStore);
+  private readonly identityAccessStore = inject(IdentityAccessStore);
 
   protected readonly simulations = this.medicalSimulationStore.simulations;
   protected readonly attempts = this.medicalSimulationStore.attempts;
@@ -29,9 +31,10 @@ export class StatsPage {
   protected readonly coinTransactions = this.gamificationStore.coinTransactions;
   protected readonly error = computed(() => this.medicalSimulationStore.error() || this.gamificationStore.error());
   protected readonly loading = computed(() => this.medicalSimulationStore.loading() || this.gamificationStore.loading());
+  protected readonly currentUser = computed(() => this.identityAccessStore.getCurrentUser());
 
   protected readonly successfulTransactions = computed(() =>
-    this.statisticsStore.getSuccessfulTransactions(this.coinTransactions(), 'usr-001'),
+    this.statisticsStore.getSuccessfulTransactions(this.coinTransactions()),
   );
   protected readonly completedSimulationIds = computed(
     () => this.statisticsStore.getCompletedSimulationIds(this.successfulTransactions()),
@@ -40,8 +43,10 @@ export class StatsPage {
   protected readonly completedSimulations = computed(() => this.completedSimulationIds().length);
   protected readonly averageAccuracy = computed(() => this.statisticsStore.getAverageAttemptAccuracy(this.userAttempts()));
   protected readonly totalCoins = computed(() => this.statisticsStore.getTotalCoins(this.successfulTransactions()));
-  protected readonly totalXp = computed(() => this.statisticsStore.getTotalXp(this.successfulTransactions(), this.simulations()));
-  protected readonly trainedMinutes = computed(() => this.statisticsStore.getTrainedMinutes(this.successfulTransactions(), this.simulations()));
+  protected readonly totalXp = computed(() =>
+    this.currentUser()?.xp ?? this.statisticsStore.getTotalXp(this.successfulTransactions(), this.simulations()),
+  );
+  protected readonly trainedMinutes = computed(() => this.statisticsStore.getTrainedMinutesFromAttempts(this.userAttempts()));
   protected readonly performanceBySimulation = computed(() =>
     this.statisticsStore.getPerformanceBySimulation(this.simulations(), this.userAttempts(), this.successfulTransactions()),
   );
@@ -85,7 +90,7 @@ export class StatsPage {
   }
 
   private userAttempts() {
-    return this.statisticsStore.getUserAttempts(this.attempts(), 1);
+    return this.statisticsStore.getUserAttempts(this.attempts());
   }
 
   private getActionRecommendations(

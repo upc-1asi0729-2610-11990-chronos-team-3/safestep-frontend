@@ -84,6 +84,9 @@
           {{ currentUser.fullName }}
         </a>
       }
+      <button mat-icon-button type="button" aria-label="Cerrar sesion" (click)="logout()">
+        <mat-icon>logout</mat-icon>
+      </button>
     </mat-toolbar>
 
     <main>

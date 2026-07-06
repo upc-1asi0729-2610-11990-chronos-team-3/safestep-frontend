@@ -7,6 +7,6 @@ import { environment } from '../../../environments/environment';
 
 export class PersonalizedRecommendationsApiEndpoint extends BaseApiEndpoint<PersonalizedRecommendation, PersonalizedRecommendationResource, PersonalizedRecommendationsResponse, PersonalizedRecommendationAssembler> {
   constructor(http: HttpClient) {
-    super(http, `${environment.platformProviderApiBaseUrl}${environment.ecommerceEndpointPath}/personalizedRecommendations`, new PersonalizedRecommendationAssembler());
+    super(http, `${environment.platformProviderApiBaseUrl}${environment.ecommerceEndpointPath}/recommendations/me`, new PersonalizedRecommendationAssembler());
   }
 }

@@ -1,6 +1,6 @@
-import { Injectable, computed, signal } from '@angular/core';
+import { DestroyRef, Injectable, computed, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { retry } from 'rxjs';
+import { Observable, catchError, finalize, map, retry, switchMap, tap, throwError } from 'rxjs';
 import { StoreProduct } from '../domain/model/store-product.entity';
 import { Coupon } from '../domain/model/coupon.entity';
 import { ProductCategory } from '../domain/model/product-category.entity';
@@ -59,7 +59,10 @@ export class EcommerceStore {
   readonly orderCount = computed(() => this.orders().length);
   readonly cartItemCount = computed(() => this.cartItems().length);
 
-  constructor(private ecommerceApi: EcommerceApi) {
+  constructor(
+    private ecommerceApi: EcommerceApi,
+    private destroyRef: DestroyRef,
+  ) {
     this.loadProducts();
     this.loadCoupons();
     this.loadCategories();
@@ -204,7 +207,7 @@ export class EcommerceStore {
   addOrder(order: Order): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.ecommerceApi.createOrder(order).pipe(retry(2)).subscribe({
+    this.ecommerceApi.createOrder(order).subscribe({
       next: (created) => {
         this.ordersSignal.update((list) => [created, ...list]);
         this.loadingSignal.set(false);
@@ -246,12 +249,19 @@ export class EcommerceStore {
     });
   }
 
+  refreshOrders(): void {
+    this.loadOrders();
+  }
+
   addCartItem(item: CartItem): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.ecommerceApi.createCartItem(item).pipe(retry(2)).subscribe({
+    this.ecommerceApi.createCartItem(item).subscribe({
       next: (created) => {
-        this.cartItemsSignal.update((list) => [...list, created]);
+        this.cartItemsSignal.update((list) => {
+          const existing = list.find((cartItem) => cartItem.id === created.id);
+          return existing ? list.map((cartItem) => cartItem.id === created.id ? created : cartItem) : [...list, created];
+        });
         this.loadingSignal.set(false);
       },
       error: (err) => {
@@ -264,7 +274,7 @@ export class EcommerceStore {
   updateCartItem(item: CartItem, id: string): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.ecommerceApi.updateCartItem(item, id).pipe(retry(2)).subscribe({
+    this.ecommerceApi.updateCartItem(item, id).subscribe({
       next: (updated) => {
         this.cartItemsSignal.update((list) => list.map((c) => (c.id === id ? updated : c)));
         this.loadingSignal.set(false);
@@ -289,6 +299,24 @@ export class EcommerceStore {
         this.loadingSignal.set(false);
       },
     });
+  }
+
+  checkoutWithStripe(): Observable<string> {
+    this.loadingSignal.set(true);
+    this.errorSignal.set(null);
+    return this.ecommerceApi.createPendingOrder().pipe(
+      tap((order) => this.ordersSignal.update((list) => [order, ...list.filter((item) => item.id !== order.id)])),
+      switchMap((order) => this.ecommerceApi.createStripeCheckoutSession(order.id)),
+      tap((session) => {
+        window.location.href = session.sessionUrl;
+      }),
+      map((session) => session.sessionUrl),
+      catchError((err) => {
+        this.errorSignal.set(this.formatError(err, 'Failed to start Stripe checkout'));
+        return throwError(() => err);
+      }),
+      finalize(() => this.loadingSignal.set(false)),
+    );
   }
 
   getRelevantProducts(products: StoreProduct[], recommendations: PersonalizedRecommendation[]): StoreProduct[] {
@@ -460,7 +488,7 @@ export class EcommerceStore {
   private loadProducts(): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.ecommerceApi.getProducts().pipe(takeUntilDestroyed()).subscribe({
+    this.ecommerceApi.getProducts().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (products) => {
         this.productsSignal.set(products);
         this.loadingSignal.set(false);
@@ -475,7 +503,7 @@ export class EcommerceStore {
   private loadCoupons(): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.ecommerceApi.getCoupons().pipe(takeUntilDestroyed()).subscribe({
+    this.ecommerceApi.getCoupons().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (coupons) => {
         this.couponsSignal.set(coupons);
         this.loadingSignal.set(false);
@@ -490,7 +518,7 @@ export class EcommerceStore {
   private loadCategories(): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.ecommerceApi.getCategories().pipe(takeUntilDestroyed()).subscribe({
+    this.ecommerceApi.getCategories().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (categories) => {
         this.categoriesSignal.set(categories);
         this.loadingSignal.set(false);
@@ -505,13 +533,12 @@ export class EcommerceStore {
   private loadReviews(): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.ecommerceApi.getReviews().pipe(takeUntilDestroyed()).subscribe({
+    this.ecommerceApi.getReviews().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (reviews) => {
         this.reviewsSignal.set(reviews);
         this.loadingSignal.set(false);
       },
       error: (err) => {
-        this.errorSignal.set(this.formatError(err, 'Failed to load reviews'));
         this.loadingSignal.set(false);
       },
     });
@@ -520,7 +547,7 @@ export class EcommerceStore {
   private loadOrders(): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.ecommerceApi.getOrders().pipe(takeUntilDestroyed()).subscribe({
+    this.ecommerceApi.getOrders().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (orders) => {
         this.ordersSignal.set(orders);
         this.loadingSignal.set(false);
@@ -535,7 +562,7 @@ export class EcommerceStore {
   private loadCartItems(): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.ecommerceApi.getCartItems().pipe(takeUntilDestroyed()).subscribe({
+    this.ecommerceApi.getCartItems().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (items) => {
         this.cartItemsSignal.set(items);
         this.loadingSignal.set(false);
@@ -550,7 +577,7 @@ export class EcommerceStore {
   private loadShippingAddresses(): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.ecommerceApi.getShippingAddresses().pipe(takeUntilDestroyed()).subscribe({
+    this.ecommerceApi.getShippingAddresses().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (addresses) => {
         this.shippingAddressesSignal.set(addresses);
         this.loadingSignal.set(false);
@@ -565,13 +592,13 @@ export class EcommerceStore {
   private loadPaymentMethods(): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.ecommerceApi.getPaymentMethods().pipe(takeUntilDestroyed()).subscribe({
+    this.ecommerceApi.getPaymentMethods().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (methods) => {
         this.paymentMethodsSignal.set(methods);
         this.loadingSignal.set(false);
       },
       error: (err) => {
-        this.errorSignal.set(this.formatError(err, 'Failed to load payment methods'));
+        this.paymentMethodsSignal.set([]);
         this.loadingSignal.set(false);
       },
     });
@@ -580,13 +607,12 @@ export class EcommerceStore {
   private loadRecommendations(): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.ecommerceApi.getRecommendations().pipe(takeUntilDestroyed()).subscribe({
+    this.ecommerceApi.getRecommendations().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (recommendations) => {
         this.recommendationsSignal.set(recommendations);
         this.loadingSignal.set(false);
       },
       error: (err) => {
-        this.errorSignal.set(this.formatError(err, 'Failed to load recommendations'));
         this.loadingSignal.set(false);
       },
     });
@@ -595,7 +621,7 @@ export class EcommerceStore {
   private loadEmergencyKits(): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.ecommerceApi.getEmergencyKits().pipe(takeUntilDestroyed()).subscribe({
+    this.ecommerceApi.getEmergencyKits().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (kits) => {
         this.emergencyKitsSignal.set(kits);
         this.loadingSignal.set(false);

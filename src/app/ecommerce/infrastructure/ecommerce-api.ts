@@ -22,6 +22,7 @@ import { ShippingAddress } from '../domain/model/shipping-address.entity';
 import { PaymentMethod } from '../domain/model/payment-method.entity';
 import { PersonalizedRecommendation } from '../domain/model/personalized-recommendation.entity';
 import { EmergencyKit } from '../domain/model/emergency-kit.entity';
+import { StripeCheckoutSessionResponse } from './orders-response';
 
 @Injectable({ providedIn: 'root' })
 export class EcommerceApi extends BaseApi {
@@ -54,8 +55,8 @@ export class EcommerceApi extends BaseApi {
   getCoupons(): Observable<Coupon[]> { return this.couponsEndpoint.getAll(); }
   getCategories(): Observable<ProductCategory[]> { return this.productCategoriesEndpoint.getAll(); }
   getReviews(): Observable<ProductReview[]> { return this.productReviewsEndpoint.getAll(); }
-  getOrders(): Observable<Order[]> { return this.ordersEndpoint.getAll(); }
-  getCartItems(): Observable<CartItem[]> { return this.cartItemsEndpoint.getAll(); }
+  getOrders(): Observable<Order[]> { return this.ordersEndpoint.getMyOrders(); }
+  getCartItems(): Observable<CartItem[]> { return this.cartItemsEndpoint.getMyCart(); }
   getShippingAddresses(): Observable<ShippingAddress[]> { return this.shippingAddressesEndpoint.getAll(); }
   getPaymentMethods(): Observable<PaymentMethod[]> { return this.paymentMethodsEndpoint.getAll(); }
   getRecommendations(): Observable<PersonalizedRecommendation[]> { return this.personalizedRecommendationsEndpoint.getAll(); }
@@ -66,10 +67,12 @@ export class EcommerceApi extends BaseApi {
   createCoupon(coupon: Coupon): Observable<Coupon> { return this.couponsEndpoint.create(coupon); }
   updateCoupon(coupon: Coupon, id: string): Observable<Coupon> { return this.couponsEndpoint.update(coupon, id); }
   deleteCoupon(id: string): Observable<void> { return this.couponsEndpoint.delete(id); }
-  createOrder(order: Order): Observable<Order> { return this.ordersEndpoint.create(order); }
+  createOrder(_order: Order): Observable<Order> { return this.ordersEndpoint.createPendingOrder(); }
+  createPendingOrder(): Observable<Order> { return this.ordersEndpoint.createPendingOrder(); }
+  createStripeCheckoutSession(orderId: string): Observable<StripeCheckoutSessionResponse> { return this.ordersEndpoint.createStripeCheckoutSession(orderId); }
   updateOrder(order: Order, id: string): Observable<Order> { return this.ordersEndpoint.update(order, id); }
   deleteOrder(id: string): Observable<void> { return this.ordersEndpoint.delete(id); }
-  createCartItem(item: CartItem): Observable<CartItem> { return this.cartItemsEndpoint.create(item); }
-  updateCartItem(item: CartItem, id: string): Observable<CartItem> { return this.cartItemsEndpoint.update(item, id); }
+  createCartItem(item: CartItem): Observable<CartItem> { return this.cartItemsEndpoint.addToCart(item.productId, item.quantity); }
+  updateCartItem(item: CartItem, id: string): Observable<CartItem> { return this.cartItemsEndpoint.updateQuantity(id, item.quantity); }
   deleteCartItem(id: string): Observable<void> { return this.cartItemsEndpoint.delete(id); }
 }

@@ -7,6 +7,6 @@ import { environment } from '../../../environments/environment';
 
 export class BadgesApiEndpoint extends BaseApiEndpoint<Badge, BadgeResource, BadgesResponse, BadgeAssembler> {
   constructor(http: HttpClient) {
-    super(http, `${environment.platformProviderApiBaseUrl}${environment.gamificationEndpointPath}/badges`, new BadgeAssembler());
+    super(http, `${environment.platformProviderApiBaseUrl}${environment.gamificationEndpointPath}/badges/me`, new BadgeAssembler());
   }
 }

@@ -1,4 +1,4 @@
-import { Injectable, computed, signal } from '@angular/core';
+import { DestroyRef, Injectable, computed, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { retry } from 'rxjs';
 import { Mission } from '../domain/model/mission.entity';
@@ -27,7 +27,10 @@ export class GamificationStore {
   readonly badgeCount = computed(() => this.badges().length);
   readonly coinTransactionCount = computed(() => this.coinTransactions().length);
 
-  constructor(private gamificationApi: GamificationApi) {
+  constructor(
+    private gamificationApi: GamificationApi,
+    private destroyRef: DestroyRef,
+  ) {
     this.loadMissions();
     this.loadBadges();
     this.loadCoinTransactions();
@@ -139,6 +142,13 @@ export class GamificationStore {
     });
   }
 
+  refresh(): void {
+    this.loadMissions();
+    this.loadBadges();
+    this.loadCoinTransactions();
+    this.loadLeaderboard();
+  }
+
   getMissionById(id: string | null): Mission | undefined {
     return this.missions().find((mission) => mission.id === id);
   }
@@ -186,7 +196,7 @@ export class GamificationStore {
   private loadMissions(): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.gamificationApi.getMissions().pipe(takeUntilDestroyed()).subscribe({
+    this.gamificationApi.getMissions().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (missions) => {
         this.missionsSignal.set(missions);
         this.loadingSignal.set(false);
@@ -201,7 +211,7 @@ export class GamificationStore {
   private loadBadges(): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.gamificationApi.getBadges().pipe(takeUntilDestroyed()).subscribe({
+    this.gamificationApi.getBadges().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (badges) => {
         this.badgesSignal.set(badges);
         this.loadingSignal.set(false);
@@ -216,7 +226,7 @@ export class GamificationStore {
   private loadCoinTransactions(): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.gamificationApi.getCoinTransactions().pipe(takeUntilDestroyed()).subscribe({
+    this.gamificationApi.getCoinTransactions().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (transactions) => {
         this.coinTransactionsSignal.set(transactions);
         this.loadingSignal.set(false);
@@ -231,7 +241,7 @@ export class GamificationStore {
   private loadLeaderboard(): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.gamificationApi.getLeaderboard().pipe(takeUntilDestroyed()).subscribe({
+    this.gamificationApi.getLeaderboard().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (entries) => {
         this.leaderboardSignal.set(entries);
         this.loadingSignal.set(false);

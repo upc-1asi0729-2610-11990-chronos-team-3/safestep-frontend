@@ -6,5 +6,5 @@ export interface ProductCategoriesResponse extends BaseResponse {
 
 export interface ProductCategoryResource extends BaseResource<string> {
   name: string;
-  productCount: number;
+  productCount?: number;
 }

@@ -1,4 +1,4 @@
-import { Injectable, computed, signal } from '@angular/core';
+import { DestroyRef, Injectable, computed, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { retry } from 'rxjs';
 import { StatisticsData } from '../domain/model/statistics-data.entity';
@@ -42,7 +42,10 @@ export class StatisticsStore {
     certificates: this.certificatesSignal(),
   }));
 
-  constructor(private statisticsApi: StatisticsApi) {
+  constructor(
+    private statisticsApi: StatisticsApi,
+    private destroyRef: DestroyRef,
+  ) {
     this.loadStatistics();
   }
 
@@ -61,16 +64,19 @@ export class StatisticsStore {
     });
   }
 
-  getSuccessfulTransactions(transactions: CoinTransaction[], userId: string): CoinTransaction[] {
-    return transactions.filter((transaction) => transaction.userId === userId && transaction.successful);
+  getSuccessfulTransactions(transactions: CoinTransaction[], userId?: string): CoinTransaction[] {
+    return transactions.filter((transaction) => {
+      const belongsToUser = userId ? transaction.userId === userId : true;
+      return belongsToUser && transaction.successful;
+    });
   }
 
   getCompletedSimulationIds(transactions: CoinTransaction[]): string[] {
     return transactions.map((transaction) => transaction.simulationId);
   }
 
-  getUserAttempts(attempts: SimulationAttempt[], userId: number): SimulationAttempt[] {
-    return attempts.filter((attempt) => attempt.userId === userId);
+  getUserAttempts(attempts: SimulationAttempt[], userId?: number): SimulationAttempt[] {
+    return userId ? attempts.filter((attempt) => attempt.userId === userId) : attempts;
   }
 
   getAverageAttemptAccuracy(attempts: SimulationAttempt[]): number {
@@ -117,6 +123,11 @@ export class StatisticsStore {
     });
 
     return total;
+  }
+
+  getTrainedMinutesFromAttempts(attempts: SimulationAttempt[]): number {
+    const seconds = attempts.reduce((total, attempt) => total + Math.max(0, attempt.timeElapsed), 0);
+    return Math.round(seconds / 60);
   }
 
   getPerformanceBySimulation(
@@ -203,7 +214,7 @@ export class StatisticsStore {
   private loadStatistics(): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.statisticsApi.getStatistics().pipe(takeUntilDestroyed()).subscribe({
+    this.statisticsApi.getStatistics().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (data) => {
         this.populateSignals(data);
         this.loadingSignal.set(false);

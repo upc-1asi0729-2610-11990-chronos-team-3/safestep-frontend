@@ -7,6 +7,6 @@ import { environment } from '../../../environments/environment';
 
 export class PaymentMethodsApiEndpoint extends BaseApiEndpoint<PaymentMethod, PaymentMethodResource, PaymentMethodsResponse, PaymentMethodAssembler> {
   constructor(http: HttpClient) {
-    super(http, `${environment.platformProviderApiBaseUrl}${environment.ecommerceEndpointPath}/paymentMethods`, new PaymentMethodAssembler());
+    super(http, `${environment.platformProviderApiBaseUrl}${environment.ecommerceEndpointPath}/payment-methods`, new PaymentMethodAssembler());
   }
 }

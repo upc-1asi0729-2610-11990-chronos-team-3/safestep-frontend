@@ -8,14 +8,91 @@
   <header class="store-header">
     <h1>{{ 'store.title' | translate }}</h1>
     <div class="store-actions">
-      <a mat-mini-fab routerLink="/app/store/admin/products" color="primary" matTooltip="{{ 'store.manageProducts' | translate }}">
+      <button
+        mat-stroked-button
+        type="button"
+        class="orders-button"
+        [matBadge]="userOrders.length"
+        [matBadgeHidden]="userOrders.length === 0"
+        matBadgeColor="accent"
+        (click)="viewHistory()"
+      >
+        <mat-icon>receipt_long</mat-icon>
+        Mis ordenes
+      </button>
+      <button
+        mat-mini-fab
+        color="primary"
+        type="button"
+        [matBadge]="cartCount"
+        [matBadgeHidden]="cartCount === 0"
+        matBadgeColor="accent"
+        matTooltip="{{ 'store.cart' | translate }}"
+        aria-label="Abrir carrito"
+        (click)="openCart()"
+      >
+        <mat-icon>shopping_cart</mat-icon>
+      </button>
+      <a mat-mini-fab routerLink="/app/store/admin/products" color="primary" matTooltip="{{ 'store.manageProducts' | translate }}" aria-label="Administrar productos">
         <mat-icon>inventory_2</mat-icon>
       </a>
-      <a mat-mini-fab routerLink="/app/store/admin/coupons" color="primary" matTooltip="{{ 'store.manageCoupons' | translate }}">
+      <a mat-mini-fab routerLink="/app/store/admin/coupons" color="primary" matTooltip="{{ 'store.manageCoupons' | translate }}" aria-label="Administrar cupones">
         <mat-icon>confirmation_number</mat-icon>
       </a>
     </div>
   </header>
+
+  <div class="cart-modal-backdrop" *ngIf="cartOpen()" (click)="closeCart()">
+    <div class="cart-modal-card" role="dialog" aria-modal="true" aria-label="Carrito" (click)="$event.stopPropagation()">
+      <header class="cart-popover-header">
+        <div>
+          <h2>{{ 'store.cart' | translate }}</h2>
+          <span class="cart-count-pill">{{ cartCount }} productos</span>
+        </div>
+        <button mat-icon-button type="button" aria-label="Cerrar carrito" (click)="closeCart()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </header>
+      <mat-divider></mat-divider>
+      <div class="cart-items" *ngIf="cartLines.length > 0; else emptyCart">
+        <div class="cart-line" *ngFor="let line of cartLines">
+          <img [src]="line.product.imageUrl" [alt]="line.product.name" />
+          <div class="line-info">
+            <h4>{{ line.product.name }}</h4>
+            <div class="line-controls">
+              <button mat-icon-button (click)="updateQuantity(line.item.id, Math.max(1, line.item.quantity - 1))">
+                <mat-icon>remove</mat-icon>
+              </button>
+              <span>{{ line.item.quantity }}</span>
+              <button mat-icon-button (click)="updateQuantity(line.item.id, line.item.quantity + 1)">
+                <mat-icon>add</mat-icon>
+              </button>
+            </div>
+            <span class="line-subtotal">{{ formatPrice(line.subtotal) }}</span>
+          </div>
+          <button mat-icon-button color="warn" (click)="removeFromCart(line.item.id)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+      <ng-template #emptyCart>
+        <div class="empty-cart">
+          <mat-icon>shopping_cart</mat-icon>
+          <p>{{ 'store.emptyCart' | translate }}</p>
+        </div>
+      </ng-template>
+      <mat-divider *ngIf="cartLines.length > 0"></mat-divider>
+      <div class="cart-summary" *ngIf="cartLines.length > 0">
+        <div class="total-row">
+          <span>{{ 'store.total' | translate }}</span>
+          <span class="total-value">{{ formatPrice(cartTotal) }}</span>
+        </div>
+        <button mat-raised-button color="accent" class="checkout-btn" (click)="checkout()">
+          {{ 'store.checkout' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
 
   <div class="search-bar">
     <mat-form-field appearance="outline" subscriptSizing="dynamic">
@@ -134,48 +211,6 @@
       </div>
     </div>
   </ng-template>
-
-  <aside class="cart-sidebar">
-    <h2>{{ 'store.cart' | translate }}</h2>
-    <mat-divider></mat-divider>
-    <div class="cart-items" *ngIf="cartLines.length > 0; else emptyCart">
-      <div class="cart-line" *ngFor="let line of cartLines">
-        <img [src]="line.product.imageUrl" [alt]="line.product.name" />
-        <div class="line-info">
-          <h4>{{ line.product.name }}</h4>
-          <div class="line-controls">
-            <button mat-icon-button (click)="updateQuantity(line.item.id, Math.max(1, line.item.quantity - 1))">
-              <mat-icon>remove</mat-icon>
-            </button>
-            <span>{{ line.item.quantity }}</span>
-            <button mat-icon-button (click)="updateQuantity(line.item.id, line.item.quantity + 1)">
-              <mat-icon>add</mat-icon>
-            </button>
-          </div>
-          <span class="line-subtotal">{{ formatPrice(line.subtotal) }}</span>
-        </div>
-        <button mat-icon-button color="warn" (click)="removeFromCart(line.item.id)">
-          <mat-icon>delete</mat-icon>
-        </button>
-      </div>
-    </div>
-    <ng-template #emptyCart>
-      <div class="empty-cart">
-        <mat-icon>shopping_cart</mat-icon>
-        <p>{{ 'store.emptyCart' | translate }}</p>
-      </div>
-    </ng-template>
-    <mat-divider *ngIf="cartLines.length > 0"></mat-divider>
-    <div class="cart-summary" *ngIf="cartLines.length > 0">
-      <div class="total-row">
-        <span>{{ 'store.total' | translate }}</span>
-        <span class="total-value">{{ formatPrice(cartTotal) }}</span>
-      </div>
-      <button mat-raised-button color="accent" class="checkout-btn" (click)="checkout()">
-        {{ 'store.checkout' | translate }}
-      </button>
-    </div>
-  </aside>
 </section>
 
 <section class="history-container" *ngIf="showHistory()">
@@ -335,8 +370,9 @@
       <h2>{{ 'store.paymentData' | translate }}</h2>
 
       <div class="payment-section">
-        <h3>{{ 'store.selectPayment' | translate }}</h3>
-        <mat-radio-group class="payment-radio-group" [(ngModel)]="selectedPaymentMethodId">
+        <h3>Stripe Checkout</h3>
+        <p class="payment-desc">Seras redirigido a Stripe para completar el pago de forma segura.</p>
+        <mat-radio-group class="payment-radio-group" [(ngModel)]="selectedPaymentMethodId" *ngIf="store.paymentMethods().length > 0">
           <mat-radio-button *ngFor="let method of store.paymentMethods()" [value]="method.id" class="payment-radio">
             <div class="payment-option">
               <span class="payment-type">{{ method.label }}</span>
@@ -387,7 +423,7 @@
 
       <div class="step-nav">
         <button mat-stroked-button (click)="prevStep()">{{ 'store.back' | translate }}</button>
-        <button mat-raised-button color="primary" (click)="nextStep()" [disabled]="!selectedPaymentMethodId">{{ 'store.next' | translate }}</button>
+        <button mat-raised-button color="primary" (click)="nextStep()" [disabled]="!canContinuePayment">{{ 'store.next' | translate }}</button>
       </div>
     </div>
 
@@ -419,11 +455,11 @@
           </div>
         </div>
 
-        <div class="review-section" *ngIf="selectedPaymentMethod">
+        <div class="review-section">
           <h3>{{ 'store.paymentData' | translate }}</h3>
           <div class="review-block">
-            <p class="review-line"><strong>{{ selectedPaymentMethod.label }}</strong></p>
-            <p class="review-line">{{ selectedPaymentMethod.description }}</p>
+            <p class="review-line"><strong>{{ selectedPaymentMethod?.label ?? 'Stripe Checkout' }}</strong></p>
+            <p class="review-line">{{ selectedPaymentMethod?.description ?? 'Pago seguro con tarjeta mediante Stripe.' }}</p>
           </div>
         </div>
 
@@ -443,7 +479,9 @@
         </div>
         <div class="step-nav">
           <button mat-stroked-button (click)="prevStep()">{{ 'store.back' | translate }}</button>
-          <button mat-raised-button color="accent" (click)="confirmOrder()">{{ 'store.pay' | translate }}</button>
+          <button mat-raised-button color="accent" (click)="confirmOrder()" [disabled]="processingPayment()">
+            {{ processingPayment() ? ('shared.loading' | translate) : ('store.pay' | translate) }}
+          </button>
         </div>
       </ng-container>
       <ng-template #purchaseSuccess>

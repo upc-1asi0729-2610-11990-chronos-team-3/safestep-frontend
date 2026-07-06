@@ -5,6 +5,7 @@ const storeProductList = () => import('./store-product-list/store-product-list')
 const storeProductForm = () => import('./store-product-form/store-product-form').then((m) => m.StoreProductForm);
 const couponList = () => import('./coupon-list/coupon-list').then((m) => m.CouponList);
 const couponForm = () => import('./coupon-form/coupon-form').then((m) => m.CouponForm);
+const paymentResult = () => import('./payment-result/payment-result').then((m) => m.PaymentResult);
 
 export const ecommerceRoutes: Routes = [
   { path: 'store', loadComponent: storePage, title: 'SafeStep - Store' },
@@ -42,5 +43,17 @@ export const ecommerceRoutes: Routes = [
     path: 'store/admin/coupons/edit/:id',
     loadComponent: couponForm,
     title: 'SafeStep - Edit coupon',
+  },
+  {
+    path: 'payment/success',
+    loadComponent: paymentResult,
+    data: { status: 'success' },
+    title: 'SafeStep - Payment Success',
+  },
+  {
+    path: 'payment/cancel',
+    loadComponent: paymentResult,
+    data: { status: 'cancel' },
+    title: 'SafeStep - Payment Cancelled',
   },
 ];

@@ -7,6 +7,6 @@ import { environment } from '../../../environments/environment';
 
 export class CoinTransactionsApiEndpoint extends BaseApiEndpoint<CoinTransaction, CoinTransactionResource, CoinTransactionsResponse, CoinTransactionAssembler> {
   constructor(http: HttpClient) {
-    super(http, `${environment.platformProviderApiBaseUrl}${environment.gamificationEndpointPath}/coinTransactions`, new CoinTransactionAssembler());
+    super(http, `${environment.platformProviderApiBaseUrl}${environment.gamificationEndpointPath}/coin-transactions/me`, new CoinTransactionAssembler());
   }
 }

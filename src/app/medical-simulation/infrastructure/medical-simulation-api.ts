@@ -23,7 +23,9 @@ export class MedicalSimulationApi extends BaseApi {
   createSimulation(simulation: MedicalSimulation): Observable<MedicalSimulation> { return this.medicalSimulationsEndpoint.create(simulation); }
   updateSimulation(simulation: MedicalSimulation, id: string): Observable<MedicalSimulation> { return this.medicalSimulationsEndpoint.update(simulation, id); }
   deleteSimulation(id: string): Observable<void> { return this.medicalSimulationsEndpoint.delete(id); }
-  createAttempt(attempt: SimulationAttempt): Observable<SimulationAttempt> { return this.simulationAttemptsEndpoint.create(attempt); }
+  createAttempt(attempt: SimulationAttempt): Observable<SimulationAttempt> {
+    return this.simulationAttemptsEndpoint.createForSimulation(attempt.scenarioSlug ?? attempt.scenarioId.toString(), attempt);
+  }
   updateAttempt(attempt: SimulationAttempt, id: string): Observable<SimulationAttempt> { return this.simulationAttemptsEndpoint.update(attempt, id); }
   deleteAttempt(id: string): Observable<void> { return this.simulationAttemptsEndpoint.delete(id); }
 }

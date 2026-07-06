@@ -89,17 +89,17 @@
           </div>
           <h3>{{ simulation.title }}</h3>
           <p>{{ simulation.description }}</p>
-          <div class="progress"><div class="progress-fill" [style.width]="simulation.completion + '%'"></div></div>
+          <div class="progress"><div class="progress-fill" [style.width]="simulationCompletion(simulation) + '%'"></div></div>
           <div class="sim-footer">
-            <strong class="body-sm" [style.color]="simulation.completion > 0 ? 'var(--safe-green)' : 'var(--safe-gray-500)'">
-              @if (simulation.completion > 0) {
-                {{ simulation.completion }}{{ 'dashboard.percentCompleted' | translate }}
+            <strong class="body-sm" [style.color]="simulationCompletion(simulation) > 0 ? 'var(--safe-green)' : 'var(--safe-gray-500)'">
+              @if (simulationCompletion(simulation) > 0) {
+                {{ simulationCompletion(simulation) }}{{ 'dashboard.percentCompleted' | translate }}
               } @else {
                 {{ 'shared.notStarted' | translate }}
               }
             </strong>
             <a mat-flat-button color="primary" routerLink="/app/simulations">
-              {{ simulation.completion > 0 ? ('dashboard.practiceNow' | translate) : ('dashboard.startSimulation' | translate) }}
+              {{ simulationCompletion(simulation) > 0 ? ('dashboard.practiceNow' | translate) : ('dashboard.startSimulation' | translate) }}
             </a>
           </div>
         </div>

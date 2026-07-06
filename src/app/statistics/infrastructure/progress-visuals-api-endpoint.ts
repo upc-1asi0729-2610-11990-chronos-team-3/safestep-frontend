@@ -7,6 +7,6 @@ import { environment } from '../../../environments/environment';
 
 export class ProgressVisualsApiEndpoint extends BaseApiEndpoint<ProgressVisualEntry, ProgressVisualResource, ProgressVisualsResponse, ProgressVisualAssembler> {
   constructor(http: HttpClient) {
-    super(http, `${environment.platformProviderApiBaseUrl}${environment.statisticsEndpointPath}`, new ProgressVisualAssembler());
+    super(http, `${environment.platformProviderApiBaseUrl}${environment.statisticsEndpointPath}/progress/me`, new ProgressVisualAssembler());
   }
 }

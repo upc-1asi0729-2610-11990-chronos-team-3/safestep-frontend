@@ -94,7 +94,7 @@ export class SimulationDetailPage {
 
   private saveReward(): void {
     const current = this.simulation();
-    const userProfile = this.identityAccessStore.userProfiles()[0];
+    const userProfile = this.identityAccessStore.getCurrentUser();
     const coinTransactions = this.gamificationStore.coinTransactions();
     const allSimulations = this.medicalSimulationStore.simulations();
     const allAttempts = this.medicalSimulationStore.attempts();
@@ -124,13 +124,17 @@ export class SimulationDetailPage {
     this.appliedMultiplier.set(reward.multiplier);
     this.successfulAttemptNumber.set(reward.successfulAttemptNumber);
     this.identityAccessStore.updateSafeCoinsLocally(reward.nextBalance);
-    this.completed.set(true);
-
-    this.identityAccessStore.updateUserProfile(reward.updatedProfile, userProfile.id);
-    this.gamificationStore.addCoinTransaction(reward.transaction);
-    this.medicalSimulationStore.addAttempt(reward.attempt);
-    this.medicalSimulationStore.updateSimulation(reward.updatedSimulation);
-
-    this.savingReward.set(false);
+    this.medicalSimulationStore.completeAttempt(reward.attempt).subscribe({
+      next: () => {
+        this.completed.set(true);
+        this.gamificationStore.refresh();
+        this.identityAccessStore.refreshGamificationSummary().subscribe();
+        this.savingReward.set(false);
+      },
+      error: (error: unknown) => {
+        this.rewardError.set(error instanceof Error ? error.message : 'No se pudo guardar el intento');
+        this.savingReward.set(false);
+      },
+    });
   }
 }
