@@ -1,0 +1,1 @@
+import{b as e}from"./chunk-4OOXOBPZ.js";import{c as r}from"./chunk-F4H3OG4F.js";import{_ as t}from"./chunk-P7UKLSNY.js";var s=()=>{let o=t(e),n=t(r);return o.isAuthenticated()?!0:n.parseUrl("/auth")};export{s as a};
